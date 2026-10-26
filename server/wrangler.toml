@@ -1,0 +1,10 @@
+name = "ansanlife-analyze"
+main = "analyze-worker.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+# 앱이 올라간 주소. 여러 개면 쉼표로 구분
+ALLOWED_ORIGIN = "https://eugenekimkim.github.io"
+# MODEL = "claude-sonnet-5-5"
+
+# API 키는 여기에 쓰지 말고: npx wrangler secret put ANTHROPIC_API_KEY

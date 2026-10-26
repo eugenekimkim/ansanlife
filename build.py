@@ -5,6 +5,7 @@ src/app.template.html 을 읽어 실행 가능한 HTML 을 만듭니다.
 
   python3 build.py                 # index.html 생성 (이미지는 assets/ 파일 참조)
   NAVER_KEY=xxxx python3 build.py  # 네이버 지도 Client ID(ncpKeyId)를 넣어 빌드
+  ANALYZE_URL=https://... python3 build.py  # 사진 분석 서버 주소를 넣어 빌드 (server/README.md)
   python3 build.py --inline        # 이미지를 base64로 넣은 단일 파일 dist/ansanlife-inline.html 생성
                                    # (Claude 아티팩트처럼 파일 하나만 올릴 때)
 """
@@ -32,6 +33,9 @@ def data_uri(path: Path) -> str:
 def main() -> None:
     inline = "--inline" in sys.argv
     key = os.environ.get("NAVER_KEY", "").strip()
+    analyze = os.environ.get("ANALYZE_URL", "").strip()
+    if analyze and not analyze.startswith("https://"):
+        sys.exit("ANALYZE_URL 은 https:// 로 시작해야 합니다")
     html = TEMPLATE.read_text(encoding="utf-8")
 
     orange = ROOT / "assets" / "intro-orange.jpg"
@@ -43,6 +47,8 @@ def main() -> None:
 
     # 키가 비어 있으면 앱은 그림 지도로 대신 보여줍니다.
     html = html.replace("const NAVER_KEY='__NAVER_KEY__';", f"const NAVER_KEY='{key}';")
+    # 비어 있으면 사진 분석은 예시 결과로 보여줍니다.
+    html = html.replace("const ANALYZE_URL='__ANALYZE_URL__';", f"const ANALYZE_URL='{analyze}';")
 
     if inline:
         out = ROOT / "dist" / "ansanlife-inline.html"
@@ -50,7 +56,7 @@ def main() -> None:
     else:
         out = ROOT / "index.html"
     out.write_text(HEAD + html + TAIL, encoding="utf-8")
-    print(f"built {out.relative_to(ROOT)}  (naver map: {'on' if key else 'off'})")
+    print(f"built {out.relative_to(ROOT)}  (naver map: {'on' if key else 'off'}, photo analysis: {'on' if analyze else 'demo'})")
 
 
 if __name__ == "__main__":

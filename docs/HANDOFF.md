@@ -56,8 +56,9 @@ Figma 색상 변수 컬렉션 "Ansan Life" (color/accent, deep, sage, background
 | 기능 | 상태 | 비고 |
 | --- | --- | --- |
 | 언어 전환 (KO/EN/VI) | 동작 | |
-| 분리배출 오늘 밤·주간 일정 | 동작 | 요일로 자동 계산. 주소는 고정값 "원포공원1로 59" |
-| 사진으로 물어보기 | 데모 | 사진 선택만 됨, 결과는 항상 "투명 페트병" |
+| 분리배출 오늘 밤·주간 일정 | 동작 | 요일로 자동 계산. 안산시 전체 기준(동별 차이 없음) |
+| 지역 "변경" (GPS · 주소 입력) | 동작 · 키 필요 | 2026-10-26 추가. 현재 위치 → 네이버 Reverse Geocoding → 도로명·행정동. 주소 입력은 Geocoding으로 안산 여부 확인. 키 없으면 GPS는 대략 범위로 안산 여부만 보고 주소 입력을 안내, 입력 주소는 그대로 저장. 분리배출·교통 화면 주소와 지도 "Home" 핀이 함께 바뀜. 브라우저(localStorage)에 저장 |
+| 사진으로 물어보기 | 동작 · 서버 필요 | 2026-10-26 추가. HTTPS에서 실시간 카메라(후면) → 셔터로 캡처(1024px JPEG로 축소) → `ANALYZE_URL` 서버(`server/analyze-worker.js`, Claude API 이미지 입력)가 8개 분류(pet·rec·food·gen·glass·bat·bulky·unknown) 중 하나로 판별. 자신 없으면(60% 미만) 후보 칩, 실패 시 다시 찍기·직접 고르기. 카메라를 못 쓰면 사진 선택으로 대체. 서버 주소 없이 빌드하면 예시 결과("예시 결과" 표시) |
 | 품목 검색 | 동작 | 품목 8개 안에서만 |
 | 오후 8시 알림 | 데모 | 실제 푸시 없음 |
 | 버스 경로·도착 시간 | 예시 데이터 | Sample 표기 |
@@ -69,8 +70,8 @@ Figma 색상 변수 컬렉션 "Ansan Life" (color/accent, deep, sage, background
 
 | 우선 | 작업 | 구현 힌트 |
 | --- | --- | --- |
-| 높음 | 사진으로 물어보기: 실제 카메라 화면 + 분석 | `getUserMedia({video:{facingMode:'environment'}})` 로 W2 뷰파인더에 실시간 영상, 셔터로 캡처 → 서버의 비전 AI가 품목 판별 → 안산시 품목별 규칙표에서 결과 생성. 자신 없으면 후보 2–3개 + 품목 검색. 사진 저장 안 함 |
-| 높음 | 지역 "변경" 클릭 시 GPS로 동네 자동 변환 | 시트: 현재 위치 사용 / 주소 검색 / 그대로. `navigator.geolocation` → 네이버 Reverse Geocoding → 행정동·도로명 → 일정·정류장·지도 갱신. 권한 거부 시 주소 검색, 안산 밖이면 안내 |
+| 높음 | 사진 분석 서버 배포 + 실기기 시험 | 코드는 완료. `server/README.md` 대로 Cloudflare Worker 배포(Claude API 키 필요) → `ANALYZE_URL` 넣어 빌드. 휴대폰에서 판별 정확도 확인. 분류표(`RULES`)는 자원순환과 확인 필요 |
+| 높음 | GPS 지역 변경 실기기 시험 | 코드는 완료. 네이버 키 발급 후 실제 도로명·행정동이 맞게 나오는지 확인. 주변 정류장은 버스 데이터 연결 때 함께 |
 | 높음 | 네이버 지도 키 + HTTPS 호스팅 | Dynamic Map, Geocoding, Reverse Geocoding 체크 |
 | 높음 | 버스 실시간·경로 실데이터 | 경기도 버스도착정보 API(공공데이터포털), 경로는 ODsay 또는 카카오 검토. 좌표 생기면 `nmap://route/public` |
 | 높음 | 개인정보·법적 검토 | 위치·사진·설문 동의 모국어로, 보상 방식 확인 |
@@ -100,5 +101,6 @@ Figma 색상 변수 컬렉션 "Ansan Life" (color/accent, deep, sage, background
 ## 주의할 점
 
 - 화면의 [대괄호]와 Sample 표시는 빈자리입니다. 추측한 값으로 채우지 말고 출처를 확인해 넣으세요.
-- 카메라 실시간 화면, GPS, 외부 지도는 HTTPS 도메인에 올린 버전에서만 시험할 수 있습니다.
+- 카메라 실시간 화면, GPS, 외부 지도는 HTTPS 도메인에 올린 버전에서만 시험할 수 있습니다(개발 중에는 `http://localhost` 도 됨).
+- 사진 분석 결과의 품목명은 AI가 쓰지만, 배출 분류·요일·봉투는 앱의 안산시 기준으로만 보여줍니다. 분류표를 고치면 `server/analyze-worker.js` 의 `RULES` 와 앱의 `DEST` 를 함께 고치세요.
 - 수정은 `src/app.template.html` 에서 하고 `python3 build.py` 로 `index.html` 을 다시 만드세요.

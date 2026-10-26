@@ -191,6 +191,13 @@ a{color:inherit;text-decoration:none}
 .shutter i{width:62px;height:62px;border-radius:50%;background:#fff;display:block}
 .scanline{position:absolute;left:0;right:0;height:70px;background:linear-gradient(to bottom,rgba(228,92,78,0),rgba(228,92,78,.35) 92%,var(--accent));animation:scan 1.6s ease-in-out infinite alternate}
 @keyframes scan{from{top:0}to{top:calc(100% - 70px)}}
+.vf video{position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px);object-fit:cover;border-radius:12px;opacity:0;transition:opacity .3s;background:#0F1716}
+.vf.live video{opacity:1}
+.vf.live .demo{display:none}
+.cam.live #camnote{display:none}
+.toast{position:absolute;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--deep);color:#fff;border-radius:16px;padding:10px 16px;font-size:13px;font-weight:600;z-index:40;white-space:nowrap;animation:fade .2s;box-shadow:0 8px 20px rgba(20,35,36,.25)}
+#lmsg{line-height:1.5;color:var(--muted)}
+#lmsg.err{color:#B4372B}
 .bottomsheet{position:absolute;left:0;right:0;bottom:0;background:#fff;color:var(--ink);border-top-left-radius:48px;padding:26px 28px calc(30px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
 .ld i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-left:4px;animation:blink 1s infinite}
 .ld i:nth-child(2){animation-delay:.2s}.ld i:nth-child(3){animation-delay:.4s}
@@ -348,7 +355,7 @@ en:{cont:'Continue',contSub:'다음 단계로',menu:'Menu',welcome:'Welcome to A
  sq:[['How do you usually get to work?','출근할 때 주로 어떻게 가나요?',[['van','Company shuttle','회사 통근버스'],['bus','City bus','시내버스'],['walk','Walk or bicycle','걷기 · 자전거'],['dots','Other','기타']]],['How long is your commute?','출근 시간은 얼마나 걸리나요?',[['clock','Under 20 min','20분 미만'],['clock','20–40 min','20–40분'],['clock','40–60 min','40–60분'],['clock','Over an hour','1시간 이상']]],['What is hardest about the bus?','버스 이용에서 가장 어려운 점은?',[['speak','Language','언어'],['clock','Waiting time','대기 시간'],['map','Finding the stop','정류장 찾기'],['dots','Other','기타']]]],
  choose1:'Choose one',nextB:'Next',finish:'Finish',thanks:'Thank you!',thanksS:'Your answers help Ansan plan better for everyone.',yourReward:'YOUR REWARD',giftcard:'Mobile gift card (sample)',sentTo:'SENT TO',backHome:'Back to home',moreSurveys:'See more surveys',
  locT:'Where do you live?',locS:'Used for waste days and nearby places.',useGps:'Use my current location',gpsWorking:'Finding your location…',gpsDenied:'Location isn’t available here. Type your address instead.',gpsNoKey:'Location found. A Naver Maps key is needed to turn it into an address — type it below for now.',addrPh:'e.g. 원포공원1로 59',save:'Save',onlyAnsan:'Only addresses in Ansan are supported for now.',locSaved:'Address saved',
- anaFail:'We couldn’t analyze this photo.',tryAgain:'Try again',demoNote:'Example result · live photo analysis isn’t available in this view',resultLbl:'Result',batNote:'Battery collection box · any day',bulkyNote:'Apply first · pickup Mon & Thu',unknownNote:'Not sure — check the item list',
+ anaFail:'We couldn’t analyze this photo.',tryAgain:'Try again',demoNote:'Example result · live photo analysis isn’t available in this view',resultLbl:'Result',batNote:'Battery collection box · any day',bulkyNote:'Apply first · pickup Mon & Thu',unknownNote:'Not sure — check the item list',keep:'Keep current',locCur:'CURRENT',gpsFail:'We couldn’t get your location. Type your address instead.',camOff:'The camera isn’t available here · choose a photo instead',maybe:'Is it one of these?',
  survNote:'Ad-free for a day when you take part',adFreeShort:'24h ad-free',adFreeOn:u=>`Ad-free until ${u}`,adFreeS:'Thanks for taking a survey',adFreeTomorrow:u=>`No ads until ${u}`,
  lang:'EN'},
 vi:{cont:'Tiếp tục',contSub:'다음 단계로',menu:'Menu',welcome:'Chào mừng đến Ansan',homeT:'Cuộc sống ở Ansan',
@@ -382,6 +389,8 @@ vi:{cont:'Tiếp tục',contSub:'다음 단계로',menu:'Menu',welcome:'Chào m�
  sq:[['Bạn thường đi làm bằng gì?','출근할 때 주로 어떻게 가나요?',[['van','Xe đưa đón công ty','회사 통근버스'],['bus','Xe buýt','시내버스'],['walk','Đi bộ, xe đạp','걷기 · 자전거'],['dots','Khác','기타']]],['Đi làm mất bao lâu?','출근 시간은 얼마나 걸리나요?',[['clock','Dưới 20 phút','20분 미만'],['clock','20–40 phút','20–40분'],['clock','40–60 phút','40–60분'],['clock','Hơn 1 tiếng','1시간 이상']]],['Điều gì khó nhất khi đi xe buýt?','버스 이용에서 가장 어려운 점은?',[['speak','Ngôn ngữ','언어'],['clock','Chờ lâu','대기 시간'],['map','Tìm trạm','정류장 찾기'],['dots','Khác','기타']]]],
  choose1:'Chọn một',nextB:'Tiếp',finish:'Hoàn tất',thanks:'Cảm ơn bạn!',thanksS:'Câu trả lời của bạn giúp Ansan tốt hơn cho mọi người.',yourReward:'QUÀ CỦA BẠN',giftcard:'Thẻ quà tặng (mẫu)',sentTo:'GỬI ĐẾN',backHome:'Về trang chủ',moreSurveys:'Xem khảo sát khác',
  survNote:'Tham gia: không quảng cáo trong 1 ngày',adFreeShort:'24h không QC',adFreeOn:u=>`Không quảng cáo đến ${u}`,adFreeS:'Cảm ơn bạn đã tham gia khảo sát',adFreeTomorrow:u=>`Không quảng cáo đến ${u}`,
+ locT:'Bạn sống ở đâu?',locS:'Dùng cho lịch đổ rác và địa điểm gần bạn.',useGps:'Dùng vị trí hiện tại',gpsWorking:'Đang tìm vị trí…',gpsDenied:'Không dùng được vị trí ở đây. Hãy nhập địa chỉ.',gpsNoKey:'Đã tìm thấy vị trí. Cần khóa Naver Maps để đổi sang địa chỉ — tạm thời hãy nhập bên dưới.',addrPh:'vd: 원포공원1로 59',save:'Lưu',onlyAnsan:'Hiện chỉ hỗ trợ địa chỉ ở Ansan.',locSaved:'Đã lưu địa chỉ',keep:'Giữ nguyên',locCur:'HIỆN TẠI',gpsFail:'Không lấy được vị trí. Hãy nhập địa chỉ.',
+ anaFail:'Không phân tích được ảnh này.',tryAgain:'Chụp lại',demoNote:'Kết quả mẫu · phiên bản này chưa phân tích ảnh thật',resultLbl:'Kết quả',batNote:'Thùng thu pin · ngày nào cũng được',bulkyNote:'Đăng ký trước · thu gom Thứ Hai & Thứ Năm',unknownNote:'Chưa chắc chắn — hãy xem danh sách đồ vật',camOff:'Không dùng được camera ở đây · hãy chọn ảnh',maybe:'Có phải một trong số này?',
  lang:'VI'},
 ko:{cont:'다음',contSub:'안산살이 시작하기',menu:'메뉴',welcome:'Welcome to Ansan',homeT:'안산 생활 안내',
  items:['분리배출','버스·교통','관공서','병원·약국','공지·행사','설문 참여'],
@@ -414,6 +423,8 @@ ko:{cont:'다음',contSub:'안산살이 시작하기',menu:'메뉴',welcome:'Wel
  sq:[['출근할 때 주로 어떻게 가나요?','How do you usually get to work?',[['van','회사 통근버스','Company shuttle'],['bus','시내버스','City bus'],['walk','걷기 · 자전거','Walk or bicycle'],['dots','기타','Other']]],['출근 시간은 얼마나 걸리나요?','How long is your commute?',[['clock','20분 미만','Under 20 min'],['clock','20–40분','20–40 min'],['clock','40–60분','40–60 min'],['clock','1시간 이상','Over an hour']]],['버스 이용에서 가장 어려운 점은?','What is hardest about the bus?',[['speak','언어','Language'],['clock','대기 시간','Waiting time'],['map','정류장 찾기','Finding the stop'],['dots','기타','Other']]]],
  choose1:'하나를 골라주세요',nextB:'다음',finish:'완료',thanks:'감사합니다!',thanksS:'소중한 의견은 모두를 위한 안산을 만드는 데 쓰여요.',yourReward:'보상',giftcard:'모바일 상품권 (예시)',sentTo:'보낼 곳',backHome:'홈으로',moreSurveys:'다른 설문 보기',
  survNote:'참여 시 하루 동안 광고 제거',adFreeShort:'24시간 광고 제거',adFreeOn:u=>`${u}까지 광고 없이 이용 중`,adFreeS:'설문에 참여해 주셔서 감사해요',adFreeTomorrow:u=>`${u}까지 광고가 보이지 않아요`,
+ locT:'어디에 사세요?',locS:'배출 요일과 주변 장소 안내에 쓰여요.',useGps:'현재 위치 사용',gpsWorking:'위치를 찾고 있어요…',gpsDenied:'여기서는 위치를 쓸 수 없어요. 주소를 입력해 주세요.',gpsNoKey:'위치는 찾았지만 주소로 바꾸려면 네이버 지도 키가 필요해요. 지금은 아래에 직접 입력해 주세요.',addrPh:'예: 원포공원1로 59',save:'저장',onlyAnsan:'지금은 안산시 주소만 지원해요.',locSaved:'주소를 저장했어요',keep:'그대로 두기',locCur:'현재 주소',gpsFail:'위치를 가져오지 못했어요. 주소를 입력해 주세요.',
+ anaFail:'사진을 분석하지 못했어요.',tryAgain:'다시 찍기',demoNote:'예시 결과 · 이 버전에서는 실제 사진 분석을 하지 않아요',resultLbl:'결과',batNote:'건전지 수거함 · 요일 상관없음',bulkyNote:'사전 신고 · 월·목 수거',unknownNote:'확실하지 않아요 — 품목 목록에서 확인하세요',camOff:'여기서는 카메라를 쓸 수 없어요 · 사진을 골라주세요',maybe:'혹시 이 중 하나인가요?',
  lang:'KO'}};
 
 /* ---------- state ---------- */
@@ -430,6 +441,15 @@ const cur=()=>st.stack[st.stack.length-1];
 function go(n){st.stack.push(n);render();}
 function back(){if(st.stack.length>1)st.stack.pop();render();}
 function home(){st.stack=['home'];render();}
+const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* ---------- home address (분리배출·교통·지도 기준) ---------- */
+const ADDR0={road:'원포공원1로 59',dong:'초지동',full:'경기도 안산시 단원구 원포공원1로 59'};
+st.addr=ADDR0;try{const a=JSON.parse(localStorage.getItem('al_addr')||'null');if(a&&a.road)st.addr=a}catch(e){}
+const addrLabel=()=>esc([st.addr.road,st.addr.dong].filter(Boolean).join(' · '));
+function saveAddr(a){st.addr=a;try{localStorage.setItem('al_addr',JSON.stringify(a))}catch(e){}}
+function toast(msg){const o=document.createElement('div');o.className='toast';o.setAttribute('role','status');o.textContent=msg;app.appendChild(o);setTimeout(()=>o.remove(),2200);}
 
 /* ---------- naver links ---------- */
 const appname=()=>{try{return location.href.split('#')[0]}catch(e){return 'ansanlife'}};
@@ -446,6 +466,9 @@ function tryApp(q){const a=document.createElement('a');a.href=nApp(q);a.rel='noo
    2) Web 서비스 URL에 이 페이지를 올릴 도메인 등록
    3) 발급받은 Client ID를 아래 NAVER_KEY에 넣기. 비어 있으면 그림 지도로 보여요. */
 const NAVER_KEY='__NAVER_KEY__';
+/* 사진 분석 서버 주소 (server/README.md). 비어 있으면 예시 결과로 보여요. */
+const ANALYZE_URL='__ANALYZE_URL__';
+const hasAnalyzer=()=>!!ANALYZE_URL&&!ANALYZE_URL.startsWith('__');
 const MAPS={
  hosp:{zoom:16,pts:[{addr:'경기도 안산시 단원구 적금로 123',label:'고려대학교 안산병원'}]},
  near:{zoom:15,pts:[{addr:'경기도 안산시 단원구 원포공원1로 59',label:'Home',home:true},{addr:'경기도 안산시 단원구 중앙대로 620',label:'초지역 Choji'}]},
@@ -456,7 +479,7 @@ function loadNaver(){if(!NAVER_KEY||NAVER_KEY.startsWith('__'))return Promise.re
  naverP=new Promise(res=>{window.navermap_authFailure=()=>res(null);const s=document.createElement('script');s.src=`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${enc(NAVER_KEY)}&submodules=geocoder`;s.onload=()=>res(window.naver&&window.naver.maps?window.naver:null);s.onerror=()=>res(null);document.head.appendChild(s);});return naverP;}
 function geocode(N,addr){if(geoCache[addr])return geoCache[addr];geoCache[addr]=new Promise(res=>{try{N.maps.Service.geocode({query:addr},(status,r)=>{const a=status===N.maps.Service.Status.OK&&r.v2&&r.v2.addresses&&r.v2.addresses[0];res(a?new N.maps.LatLng(+a.y,+a.x):null);});}catch(e){res(null)}});return geoCache[addr];}
 async function mountMaps(){const els=[...app.querySelectorAll('.nmap[data-map]')];if(!els.length)return;const N=await loadNaver();if(!N)return;
- for(const el of els){if(!el.isConnected)continue;const spec=MAPS[el.dataset.map];const ll=(await Promise.all(spec.pts.map(p=>geocode(N,p.addr))));const pts=spec.pts.map((p,i)=>({...p,ll:ll[i]})).filter(p=>p.ll);if(!pts.length||!el.isConnected)continue;
+ for(const el of els){if(!el.isConnected)continue;const spec=MAPS[el.dataset.map];const ll=(await Promise.all(spec.pts.map(p=>p.home&&st.addr.lat?new N.maps.LatLng(st.addr.lat,st.addr.lng):geocode(N,p.home?st.addr.full:p.addr))));const pts=spec.pts.map((p,i)=>({...p,ll:ll[i]})).filter(p=>p.ll);if(!pts.length||!el.isConnected)continue;
   const map=new N.maps.Map(el.querySelector('.live'),{center:pts[pts.length-1].ll,zoom:spec.zoom,scaleControl:false,mapDataControl:false,logoControlOptions:{position:N.maps.Position.BOTTOM_RIGHT}});
   pts.forEach(p=>new N.maps.Marker({position:p.ll,map,icon:{content:`<div class="npin ${p.home?'home':''}"><b></b><span>${p.label}</span></div>`,anchor:new N.maps.Point(0,0)}}));
   if(pts.length>1){const b=new N.maps.LatLngBounds(pts[0].ll,pts[0].ll);pts.forEach(p=>b.extend(p.ll));map.fitBounds(b,{top:50,right:40,bottom:30,left:40});}
@@ -472,7 +495,7 @@ const koSub=s=>isKo()||!s?'':`<span class="kr micro muted">${s}</span>`;
 
 /* ---------- waste schedule (Ansan city-wide public data) ---------- */
 const sched=d=>({g:d<=5,f:d<=5,r:[1,2,4,5].includes(d)});
-function nextNight(from){for(let i=1;i<=7;i++){const d=(from+i)%7;if(sched(d).r)return d}return from}
+function nextNight(from,k='r'){for(let i=1;i<=7;i++){const d=(from+i)%7;if(sched(d)[k])return d}return from}
 
 /* ---------- screens ---------- */
 const SCR={};
@@ -511,7 +534,7 @@ SCR.w1=()=>{const t=T();const d=new Date().getDay();const s=sched(d);const any=s
  const types=[['gen',t.genL,'일반쓰레기',t.bagW,'#ECE6D8'],['food',t.foodL,'음식물쓰레기',t.bagO,'#EE8A3C'],['rec',t.recL,'재활용품',t.bagC,'#CFE3EA']];
  const bag=c=>`<svg width="18" height="21" viewBox="0 0 28 32" aria-hidden="true"><path d="M8 7c0-3 2.5-5 6-5s6 2 6 5" fill="none" stroke="${c}" stroke-width="2"/><path d="M3 8h22l-2 22H5z" fill="${c}"/></svg>`;
  return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu,{right:`<button class="ibtn" aria-label="Notifications">${ic('bell',20)}</button>`})}
- ${ttl(t.wasteT,`<span class="kr">원포공원1로 59 · 초지동</span><button class="b small" style="color:var(--ink)">${t.change}</button>`,{pin:true})}
+ ${ttl(t.wasteT,`<span class="kr">${addrLabel()}</span><button class="b small" style="color:var(--ink)" data-act="loc">${t.change}</button>`,{pin:true})}
  <div class="sheet">
   <div class="card" style="background:var(--deep);color:#fff;border-radius:22px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
    <div class="row" style="justify-content:space-between"><span class="row cap" style="color:rgba(255,255,255,.8);gap:6px">${ic('moon',14,'#fff')}${t.tonight} · ${DAYLONG[st.lang][d]}</span><span class="kr tiny" style="opacity:.7">${any?'오늘 밤 배출 가능':'오늘 밤 수거 없음'}</span></div>
@@ -531,36 +554,49 @@ SCR.w1=()=>{const t=T();const d=new Date().getDay();const s=sched(d);const any=s
 const bottleSVG=`<svg viewBox="0 0 110 230" width="110" height="230" aria-hidden="true" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)"><defs><linearGradient id="bg1" x1="0" x2="1"><stop offset="0" stop-color="#BFD8E0"/><stop offset=".5" stop-color="#EAF4F7"/><stop offset="1" stop-color="#A9C6CF"/></linearGradient></defs><rect x="40" y="0" width="30" height="20" rx="4" fill="#3E7FB6"/><path d="M42 20h26l6 30c18 10 26 22 26 40v124a12 12 0 0 1-12 12H22a12 12 0 0 1-12-12V90c0-18 8-30 26-40z" fill="url(#bg1)"/><rect x="10" y="110" width="90" height="46" fill="#5BA37A"/><path d="M26 133h58" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>`;
 const corners=c=>`<svg class="c" viewBox="0 0 270 320" preserveAspectRatio="none" aria-hidden="true"><g stroke="${c}" stroke-width="3" fill="none" stroke-linecap="round"><path d="M2 30V2h28M240 2h28v28M2 290v28h28M240 318h28v-28"/></g></svg>`;
 SCR.w2=()=>{const t=T();return `<div class="scr cam" style="overflow:hidden">
- <div class="vf">${st.photo?`<img src="${st.photo}" alt="">`:bottleSVG}${corners('#fff')}</div>
+ <div class="vf"><span class="demo">${st.photo?`<img src="${st.photo}" alt="">`:bottleSVG}</span><video id="cv" playsinline muted autoplay aria-label="${t.camT}"></video>${corners('#fff')}</div>
  <div class="camtop"><button class="ibtn glass" style="margin:0;width:44px;height:44px;border-radius:22px" data-act="back" aria-label="Close">${ic('x',20,'#fff')}</button><div class="col" style="align-items:center"><span class="serif" style="font-size:17px">${t.camT}</span>${koSub('버릴 물건을 찍어주세요')}</div><span class="idot glass" style="width:44px;height:44px">${ic('flash',20,'#fff')}</span></div>
  <div class="camhint glass"><span class="dot" style="background:var(--accent)"></span><span class="col"><span class="small b">${t.camH}</span>${koSub('물건을 네모 안에 맞춰주세요')}</span></div>
  <div class="camctl">
   <div class="modes"><span class="b col" style="align-items:center;gap:4px">${t.photo}<span class="dot" style="background:var(--accent);width:5px;height:5px"></span></span><span style="opacity:.6">${t.barcode}</span></div>
   <div class="row" style="justify-content:space-between">
    <label class="idot" style="width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.5);cursor:pointer" aria-label="Choose photo">${ic('img',20,'#fff')}<input id="ph" type="file" accept="image/*" hidden></label>
-   <label class="shutter" style="cursor:pointer" aria-label="Take photo"><i></i><input id="ph2" type="file" accept="image/*" capture="environment" hidden></label>
-   <button class="idot" style="width:48px;height:48px;background:rgba(255,255,255,.15)" data-go="w3" aria-label="Use sample">${ic('flip',20,'#fff')}</button>
+   <label class="shutter" id="shut" style="cursor:pointer" aria-label="Take photo"><i></i><input id="ph2" type="file" accept="image/*" capture="environment" hidden></label>
+   <button class="idot" style="width:48px;height:48px;background:rgba(255,255,255,.15)" data-act="sample" aria-label="Use sample">${ic('flip',20,'#fff')}</button>
   </div>
-  <span class="micro" style="text-align:center;opacity:.6">데모: 사진을 고르거나 오른쪽 버튼으로 예시 사진 사용</span>
+  <span class="micro" id="camnote" style="text-align:center;opacity:.6">${hasAnalyzer()?'':'데모: '}사진을 고르거나 오른쪽 버튼으로 예시 사진 사용</span>
  </div></div>`;};
-SCR.w3=()=>{const t=T();return `<div class="scr cam" style="overflow:hidden">
+SCR.w3=()=>{const t=T();const demo=!(st.photo&&hasAnalyzer());return `<div class="scr cam" style="overflow:hidden">
  <div class="vf" style="top:150px;height:300px;left:70px;right:70px">${st.photo?`<img src="${st.photo}" alt="">`:bottleSVG}<div class="scanline"></div>${corners('#E45C4E')}</div>
- <span class="chip" style="position:absolute;top:122px;left:196px;background:#fff;color:var(--ink);font-size:12px;padding:6px 12px 6px 8px;border-radius:14px"><span class="dot" style="background:var(--accent)"></span>${t.pet} <span class="muted">92%</span></span>
+ ${demo?`<span class="chip" style="position:absolute;top:122px;left:196px;background:#fff;color:var(--ink);font-size:12px;padding:6px 12px 6px 8px;border-radius:14px"><span class="dot" style="background:var(--accent)"></span>${t.pet} <span class="muted">92%</span></span>`:''}
  <div class="camtop"><button class="ibtn glass" style="margin:0;width:44px;height:44px;border-radius:22px" data-act="back" aria-label="Close">${ic('x',20,'#fff')}</button></div>
  <div class="bottomsheet"><div class="row"><span class="h1 ${isKo()?'ko':''}" style="font-size:24px">${t.analyzing}</span><span class="ld"><i></i><i></i><i></i></span></div>${koSub('분석 중이에요 · 잠시만 기다려주세요')}
-  <div class="col" style="gap:10px">${[[t.st1,'물건 인식','done'],[t.st2,'안산시 배출 기준 확인','doing'],[t.st3,'올바른 배출 방법 찾기','']].map(([a,b,s],i)=>`<div class="row" id="stp${i}"><span class="stat ${s}">${s==='done'?ic('check',12,'#fff',3):''}</span><span class="col"><span class="b" style="font-size:14px;${s?'':'color:var(--muted);font-weight:500'}">${a}</span>${koSub(b)}</span></div>`).join('')}</div>
+  <div class="col" style="gap:10px">${[[t.st1,'물건 인식','doing'],[t.st2,'안산시 배출 기준 확인',''],[t.st3,'올바른 배출 방법 찾기','']].map(([a,b,s],i)=>`<div class="row" id="stp${i}"><span class="stat ${s}"></span><span class="col"><span class="b" style="font-size:14px">${a}</span>${koSub(b)}</span></div>`).join('')}</div>
  </div></div>`;};
-SCR.w4=()=>{const t=T();const d=new Date().getDay();const ok=sched(d).r;const nd=nextNight(d);
- return `<div class="scr ${isKo()?'ko':''}">${nav(t.routeT===undefined?'':(isKo()?'결과':st.lang==='vi'?'Kết quả':'Result'),{right:`<button class="ibtn" data-act="home" aria-label="Close">${ic('x',20)}</button>`})}
- <div class="ttl" style="flex-direction:row;align-items:center;gap:16px"><div class="col grow"><span class="eyebrow">${t.thisIs}</span><h1 class="h1 ${isKo()?'ko':''}">${t.pet}</h1>${koSub('투명 페트병')}</div><span style="width:76px;height:76px;border-radius:18px;overflow:hidden;background:#DCE6E7;display:grid;place-items:center;flex:none">${st.photo?`<img src="${st.photo}" alt="" style="width:100%;height:100%;object-fit:cover">`:ic('img',20,'#4E6B70')}</span></div>
+
+/* result categories: where the item goes in Ansan */
+const DEST={pet:{icon:'recycle',c:'#4E8F87',k:'r'},rec:{icon:'recycle',c:'#4E8F87',k:'r'},gen:{icon:'trash',c:'#3A4442',k:'g'},food:{icon:'trash',c:'#EE8A3C',k:'f'},glass:{icon:'alert',c:'#3A4442',k:'g'},bat:{icon:'refresh',c:'#7A6AA8'},bulky:{icon:'sofa',c:'#22393A'},unknown:{icon:'search',c:'#6E7472'}};
+const destName=(L,d)=>({pet:L.petDest,rec:L.recL,gen:L.genL,food:L.foodL,glass:L.dest.glass,bat:L.dest.bat,bulky:L.bulky,unknown:L.lookT}[d]);
+const destBag=(L,d)=>({pet:L.bagC,rec:L.bagC,gen:L.bagW,food:L.bagO,glass:L.bagW}[d]||'');
+SCR.w4=()=>{const t=T();const r=st.result||{demo:true,dest:'pet',name:t.pet,name_ko:'투명 페트병',confidence:.92,candidates:[]};const D=DEST[r.dest]||DEST.unknown;
+ const d=new Date().getDay();const k=D.k;const ok=k&&sched(d)[k];const nd=k?nextNight(d,k):d;
+ const name=r.name||destName(t,r.dest);const nameKo=r.name_ko||'';
+ const when=k?`<div class="soft-accent row">${ic('moon',16,'#E45C4E')}<div class="col"><span class="b" style="font-size:14px">${ok?t.tonightYes:t.tonightNo}</span><span class="tiny muted">${DAYLONG[st.lang][ok?d:nd]} · 20:00 – 06:00</span></div></div>`
+  :`<div class="soft-accent row">${ic(r.dest==='unknown'?'search':'clock',16,'#E45C4E')}<div class="col"><span class="b" style="font-size:14px">${r.dest==='bat'?t.batNote:r.dest==='bulky'?t.bulkyNote:t.unknownNote}</span></div></div>`;
+ const cands=(r.confidence<.6&&r.candidates&&r.candidates.length)?`${h2(t.maybe,'혹시 이 중 하나인가요?')}<div class="chips">${r.candidates.map((c,i)=>`<button class="chip" data-cand="${i}" style="background:var(--bg);font-size:12px;padding:6px 12px 6px 10px"><span class="dot" style="background:${(DEST[c.dest]||DEST.unknown).c};width:7px;height:7px"></span>${esc(c.name||destName(t,c.dest))}</button>`).join('')}</div>`:'';
+ return `<div class="scr ${isKo()?'ko':''}">${nav(t.resultLbl,{right:`<button class="ibtn" data-act="home" aria-label="Close">${ic('x',20)}</button>`})}
+ <div class="ttl" style="flex-direction:row;align-items:center;gap:16px"><div class="col grow"><span class="eyebrow">${t.thisIs}</span><h1 class="h1 ${isKo()?'ko':''}">${esc(name)}</h1>${isKo()?'':koSub(esc(nameKo))}</div><span style="width:76px;height:76px;border-radius:18px;overflow:hidden;background:#DCE6E7;display:grid;place-items:center;flex:none">${st.photo?`<img src="${st.photo}" alt="" style="width:100%;height:100%;object-fit:cover">`:ic('img',20,'#4E6B70')}</span></div>
  <div class="sheet">
-  <div class="ticket">${dotI('recycle','#4E8F87','#fff',40)}<div class="col grow"><span class="cap">${t.goesIn}</span><span class="serif" style="font-size:16px">${t.petDest}</span>${koSub('투명 페트병 별도 배출')}</div><span class="dash"></span><div class="col" style="align-items:center"><span class="cap">${t.bag}</span><span class="small b">${t.clear}</span></div></div>
-  <div class="soft-accent row">${ic('moon',16,'#E45C4E')}<div class="col"><span class="b" style="font-size:14px">${ok?t.tonightYes:t.tonightNo}</span><span class="tiny muted">${ok?DAYLONG[st.lang][d]:DAYLONG[st.lang][nd]} · 20:00 – 06:00</span></div></div>
-  ${h2(t.before)}
-  <div class="col" style="gap:10px">${t.petSteps.map((s,i)=>`<div class="row" style="align-items:flex-start"><span class="it ${i?'muted':'accent'}" style="font-size:15px;width:20px">0${i+1}</span><span class="col"><span class="b" style="font-size:14px">${s}</span>${koSub(S.ko.petSteps[i])}</span></div>`).join('')}</div>
+  <div class="ticket">${dotI(D.icon,D.c,'#fff',40)}<div class="col grow"><span class="cap">${t.goesIn}</span><span class="serif" style="font-size:16px">${destName(t,r.dest)}</span>${destBag(t,r.dest)?`<span class="tiny muted">${destBag(t,r.dest)}</span>`:''}${koSub(destName(S.ko,r.dest))}</div>${r.dest==='pet'?`<span class="dash"></span><div class="col" style="align-items:center"><span class="cap">${t.bag}</span><span class="small b">${t.clear}</span></div>`:''}</div>
+  ${when}
+  ${cands}
+  ${r.dest==='pet'?`${h2(t.before)}<div class="col" style="gap:10px">${t.petSteps.map((s,i)=>`<div class="row" style="align-items:flex-start"><span class="it ${i?'muted':'accent'}" style="font-size:15px;width:20px">0${i+1}</span><span class="col"><span class="b" style="font-size:14px">${s}</span>${koSub(S.ko.petSteps[i])}</span></div>`).join('')}</div>`:''}
+  ${r.dest==='bulky'?`<button class="btn line" data-go="w6">${ic('sofa',18)}${t.bulkyT}</button>`:''}
+  ${r.dest==='unknown'?`<button class="btn line" data-go="w5">${ic('search',18)}${t.lookT}</button>`:''}
   <div class="spacer"></div>
+  ${r.demo?`<span class="micro muted">${t.demoNote}</span>`:''}
   <div class="row small"><span class="muted">${t.notRight}</span><button class="b" data-go="w5">${t.pickAgain}</button></div>
-  <div class="acts"><button class="btn line sq" data-go="w2" aria-label="${t.ask}">${ic('camera',18)}</button><button class="btn dark" id="remind">${ic(st.remind?'check':'bell',18,'#fff')}${st.remind?t.reminded:t.remind}</button></div>
+  <div class="acts"><button class="btn line sq" data-go="w2" aria-label="${t.ask}">${ic('camera',18)}</button>${k?`<button class="btn dark" id="remind">${ic(st.remind?'check':'bell',18,'#fff')}${st.remind?t.reminded:t.remind}</button>`:`<button class="btn dark" data-act="home">${ic('home',18,'#fff')}${t.menu}</button>`}</div>
  </div>${foot}</div>`;};
 SCR.w5=()=>{const t=T();const col={gen:'#3A4442',food:'#EE8A3C',rec:'#4E8F87',bat:'#7A6AA8',glass:'#3A4442'};const q=st.query.toLowerCase();
  const list=t.items8.map((x,i)=>[...x,S.ko.items8[i][0]]).filter(x=>!q||x[0].toLowerCase().includes(q)||x[3].includes(q)||x[1].includes(q));
@@ -584,9 +620,9 @@ SCR.w6=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.waste
 
 /* transit */
 const LINES=`<span class="badge" style="background:var(--l4)">4</span><span class="badge" style="background:var(--sb);color:#3A2600">수인분당</span><span class="badge" style="background:var(--sh);color:#1E2A00">서해</span>`;
-SCR.b1=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.busT,`<span class="kr">원포공원1로 59 · 초지동</span>`,{pin:true})}
+SCR.b1=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.busT,`<span class="kr">${addrLabel()}</span><button class="b small" style="color:var(--ink)" data-act="loc">${t.change}</button>`,{pin:true})}
  <div class="sheet">
-  <div class="card" style="padding:4px 16px"><div class="row" style="padding:11px 0;border-bottom:1px solid rgba(30,34,33,.1)">${ic('home',16)}<span class="kr b grow" style="font-size:14px">${t.home} · 원포공원1로 59</span></div><button class="row" style="padding:11px 0;width:100%" data-go="b2">${ic('work',16,'#E45C4E')}<span class="grow muted" style="text-align:left;font-size:14px">${t.whereTo}</span></button></div>
+  <div class="card" style="padding:4px 16px"><div class="row" style="padding:11px 0;border-bottom:1px solid rgba(30,34,33,.1)">${ic('home',16)}<span class="kr b grow" style="font-size:14px">${t.home} · ${esc(st.addr.road)}</span></div><button class="row" style="padding:11px 0;width:100%" data-go="b2">${ic('work',16,'#E45C4E')}<span class="grow muted" style="text-align:left;font-size:14px">${t.whereTo}</span></button></div>
   ${h2(t.saved,'자주 가는 곳')}
   <button class="row" style="border:1px solid var(--hair);border-radius:18px;padding:12px 14px;text-align:left" data-go="b3">${dotI('work','#22393A','#fff',36)}<span class="col grow"><span class="b" style="font-size:13px">${t.toWork}</span><span class="row tiny muted" style="gap:6px"><span class="badge" style="background:var(--bus)">Bus</span>~35 ${t.min}</span></span>${ic('arrow',16,'#6E7472')}</button>
   ${h2(t.nearby,'주변')}
@@ -598,7 +634,7 @@ SCR.b1=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)
 const seg=(c,g,l='')=>`<span class="seg" style="background:${c};flex:${g}">${l}</span>`;
 SCR.b2=()=>{const t=T();const opts=[[35,0,[[ 'var(--walk)',1],['var(--bus)',5,'Bus'],['var(--walk)',1]],true],[42,1,[['var(--walk)',1],['var(--l4)',3,'Line 4'],['var(--bus)',3,'Bus'],['var(--walk)',1]]],[48,1,[['var(--walk)',2],['var(--bus)',3,'Bus'],['var(--bus)',3,'Bus'],['var(--walk)',1]]]];
  return `<div class="scr ${isKo()?'ko':''}">${nav(t.busT)}
- <div class="ttl" style="gap:0">${[['var(--ink)','원포공원1로 59',t.home],['var(--accent)',isKo()?'반월국가산업단지':'Banwol Industrial Complex','반월국가산업단지']].map(([c,a,b],i)=>`<div class="row" style="padding:6px 0"><span class="dot" style="background:${c};width:10px;height:10px"></span><span class="col"><span class="${i===0||isKo()?'kr b':'serif'}" style="font-size:17px">${a}</span><span class="tiny muted kr">${i===0?b:(isKo()?'':b)}</span></span></div>`).join('')}</div>
+ <div class="ttl" style="gap:0">${[['var(--ink)',esc(st.addr.road),t.home],['var(--accent)',isKo()?'반월국가산업단지':'Banwol Industrial Complex','반월국가산업단지']].map(([c,a,b],i)=>`<div class="row" style="padding:6px 0"><span class="dot" style="background:${c};width:10px;height:10px"></span><span class="col"><span class="${i===0||isKo()?'kr b':'serif'}" style="font-size:17px">${a}</span><span class="tiny muted kr">${i===0?b:(isKo()?'':b)}</span></span></div>`).join('')}</div>
  <div class="sheet" style="gap:12px">
   <div class="row" style="gap:18px">${t.sortBy.map((s,i)=>`<span class="col" style="align-items:center;gap:4px"><span style="font-size:13px;${i?'color:var(--muted)':'font-weight:600'}">${s}</span><span style="height:2px;width:18px;background:${i?'transparent':'var(--accent)'}"></span></span>`).join('')}</div>
   ${opts.map(([m,tr,segs,best])=>`<button class="opt ${best?'best':''}" data-go="b3"><span class="row" style="align-items:baseline;gap:8px;width:100%"><span class="serif" style="font-size:26px">${m}</span><span class="small muted">${t.min}</span><span class="grow"></span>${best?`<span class="badge" style="background:var(--accent)">${t.best}</span>`:''}</span><span class="row" style="gap:3px;width:100%">${segs.map(s=>seg(...s)).join('')}</span><span class="row tiny muted" style="gap:8px">${t.transfers(tr)} · ₩1,650+</span></button>`).join('')}
@@ -717,13 +753,100 @@ function sheet(kind){const t=T();const o=document.createElement('div');o.classNa
  app.appendChild(o);}
 function remember(o,v){if(o.dataset.always){st.always=v;try{localStorage.setItem('al_naver',v)}catch(e){}}}
 
+/* ---------- camera (HTTPS only; falls back to the photo picker) ---------- */
+let camStream=null;
+function stopCam(){if(camStream){camStream.getTracks().forEach(x=>x.stop());camStream=null}}
+function camOff(){const n=document.getElementById('camnote');if(n)n.textContent=T().camOff;}
+async function startCam(){const v=document.getElementById('cv');if(!v)return;
+ if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)||!window.isSecureContext){camOff();return}
+ try{const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:1280}},audio:false});
+  if(cur()!=='w2'||!v.isConnected){s.getTracks().forEach(x=>x.stop());return}
+  camStream=s;v.srcObject=s;try{await v.play()}catch(e){}
+  v.closest('.vf').classList.add('live');v.closest('.scr').classList.add('live');}
+ catch(e){camOff()}}
+/* downscale before upload: long side 1024px, JPEG */
+function shrink(src,w,h,max=1024){const k=Math.min(1,max/Math.max(w,h));const c=document.createElement('canvas');c.width=Math.round(w*k);c.height=Math.round(h*k);c.getContext('2d').drawImage(src,0,0,c.width,c.height);return c.toDataURL('image/jpeg',.82);}
+function capture(){const v=document.getElementById('cv');if(!v||!v.videoWidth)return;st.photo=shrink(v,v.videoWidth,v.videoHeight);stopCam();go('w3');}
+function readPhoto(f){const u=URL.createObjectURL(f);const im=new Image();
+ im.onload=()=>{st.photo=shrink(im,im.naturalWidth,im.naturalHeight);URL.revokeObjectURL(u);go('w3')};
+ im.onerror=()=>{URL.revokeObjectURL(u);const r=new FileReader();r.onload=()=>{st.photo=r.result;go('w3')};r.readAsDataURL(f)};im.src=u;}
+
+/* ---------- photo analysis (server/analyze-worker.js) ---------- */
+const DESTS=Object.keys(DEST);
+const clip=v=>String(v||'').slice(0,60);
+async function analyze(dataUrl){const m=/^data:([^;]+);base64,(.*)$/.exec(dataUrl||'');if(!m)return null;
+ const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),25000);
+ try{const r=await fetch(ANALYZE_URL,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({image:m[2],mediaType:m[1],lang:st.lang}),signal:ctl.signal});
+  if(!r.ok)return null;const j=await r.json();if(!j||!DESTS.includes(j.dest))return null;
+  return {dest:j.dest,name:clip(j.name),name_ko:clip(j.name_ko),confidence:Math.max(0,Math.min(1,+j.confidence||0)),
+   candidates:(Array.isArray(j.candidates)?j.candidates:[]).filter(c=>c&&DESTS.includes(c.dest)).slice(0,3).map(c=>({dest:c.dest,name:clip(c.name),name_ko:clip(c.name_ko)}))};}
+ catch(e){return null}finally{clearTimeout(to)}}
+let scanSeq=0;
+async function runScan(){const id=scanSeq;const steps=[...app.querySelectorAll('.stat')];const alive=()=>id===scanSeq&&cur()==='w3';
+ const mark=(i,s)=>{const e=steps[i];if(!e)return;e.className='stat '+s;e.innerHTML=s==='done'?ic('check',12,'#fff',3):'';const l=e.nextElementSibling&&e.nextElementSibling.firstElementChild;if(l)l.style.cssText='font-size:14px'+(s?'':';color:var(--muted);font-weight:500');};
+ [1,2].forEach(i=>mark(i,''));
+ let res;
+ if(st.photo&&hasAnalyzer()){const p=analyze(st.photo);await wait(700);if(!alive())return;mark(0,'done');mark(1,'doing');res=await p;}
+ else{await wait(1300);if(!alive())return;mark(0,'done');mark(1,'doing');res={demo:true,dest:'pet',name:T().pet,name_ko:'투명 페트병',confidence:.92,candidates:[]};}
+ if(!alive())return;
+ if(!res){showAnaErr();return}
+ mark(1,'done');mark(2,'doing');await wait(700);if(!alive())return;
+ st.result=res;st.remind=false;st.stack.pop();go('w4');}
+function showAnaErr(){const t=T();const b=app.querySelector('.bottomsheet');const sl=app.querySelector('.scanline');if(sl)sl.remove();
+ b.innerHTML=`<span class="h1 ${isKo()?'ko':''}" style="font-size:24px">${t.anaFail}</span>${koSub('사진을 분석하지 못했어요.')}<div class="acts"><button class="btn line" data-act="pick">${t.pickAgain}</button><button class="btn dark" data-act="retry">${ic('camera',18,'#fff')}${t.tryAgain}</button></div>`;tagFx(b);}
+
+/* ---------- home address: GPS → Naver reverse geocoding, or typed address ---------- */
+const inAnsanBox=(lat,lng)=>lat>37.20&&lat<37.38&&lng>126.36&&lng<126.95; // 대략적인 안산시 범위(대부도 포함). 키가 있으면 행정구역명으로 판정
+function revGeo(N,lat,lng){return new Promise(res=>{try{N.maps.Service.reverseGeocode({coords:new N.maps.LatLng(lat,lng),orders:'admcode,roadaddr,addr'},(s,r)=>{
+  if(s!==N.maps.Service.Status.OK||!r||!r.v2)return res(null);const R=r.v2.results||[];
+  const adm=R.find(x=>x.name==='admcode'),road=R.find(x=>x.name==='roadaddr'),jib=R.find(x=>x.name==='addr');const base=road||jib||adm;if(!base)return res(null);
+  const g=base.region,L=base.land,num=L?`${L.number1||''}${L.number2?'-'+L.number2:''}`:'';
+  const short=road&&L?`${L.name} ${num}`.trim():jib&&L?`${g.area3.name} ${num}`.trim():g.area3.name;
+  const A=r.v2.address||{};
+  res({inAnsan:/안산/.test(g.area2&&g.area2.name||''),road:short,dong:adm?adm.region.area3.name:g.area3.name,full:A.roadAddress||A.jibunAddress||`${g.area1.name} ${g.area2.name} ${short}`,lat,lng});});}catch(e){res(null)}});}
+function geoText(N,q){return new Promise(res=>{try{N.maps.Service.geocode({query:q},(s,r)=>res(s===N.maps.Service.Status.OK&&r&&r.v2&&r.v2.addresses&&r.v2.addresses[0]||null))}catch(e){res(null)}});}
+function locSheet(){const t=T();const o=document.createElement('div');o.className='sheetover';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-label',t.locT);
+ o.innerHTML=`<div class="bs"><span class="grab"></span><span class="eyebrow">${t.change}</span><span class="h1 ${isKo()?'ko':''}" style="font-size:26px">${t.locT}</span>${koSub('어디에 사세요?')}<span class="small muted">${t.locS}</span>
+  <button class="choice rec" id="lgps" type="button">${dotI('spot','var(--deep)','#fff',40)}<span class="col grow"><span class="b">${t.useGps}</span>${koSub('현재 위치 사용')}</span>${ic('arrow',16,'#6E7472')}</button>
+  <form id="lform" class="col" style="gap:10px"><label class="field">${ic('search',18,'#6E7472')}<input id="laddr" type="text" enterkeyhint="done" autocomplete="street-address" placeholder="${t.addrPh}" aria-label="${t.addrPh}"></label>
+   <div id="lmsg" class="small" role="status" aria-live="polite" hidden></div>
+   <div class="acts"><button type="button" class="btn line" id="lkeep">${t.keep}</button><button type="submit" class="btn dark">${t.save}</button></div></form>
+  <div class="card row small" style="padding:10px 12px"><span class="dot" style="background:var(--accent)"></span><span class="col"><span class="cap">${t.locCur}</span><span class="kr b">${addrLabel()}</span></span></div></div>`;
+ const msg=(m,err)=>{const e=o.querySelector('#lmsg');e.hidden=!m;e.textContent=m||'';e.classList.toggle('err',!!err)};
+ const focusAddr=()=>{const i=o.querySelector('#laddr');try{i.focus()}catch(e){}};
+ const done=a=>{saveAddr(a);o.remove();render();toast(T().locSaved);};
+ o.querySelector('#lgps').addEventListener('click',async()=>{const t=T();
+  if(!navigator.geolocation||!window.isSecureContext){msg(t.gpsDenied,1);focusAddr();return}
+  msg(t.gpsWorking);let pos;
+  try{pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:true,timeout:12000,maximumAge:60000}))}
+  catch(e){msg(e&&e.code===1?t.gpsDenied:t.gpsFail,1);focusAddr();return}
+  if(!o.isConnected)return;const lat=pos.coords.latitude,lng=pos.coords.longitude;
+  const N=await loadNaver();
+  if(!N){if(!inAnsanBox(lat,lng)){msg(t.onlyAnsan,1);return}msg(t.gpsNoKey,1);focusAddr();return}
+  const a=await revGeo(N,lat,lng);if(!o.isConnected)return;
+  if(!a){msg(t.gpsFail,1);focusAddr();return}
+  if(!a.inAnsan){msg(t.onlyAnsan,1);return}
+  done(a);});
+ o.querySelector('#lform').addEventListener('submit',async e=>{e.preventDefault();const t=T();const v=o.querySelector('#laddr').value.trim().slice(0,80);if(!v){focusAddr();return}
+  const q=/안산/.test(v)?v:`경기도 안산시 ${v}`;const N=await loadNaver();
+  if(!N){done({road:v.replace(/^(경기도\s*)?안산시\s*((단원|상록)구\s*)?/,'')||v,dong:'',full:q});return}
+  msg(t.gpsWorking);const hit=await geoText(N,q);if(!o.isConnected)return;
+  const full=hit&&(hit.roadAddress||hit.jibunAddress)||'';
+  if(!hit||!/안산/.test(full)){msg(t.onlyAnsan,1);return}
+  const a=await revGeo(N,+hit.y,+hit.x);
+  done(a&&a.inAnsan?a:{road:v,dong:'',full,lat:+hit.y,lng:+hit.x});});
+ o.querySelector('#lkeep').addEventListener('click',()=>o.remove());
+ o.addEventListener('click',e=>{if(e.target===o)o.remove()});
+ app.appendChild(o);tagFx(o);}
+
 /* ---------- render + behaviors ---------- */
 let bgTimer=null,scanTimer=null;
-function render(){clearInterval(bgTimer);clearTimeout(scanTimer);const n=cur();app.innerHTML=SCR[n]();
+function render(){clearInterval(bgTimer);clearTimeout(scanTimer);scanSeq++;const n=cur();if(n!=='w2')stopCam();app.innerHTML=SCR[n]();
  if(n==='intro')bindIntro();
  if(n==='w3')runScan();
  mountMaps();
- if(n==='w2'){['ph','ph2'].forEach(id=>{const i=document.getElementById(id);i&&i.addEventListener('change',()=>{const f=i.files&&i.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{st.photo=r.result;go('w3')};r.readAsDataURL(f);});});}
+ if(n==='w2'){['ph','ph2'].forEach(id=>{const i=document.getElementById(id);i&&i.addEventListener('change',()=>{const f=i.files&&i.files[0];if(f)readPhoto(f);});});
+  document.getElementById('shut').addEventListener('click',e=>{if(camStream){e.preventDefault();capture();}});startCam();}
  if(n==='w5'){const q=document.getElementById('q');q.addEventListener('input',()=>{st.query=q.value;const pos=q.selectionStart;app.innerHTML=SCR.w5();const q2=document.getElementById('q');q2.focus();try{q2.setSelectionRange(pos,pos)}catch(e){}render.bindW5&&0;rebindW5();});}
 }
 function rebindW5(){const q=document.getElementById('q');q.addEventListener('input',()=>{st.query=q.value;const pos=q.selectionStart;app.innerHTML=SCR.w5();const q2=document.getElementById('q');q2.focus();try{q2.setSelectionRange(pos,pos)}catch(e){}rebindW5();});}
@@ -742,11 +865,7 @@ function bindIntro(start=true){const A=document.getElementById('bgA'),B=document
  rail.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){rail.scrollLeft+=e.deltaY;e.preventDefault();}},{passive:false});
 }
 let dragMoved=false;
-function runScan(){const steps=[...app.querySelectorAll('.stat')];
- scanTimer=setTimeout(()=>{steps[1].className='stat done';steps[1].innerHTML=ic('check',12,'#fff',3);steps[2].className='stat doing';
-  scanTimer=setTimeout(()=>{st.stack.pop();go('w4')},1100)},1300);}
-
-app.addEventListener('click',e=>{const el=e.target.closest('[data-sel],[data-go],[data-act],[data-naver],[data-ans],#goBtn,#remind,#ntf');if(!el)return;
+app.addEventListener('click',e=>{const el=e.target.closest('[data-sel],[data-go],[data-act],[data-naver],[data-ans],[data-cand],#goBtn,#remind,#ntf');if(!el)return;
  if(el.dataset.sel){if(dragMoved)return;const keep=document.getElementById('rail').scrollLeft;const A0=document.getElementById('bgA');const orangeOn=A0&&A0.style.opacity!=='0';st.sel=el.dataset.sel;clearInterval(bgTimer);app.innerHTML=SCR.intro().replace('class="scr intro"','class="scr intro" style="animation:none"');
   const A=document.getElementById('bgA'),B=document.getElementById('bgB');A.style.transition=B.style.transition='none';A.style.opacity=orangeOn?1:0;B.style.opacity=orangeOn?0:1;void A.offsetWidth;A.style.transition=B.style.transition='';
   bindIntro(orangeOn);document.getElementById('rail').scrollLeft=keep;return;}
@@ -755,9 +874,13 @@ app.addEventListener('click',e=>{const el=e.target.closest('[data-sel],[data-go]
  if(el.id==='ntf'){st.notify=!st.notify;el.setAttribute('aria-pressed',st.notify);return;}
  if(el.dataset.naver){openNaver(el.dataset.naver);return;}
  if(el.dataset.ans!=null){st.answers[st.qi]=+el.dataset.ans;render();return;}
+ if(el.dataset.cand!=null){const c=st.result&&st.result.candidates[+el.dataset.cand];if(c){st.result={...c,demo:st.result.demo,confidence:1,candidates:[]};render();}return;}
  if(el.dataset.go){if(el.dataset.go==='w2')st.photo=null;go(el.dataset.go);return;}
  const a=el.dataset.act;
- if(a==='back')back();else if(a==='home')home();else if(a==='intro'){st.stack=['intro'];render();}
+ if(a==='back')back();else if(a==='home')home();else if(a==='loc')locSheet();
+ else if(a==='sample'){stopCam();st.photo=null;go('w3');}
+ else if(a==='retry'){st.stack.pop();st.photo=null;render();}
+ else if(a==='pick'){st.stack.splice(-2,2);go('w5');}else if(a==='intro'){st.stack=['intro'];render();}
  else if(a==='startsurv'){st.qi=0;st.answers=[];go('sq');}
  else if(a==='qprev'){if(st.qi>0){st.qi--;render()}else back();}
  else if(a==='qnext'){if(st.qi<T().sq.length-1){st.qi++;render()}else{grantAdFree();st.stack=['home','sdone'];render();}}
