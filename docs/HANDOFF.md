@@ -74,6 +74,7 @@ Figma 색상 변수 컬렉션 "Ansan Life" (color/accent, deep, sage, background
 
 | 우선 | 작업 | 구현 힌트 |
 | --- | --- | --- |
+| 높음 | 사진 판별 모델 비교 | 기본은 Haiku 5.5(장당 약 0.4원). 실제 사진 50장으로 Sonnet 5.5(약 8원)와 비교해 `VISION_MODEL` 결정 |
 | 높음 | API 서버 배포 + 실기기 시험 | 코드는 완료. `server/README.md` 대로 Cloudflare Worker 배포(Claude API 키, 공공데이터 키) → `API_URL` 넣어 빌드. 사진 판별 정확도, 경기도 버스 응답 구조 첫 확인. 분류표(`RULES`)는 자원순환과 확인 필요 |
 | 높음 | GPS 지역 변경 실기기 시험 | 코드는 완료. 네이버 키 발급 후 실제 도로명·행정동이 맞게 나오는지 확인. 주변 정류장은 버스 데이터 연결 때 함께 |
 | 높음 | 네이버 지도 키 + HTTPS 호스팅 | Dynamic Map, Geocoding, Reverse Geocoding 체크 |
