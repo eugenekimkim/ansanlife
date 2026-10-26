@@ -5,8 +5,10 @@ compatibility_date = "2026-10-01"
 [vars]
 # 앱이 올라간 주소. 여러 개면 쉼표로 구분
 ALLOWED_ORIGIN = "https://gogeangs.github.io,https://eugenekimkim.github.io"
-# 공지 원문(한국어) JSON. 앱 저장소의 data/notices.json 이 배포된 주소
+# 공지 원문(한국어). Supabase 를 쓰면 아래 주석의 주소로 바꾸고 NOTICES_KEY(anon 키)를 넣으세요
+#   https://<프로젝트>.supabase.co/rest/v1/notices?select=id,type,title,body,date,url,sample&published=is.true&order=sort.desc,created_at.desc
 NOTICES_URL = "https://gogeangs.github.io/ansanlife-dev/data/notices.json"
+# NOTICES_KEY = "<Supabase anon 키>"   (공개 키라 vars 에 둬도 됨)
 # MODEL = "claude-sonnet-5-5"
 
 # 키는 여기에 쓰지 말고 secret 으로:

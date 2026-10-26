@@ -17,7 +17,8 @@
  *   ALLOWED_ORIGIN     필수 · 앱이 올라간 주소 (예: https://example.github.io). 쉼표로 여러 개
  *   MODEL              선택 · 기본 claude-sonnet-5-5
  *   DATA_GO_KR_KEY     버스 기능 · 공공데이터포털 인증키(Decoding 키). 없으면 /bus/* 는 503
- *   NOTICES_URL        공지 기능 · 앱과 함께 올린 data/notices.json 주소. 없으면 /notices 는 503
+ *   NOTICES_URL        공지 기능 · Supabase notices REST 주소(또는 data/notices.json). 없으면 /notices 는 503
+ *   NOTICES_KEY        공지 기능 · Supabase anon(공개) 키. NOTICES_URL 이 Supabase 일 때
  *
  * 요청:  POST { image: <base64>, mediaType: "image/jpeg", lang: "en"|"vi"|"ko" }
  * 응답:  { dest, name, name_ko, confidence, candidates: [{dest, name, name_ko}] }
@@ -235,7 +236,9 @@ async function noticesRoute(url, env, h) {
   if (!env.NOTICES_URL) return json({ error: 'config' }, 503, h);
   const lang = url.searchParams.get('lang') || 'ko';
   let list;
-  try { const r = await fetch(env.NOTICES_URL, { cf: { cacheTtl: 300 } }); list = await r.json(); } catch { return json({ error: 'notices' }, 502, h); }
+  // NOTICES_URL: Supabase REST(…/rest/v1/notices?select=…&published=is.true&order=sort.desc) 또는 정적 JSON
+  const nh = env.NOTICES_KEY ? { apikey: env.NOTICES_KEY, authorization: `Bearer ${env.NOTICES_KEY}` } : {};
+  try { const r = await fetch(env.NOTICES_URL, { headers: nh, cf: { cacheTtl: 300 } }); if (!r.ok) throw new Error(); list = await r.json(); } catch { return json({ error: 'notices' }, 502, h); }
   list = (Array.isArray(list) ? list : []).slice(0, 30).map(n => ({ ...n, id: String(n.id), title: String(n.title || '').slice(0, 300), body: String(n.body || '').slice(0, 4000) }));
   if (lang === 'ko' || !TR_LANG[lang] || !env.ANTHROPIC_API_KEY) return json({ lang: 'ko', notices: list }, 200, { ...h, 'cache-control': 'max-age=300' });
   const key = new Request(`https://cache.ansanlife/notices/${lang}/${await sha(lang + JSON.stringify(list))}`);

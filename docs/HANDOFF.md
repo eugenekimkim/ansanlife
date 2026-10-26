@@ -62,12 +62,13 @@ Figma 색상 변수 컬렉션 "Ansan Life" (color/accent, deep, sage, background
 | 품목 검색 | 동작 | 품목 8개 안에서만 |
 | 오후 8시 알림 | 데모 | 실제 푸시 없음 |
 | 버스 주변 정류장·도착 시간 | 동작 · 서버 필요 | 2026-10-26 추가. 집 주소 좌표 → `/bus/stops` 주변 정류장 3곳 → `/bus/arrivals` 실시간 도착(30초 갱신, 곧 도착·정류장 수·혼잡/빈자리·운행 종료). 실패 시 안내 + Sample. 서버 없으면 기존 Sample |
-| 버스 경로 | 예시 데이터 | Sample 표기. 경로 API(ODsay/카카오) 선택 후 구현 |
+| 버스 경로 | 동작 | 2026-10-27 결정: 네이버지도로 넘기기. 목적지(자주 가는 곳 6곳·주소 검색) → 집 좌표에서 `nmap://route/public`. 키 없거나 좌표 없으면 장소 검색. 앱 안 경로 화면(예시)은 삭제 |
 | 공지·행사 | 동작 · 서버 필요 | 2026-10-26 추가. `data/notices.json`(한국어 원문) → `/notices?lang=` 번역(내용이 바뀔 때만, 하루 캐시) → 목록·상세, "원문 보기" 토글. 지금은 예시 공지 2건 |
 | 앱 설치(PWA) · 오프라인 | 동작 | 2026-10-26 추가. manifest + service worker, 안드로이드 설치 카드 / 아이폰 안내, 오프라인 시 마지막 화면 |
 | 네이버지도 열기 | 동작 | 앱(nmap://search) / 웹(새 창), 미설치 안내, 선택 기억 |
 | 실제 지도 | 키 필요 | Maps JS v3 + Geocoding, 키 없으면 그림 지도 |
-| 설문 + 24시간 광고 제거 | 동작 | localStorage 에만 저장 |
+| 설문 + 24시간 광고 제거 | 동작 | 2026-10-27부터 응답을 Supabase `survey_responses` 에 저장(실패 시 기기에 모았다 재전송). 광고 제거 상태는 기기에만 |
+| 광고 | 동작 · Supabase 필요 | 2026-10-27 결정: 직접 영업 + 빈 자리는 네트워크. Supabase `ads`(언어별·기간·비율) → 없으면 애드센스 → 없으면 비움. Supabase 없으면 예시 광고 |
 
 ## 남은 일
 
@@ -76,12 +77,11 @@ Figma 색상 변수 컬렉션 "Ansan Life" (color/accent, deep, sage, background
 | 높음 | API 서버 배포 + 실기기 시험 | 코드는 완료. `server/README.md` 대로 Cloudflare Worker 배포(Claude API 키, 공공데이터 키) → `API_URL` 넣어 빌드. 사진 판별 정확도, 경기도 버스 응답 구조 첫 확인. 분류표(`RULES`)는 자원순환과 확인 필요 |
 | 높음 | GPS 지역 변경 실기기 시험 | 코드는 완료. 네이버 키 발급 후 실제 도로명·행정동이 맞게 나오는지 확인. 주변 정류장은 버스 데이터 연결 때 함께 |
 | 높음 | 네이버 지도 키 + HTTPS 호스팅 | Dynamic Map, Geocoding, Reverse Geocoding 체크 |
-| 높음 | 버스 경로 실데이터 | 도착·주변 정류장은 완료. 경로는 ODsay 또는 카카오 선택 후 `/bus/route` 추가, 네이버 연결은 `nmap://route/public` |
 | 높음 | 개인정보·법적 검토 | `docs/PRIVACY_DRAFT.md` 초안 → 변호사 검토(사진 국외 이전, 위치정보, 처리위탁, 설문 보상). 결과에 따라 첫 사용 동의 화면 추가 |
-| 중간 | 회원·서버 저장 | 광고 제거, 설문 응답, 설정 (서버·회원 방식 결정 후) |
+| 높음 | Supabase 프로젝트 만들기 | 2026-10-27 결정: Supabase(서울 리전). `supabase/README.md` 대로 만들고 키를 빌드에 넣기 |
+| 중간 | 회원 기능 | 지금은 회원 없이 동작. 기기 바꿔도 설정·광고 제거 유지가 필요해지면 Supabase Auth(익명 로그인) 추가 |
 | 중간 | 푸시 알림 | 배출일 전날, 버스 2정류장 전 |
-| 중간 | 공지 운영 | 번역·표시는 완료. 실제 공지를 `data/notices.json` 에 넣는 사람/방법(또는 관리자 화면) 정하기 |
-| 중간 | 관리자 화면 | 광고·공지·설문 등록 (서버 결정 후) |
+| 중간 | 공지·광고 운영자 정하기 | 관리 화면은 Supabase Table Editor (`supabase/README.md`). 누가 올릴지 정하고 대시보드에 초대 |
 | 중간 | 번역 원어민 검수 | 베트남어 포함 6개 외국어 (`docs/CHECKLIST.md`) |
 | 낮음 | 빈 정보 채우기 | 병원 외래시간, 관공서 2곳 주소, 대형폐기물 수수료, 병원 사진 |
 | 낮음 | 하늘색 인트로 이미지 고해상도 교체 | 지금은 390×700 캡처 |
@@ -109,4 +109,6 @@ Figma 색상 변수 컬렉션 "Ansan Life" (color/accent, deep, sage, background
 - 수정은 `src/app.template.html` 에서 하고 `python3 build.py` 로 `index.html` 을 다시 만드세요.
 
 - 출시 전 사람이 할 일(안산시 문의, API 신청, 번역 검수, 법률 검토)은 `docs/CHECKLIST.md` 에 모아 두었습니다.
-- 공지는 `data/notices.json` 에 한국어로만 넣으세요. 번역은 서버가 하고, 내용이 바뀌면 다시 번역합니다.
+- 공지는 한국어로만 넣으세요(Supabase `notices`, 또는 임시로 `data/notices.json`). 번역은 서버가 하고, 내용이 바뀌면 다시 번역합니다.
+- Supabase `service_role` 키는 앱·저장소·Worker 어디에도 넣지 마세요. 앱에는 anon(공개) 키만 들어갑니다.
+- 앱 형태는 2026-10-27 결정대로 웹앱(PWA) 먼저. 스토어 앱은 필요할 때 같은 코드를 감싸서(Capacitor 등) 진행

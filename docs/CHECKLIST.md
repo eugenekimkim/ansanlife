@@ -23,7 +23,8 @@
 | 네이버 클라우드 Maps Application (Dynamic Map, Geocoding, Reverse Geocoding) | NAVER Cloud 콘솔 | 지도, 주소 ↔ 좌표 |
 | Claude API 키, 사용량 상한 | console.anthropic.com | 사진 분석, 공지 번역 |
 | Cloudflare 계정 | dash.cloudflare.com | API 서버 |
-| 버스 경로 API 선택 (ODsay LAB 또는 카카오) | 각 사 | 출발지 → 목적지 경로 (아직 미구현) |
+| Supabase 프로젝트 (서울 리전) | supabase.com | 공지·광고 관리, 설문 저장 (`supabase/README.md`) |
+| 애드센스 승인 (선택) | adsense.google.com | 직접 광고가 없을 때 빈 자리 |
 
 ## 빈 정보 채우기 (화면에 [대괄호]나 Sample 로 남은 것)
 
@@ -31,7 +32,13 @@
 - 안산시 외국인주민지원본부, 출입국·외국인청 안산출장소 주소·전화
 - 원포공원1로 59 의 행정동 (앱 기본 주소, 초지동으로 추정)
 - 경기 시내버스 요금이 2025년 10월 이후 바뀌었는지
-- 실제 공지·행사 → `data/notices.json` 에 한국어 원문으로 넣기 (예시 2건은 `"sample": true`)
+- 실제 공지·행사 → Supabase `notices` 에 한국어 원문으로 넣기 (예시 2건은 `sample` = true, 운영 전 삭제)
+
+## 광고 영업
+
+- 광고 상품 정하기: 위치(홈·공지 화면), 언어(국적) 타깃, 기간, 단가
+- 후보: 해외송금, 알뜰폰·통신, 원곡동·초지동 지역 상점, 외국인 대상 병원·학원
+- 계약한 광고는 Supabase `ads` 에 등록 (문구는 그 언어로, 제목 80자·설명 160자 이내)
 
 ## 번역 검수
 

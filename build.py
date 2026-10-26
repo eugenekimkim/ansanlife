@@ -6,6 +6,8 @@ src/app.template.html 을 읽어 실행 가능한 HTML 을 만듭니다.
   python3 build.py                 # index.html 생성 (이미지는 assets/ 파일 참조)
   NAVER_KEY=xxxx python3 build.py  # 네이버 지도 Client ID(ncpKeyId)를 넣어 빌드
   API_URL=https://... python3 build.py   # API 서버(사진 분석·버스·공지 번역) 주소를 넣어 빌드 (server/README.md)
+  SUPABASE_URL=... SUPABASE_ANON_KEY=... python3 build.py   # 공지·광고·설문 저장 (supabase/README.md)
+  ADSENSE_CLIENT=ca-pub-... ADSENSE_SLOT=... python3 build.py  # 직접 광고가 없을 때 애드센스
   python3 build.py --inline        # 이미지를 base64로 넣은 단일 파일 dist/ansanlife-inline.html 생성
                                    # (Claude 아티팩트처럼 파일 하나만 올릴 때)
 """
@@ -51,6 +53,16 @@ def main() -> None:
     html = html.replace("const NAVER_KEY='__NAVER_KEY__';", f"const NAVER_KEY='{key}';")
     # 비어 있으면 사진 분석·버스·공지는 예시 데이터로 보여줍니다.
     html = html.replace("'__API_URL__'", f"'{analyze}'")
+    # Supabase 공개(anon) 키·애드센스는 원래 공개되는 값이라 빌드에 넣어도 됩니다 (비밀 키는 절대 넣지 마세요)
+    sb_url = os.environ.get("SUPABASE_URL", "").strip().rstrip("/")
+    sb_key = os.environ.get("SUPABASE_ANON_KEY", "").strip()
+    if sb_url and not sb_url.startswith("https://"):
+        sys.exit("SUPABASE_URL 은 https:// 로 시작해야 합니다")
+    if sb_key.count(".") != 2 and not sb_key.startswith("sb_publishable_") and sb_key:
+        sys.exit("SUPABASE_ANON_KEY 는 anon(공개) 키여야 합니다")
+    html = html.replace("'__SUPABASE_URL__'", f"'{sb_url}'").replace("'__SUPABASE_ANON_KEY__'", f"'{sb_key}'")
+    html = html.replace("'__ADSENSE_CLIENT__'", f"'{os.environ.get('ADSENSE_CLIENT', '').strip()}'")
+    html = html.replace("'__ADSENSE_SLOT__'", f"'{os.environ.get('ADSENSE_SLOT', '').strip()}'")
 
     if inline:
         out = ROOT / "dist" / "ansanlife-inline.html"
@@ -63,7 +75,7 @@ def main() -> None:
                               '<meta name="apple-mobile-web-app-capable" content="yes">\n'
                               '<meta name="apple-mobile-web-app-title" content="안산살이">\n')
     out.write_text(HEAD.replace("__PWA__", pwa) + html + TAIL, encoding="utf-8")
-    print(f"built {out.relative_to(ROOT)}  (naver map: {'on' if key else 'off'}, api: {analyze or 'off (sample data)'})")
+    print(f"built {out.relative_to(ROOT)}  (naver map: {'on' if key else 'off'}, api: {analyze or 'off'}, supabase: {'on' if sb_url and sb_key else 'off'})")
 
 
 if __name__ == "__main__":

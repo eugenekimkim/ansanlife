@@ -58,7 +58,8 @@ POST /analyze   { "image": "<base64>", "mediaType": "image/jpeg", "lang": "vi" }
 | `ALLOWED_ORIGIN` | 예 | 앱 주소. 여러 개면 쉼표로 구분 (예: `https://eugenekimkim.github.io,http://localhost:8000`) |
 | `MODEL` | 아니오 | 기본 `claude-sonnet-5-5`. 비용을 줄이려면 `claude-haiku-5-5` 로 시험 |
 | `DATA_GO_KR_KEY` | 버스 기능 (secret) | 공공데이터포털 인증키(Decoding). 경기도 버스도착정보·정류소 조회 v2 활용 신청 필요 |
-| `NOTICES_URL` | 공지 기능 | 앱과 함께 배포된 `data/notices.json` 주소 |
+| `NOTICES_URL` | 공지 기능 | Supabase `notices` REST 주소(`supabase/README.md`) 또는 `data/notices.json` 주소 |
+| `NOTICES_KEY` | Supabase 공지일 때 | Supabase anon(공개) 키 |
 
 ## 버스 · 공지 응답
 
