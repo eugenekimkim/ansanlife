@@ -79,7 +79,7 @@ Figma 색상 변수 컬렉션 "Ansan Life" (color/accent, deep, sage, background
 | 높음 | GPS 지역 변경 실기기 시험 | 코드는 완료. 네이버 키 발급 후 실제 도로명·행정동이 맞게 나오는지 확인. 주변 정류장은 버스 데이터 연결 때 함께 |
 | 높음 | 네이버 지도 키 + HTTPS 호스팅 | Dynamic Map, Geocoding, Reverse Geocoding 체크 |
 | 높음 | 개인정보·법적 검토 | `docs/PRIVACY_DRAFT.md` 초안 → 변호사 검토(사진 국외 이전, 위치정보, 처리위탁, 설문 보상). 결과에 따라 첫 사용 동의 화면 추가 |
-| 높음 | Supabase 프로젝트 만들기 | 2026-10-27 결정: Supabase(서울 리전). `supabase/README.md` 대로 만들고 키를 빌드에 넣기 |
+| 완료 | Supabase 프로젝트 | 2026-10-27 생성: gogeangs 조직 `ansanlife`(서울 ap-northeast-2), URL `https://mriuywhiaaslmcdrfhfh.supabase.co`. schema.sql 적용, 공개 키 보안 규칙 실서버 확인, 빌드에 연결. 예시 공지 2건 들어 있음 |
 | 중간 | 회원 기능 | 지금은 회원 없이 동작. 기기 바꿔도 설정·광고 제거 유지가 필요해지면 Supabase Auth(익명 로그인) 추가 |
 | 중간 | 푸시 알림 | 배출일 전날, 버스 2정류장 전 |
 | 중간 | 공지·광고 운영자 정하기 | 관리 화면은 Supabase Table Editor (`supabase/README.md`). 누가 올릴지 정하고 대시보드에 초대 |

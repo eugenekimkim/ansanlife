@@ -697,7 +697,7 @@ const API_URL=''.replace(/\/+$/,'');
 const hasApi=()=>!!API_URL&&!API_URL.startsWith('__');
 const hasAnalyzer=hasApi;
 /* Supabase (supabase/schema.sql): 공지·광고·설문 응답. 공개(anon) 키만 씁니다. 비어 있으면 예시 데이터 */
-const SB_URL=''.replace(/\/+$/,''),SB_KEY='';
+const SB_URL='https://mriuywhiaaslmcdrfhfh.supabase.co'.replace(/\/+$/,''),SB_KEY='sb_publishable_a4KmdsVZm1nrH-FvxA3RrQ_RfZxHyIr';
 const hasSb=()=>!!SB_URL&&!SB_URL.startsWith('__')&&!!SB_KEY&&!SB_KEY.startsWith('__');
 async function sb(path,opt={},ms=10000){const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),ms);
  try{const r=await fetch(`${SB_URL}/rest/v1/${path}`,{...opt,headers:{apikey:SB_KEY,authorization:`Bearer ${SB_KEY}`,'content-type':'application/json',...(opt.headers||{})},signal:ctl.signal});if(!r.ok)throw new Error('sb '+r.status);return r.status===201||r.status===204?null:await r.json();}finally{clearTimeout(to)}}
@@ -936,7 +936,7 @@ SCR.hdetail=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">
  </div></div>`;};
 SCR.offices=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.offT,`<span>${t.offS}</span>`,{pin:true})}
  <div class="sheet" style="gap:18px">${miniMap('offices')}${t.offices.map(([a,k,d],i)=>`<button class="col" style="gap:8px;text-align:left" data-naver="${S.ko.offices[i][0]}"><span class="row" style="gap:10px"><span style="width:16px;height:1.5px;background:var(--ink)"></span><span class="serif grow ${isKo()?'kr':''}" style="font-size:16px">${a}</span></span><span class="ticket" style="width:100%"><span class="col grow" style="gap:4px"><span class="tiny muted kr">${k}</span><span class="small">${d}</span></span><span class="dash"></span><span class="idot" style="background:var(--accent)">${ic('map',16,'#fff',2)}</span></span></button>`).join('')}<div class="spacer"></div></div>${foot}</div>`;};
-SCR.news=()=>{const t=T();const cached=hasApi()&&st.news[st.lang];return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.newsT,koSub('공지·행사'))}
+SCR.news=()=>{const t=T();const cached=(hasApi()||hasSb())&&st.news[st.lang];return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.newsT,koSub('공지·행사'))}
  <div class="sheet" style="gap:20px"><div id="newslist" class="col" style="gap:20px">${cached?newsList(cached.notices||[]):t.newsItems.map(([a,b],i)=>`<div class="quote"><div class="col" style="gap:6px"><span class="row cap" style="gap:6px;color:var(--deep)">${ic(i?'cal':'shield',13,'#22393A',2)}${i?t.event:t.official} · ${t.sample}</span><span class="serif" style="font-size:17px">${a}</span><span class="small muted">${b}</span></div></div>`).join('')}</div>
  ${adSlot()}
  <div class="spacer"></div></div>${foot}</div>`;};
@@ -1021,7 +1021,8 @@ async function loadArr(){const box=document.getElementById('arrs');if(!box||!st.
 /* notices: data/notices.json (Korean) → server translates for the viewer's language */
 st.news={};st.nsel=null;st.showOrig=false;
 async function loadNews(){const box=document.getElementById('newslist');if(!box)return;const lang=st.lang;
- try{if(!st.news[lang]||st.news[lang].retry){const j=await api(`/notices?lang=${lang}`,{},25000);st.news[lang]=(j.error||j.partial||j.lang!==lang)?{...j,retry:true}:j;}if(!document.body.contains(box)||st.lang!==lang)return;box.innerHTML=newsList(st.news[lang].notices||[]);tagFx(box);}
+ try{if(!st.news[lang]||st.news[lang].retry){if(hasApi()){const j=await api(`/notices?lang=${lang}`,{},25000);st.news[lang]=(j.error||j.partial||j.lang!==lang)?{...j,retry:true}:j;}
+  else{/* 번역 서버 전: Supabase 한국어 원문 */const list=await sb('notices?select=id,type,title,body,date,url,sample&order=sort.desc,created_at.desc&limit=30');st.news[lang]={lang:'ko',notices:list||[]};}}if(!document.body.contains(box)||st.lang!==lang)return;box.innerHTML=newsList(st.news[lang].notices||[]);tagFx(box);}
  catch(e){/* keep static sample list */}}
 const newsList=list=>{const t=T();return list.map((n,i)=>`<button class="nitem" data-news="${i}"><span class="col" style="gap:6px"><span class="row cap" style="gap:6px;color:var(--deep)">${ic(n.type==='event'?'cal':'shield',13,'#22393A',2)}${n.type==='event'?t.event:t.official}${n.sample?` · ${t.sample}`:''}${n.date?` · ${esc(n.date)}`:''}</span><span class="serif" style="font-size:17px">${esc(n.title)}</span><span class="small muted" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(n.body)}</span></span></button>`).join('')};
 SCR.ndetail=()=>{const t=T();const n=(st.news[st.lang]&&st.news[st.lang].notices||[])[st.nsel]||{};const tr=!isKo()&&n.title_ko;const o=tr&&st.showOrig;
@@ -1185,7 +1186,8 @@ function render(){clearInterval(bgTimer);clearTimeout(scanTimer);clearTimeout(ar
  if(n==='w3')runScan();
  if(n==='home'||n==='news')loadAd();
  if(n==='b2'){const f=document.getElementById('destf');f&&f.addEventListener('submit',e=>{e.preventDefault();const v=document.getElementById('dest').value.trim().slice(0,80);if(v)routeTo(v,/(로|길|동|구)\s*\d/.test(v)?(/안산/.test(v)?v:'경기도 안산시 '+v):null);});}
- if(hasApi()){if(n==='b1')loadStops();if(n==='b4')loadArr();if(n==='news')loadNews();}
+ if(n==='news'&&(hasApi()||hasSb()))loadNews();
+ if(hasApi()){if(n==='b1')loadStops();if(n==='b4')loadArr();}
  mountMaps();
  if(n==='w2'){['ph','ph2'].forEach(id=>{const i=document.getElementById(id);i&&i.addEventListener('change',()=>{const f=i.files&&i.files[0];if(f)readPhoto(f);});});
   document.getElementById('shut').addEventListener('click',e=>{if(camStream){e.preventDefault();capture();}});startCam();}

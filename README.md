@@ -76,7 +76,7 @@ Supabase 없이 빌드하면 예시 광고가 나오고, 설문 응답은 기기
 | --- | --- |
 | `src/app.template.html` | 앱 원본 (CSS + JS 한 파일). 수정은 여기서 |
 | `build.py` | 템플릿 → `index.html` 빌드, `--inline` 은 이미지 내장 단일 파일 |
-| `index.html` | 빌드 결과 (네이버 키·API 서버 없이 빌드됨) |
+| `index.html` | 빌드 결과. 지금은 Supabase(서울, 공개 키)만 연결해 빌드됨. 네이버 키·API 서버는 아직 |
 | `manifest.webmanifest`, `sw.js` | 앱 설치(PWA) · 오프라인 |
 | `data/notices.json` | Supabase 를 쓰기 전 임시 공지 원문 (서버가 번역) |
 | `assets/` | 인트로 배경 이미지 (주황 노을, 하늘색), 원본 PNG, 앱 아이콘 |
