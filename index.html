@@ -724,7 +724,8 @@ const koSub=s=>isKo()||!s?'':`<span class="kr micro muted">${s}</span>`;
 
 /* ---------- waste schedule (Ansan city-wide public data) ---------- */
 const CITY={g:[0,1,2,3,4,5],f:[0,1,2,3,4,5],r:[1,2,4,5],from:'20:00',to:'06:00'};
-st.rules=null;try{const r=JSON.parse(localStorage.getItem('al_rules')||'null');if(r&&Array.isArray(r.g))st.rules=r}catch(e){}
+const validRules=r=>!!r&&['g','f','r'].every(k=>Array.isArray(r[k])&&r[k].every(d=>Number.isInteger(d)&&d>=0&&d<=6))&&[r.from,r.to].every(v=>/^\d{2}:\d{2}$/.test(v||''));
+st.rules=null;try{const r=JSON.parse(localStorage.getItem('al_rules')||'null');if(validRules(r))st.rules=r}catch(e){}
 const rules=()=>st.rules||CITY;
 const sched=d=>{const R=rules();return {g:R.g.includes(d),f:R.f.includes(d),r:R.r.includes(d)}};
 const span=()=>`${rules().from} – ${rules().to}`;
@@ -990,23 +991,24 @@ SCR.rules=()=>{const t=T();const R=st.rulesDraft||(st.rulesDraft=JSON.parse(JSON
 st.stops=null;st.stop=null;st.arr=null;let arrTimer=null;
 async function homeLL(){if(st.addr.lat)return {lat:st.addr.lat,lng:st.addr.lng};const N=await loadNaver();if(!N)return null;const ll=await geocode(N,st.addr.full);return ll?{lat:typeof ll.lat==="function"?ll.lat():ll.y,lng:typeof ll.lng==="function"?ll.lng():ll.x}:null;}
 async function loadStops(){const box=document.getElementById('stops');if(!box)return;const t=T();
- try{if(!st.stops||st.stops.key!==st.addr.full){const ll=await homeLL();if(!ll)throw new Error('coords');const j=await api(`/bus/stops?lat=${ll.lat}&lng=${ll.lng}`);st.stops={key:st.addr.full,list:j.stops||[]};}
+ try{const key=st.addr.full;if(!st.stops||st.stops.key!==key){const ll=await homeLL();if(!ll)throw new Error('coords');const j=await api(`/bus/stops?lat=${ll.lat}&lng=${ll.lng}`);if(st.addr.full!==key)return;st.stops={key,list:j.stops||[]};}
   if(!document.body.contains(box))return;
   box.innerHTML=st.stops.list.length?`<span class="livetag">${t.live}</span>${st.stops.list.slice(0,3).map((x,i)=>`<button class="card row" style="text-align:left" data-stop="${i}">${dotI('bus','#fff','#1E2221',36)}<span class="col grow"><span class="serif" style="font-size:15px">${esc(x.name)}</span><span class="tiny muted">${x.no?esc(x.no)+' · ':''}${x.dist!=null?x.dist+' m':''}</span></span>${ic('arrow',16,'#6E7472')}</button>`).join('')}`:`<span class="small muted">${t.noStops}</span>`;tagFx(box);}
  catch(e){/* keep the sample card */}}
 const crowdTxt=(t,b)=>b.seats!=null&&b.seats>=0?t.seats(b.seats):b.crowd?t.crowd[Math.min(2,b.crowd-1)]:'';
-async function loadArr(){const box=document.getElementById('arrs');if(!box||!st.stop)return;const t=T();
+async function loadArr(){const box=document.getElementById('arrs');if(!box||!st.stop)return;const t=T();const again=()=>{clearTimeout(arrTimer);arrTimer=setTimeout(()=>{if(cur()==='b4')loadArr()},30000)};
+ if(document.hidden&&st.arr&&st.arr.stationId===st.stop.id){again();return;}
  try{const j=await api(`/bus/arrivals?stationId=${enc(st.stop.id)}`);if(!document.body.contains(box))return;st.arr=j;
   const rows=j.arrivals||[];
   box.innerHTML=`<span class="row tiny muted" style="gap:6px"><span class="livetag">${t.live}</span>${ic('refresh',13,'#6E7472')}${new Date(j.at||Date.now()).toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit'})}</span>`+
    (rows.length?rows.map((r,i)=>{const b=r.buses[0],b2=r.buses[1];return `<div class="row" style="border-radius:18px;padding:12px 14px;background:${i?'var(--bg)':'#fff'};${i?'':'box-shadow:inset 0 0 0 1.5px var(--accent)'}"><span class="col grow" style="gap:4px"><span class="row" style="gap:6px"><span class="badge" style="background:${r.ended||!b?'var(--walk)':'var(--bus)'}">${esc(r.route)}</span>${r.dest?`<span class="tiny muted">→ ${esc(r.dest)}</span>`:''}</span><span class="micro muted">${r.ended||!b?t.ended:[b.stops!=null?t.stopsAway(b.stops):'',crowdTxt(t,b)].filter(Boolean).join(' · ')}</span></span>${r.ended||!b?'<span class="serif">—</span>':`<span class="col" style="align-items:flex-end"><span>${b.min<=1?`<span class="b accent">${t.arrSoon}</span>`:`<span class="serif ${i?'':'accent'}" style="font-size:22px">${b.min}</span> <span class="tiny muted">${t.min}</span>`}</span>${b2?`<span class="micro muted">${t.next} ${b2.min} ${t.min}</span>`:''}</span>`}</div>`}).join(''):`<p class="small muted">${t.ended}</p>`);
-  clearTimeout(arrTimer);arrTimer=setTimeout(()=>{if(cur()==='b4')loadArr()},30000);}
- catch(e){if(document.body.contains(box)){const n=document.getElementById('arrerr');if(n)n.hidden=false;box.innerHTML=box.dataset.sample||'';}}}
+  again();}
+ catch(e){if(document.body.contains(box)){const n=document.getElementById('arrerr');const real=st.arr&&String(st.arr.stationId)===String(st.stop.id);if(!real){if(n)n.hidden=false;box.innerHTML=box.dataset.sample||'';}again();}}}
 
 /* notices: data/notices.json (Korean) → server translates for the viewer's language */
 st.news={};st.nsel=null;st.showOrig=false;
 async function loadNews(){const box=document.getElementById('newslist');if(!box)return;const lang=st.lang;
- try{if(!st.news[lang])st.news[lang]=await api(`/notices?lang=${lang}`,{},25000);if(!document.body.contains(box)||st.lang!==lang)return;box.innerHTML=newsList(st.news[lang].notices||[]);tagFx(box);}
+ try{if(!st.news[lang]||st.news[lang].retry){const j=await api(`/notices?lang=${lang}`,{},25000);st.news[lang]=(j.error||j.partial||j.lang!==lang)?{...j,retry:true}:j;}if(!document.body.contains(box)||st.lang!==lang)return;box.innerHTML=newsList(st.news[lang].notices||[]);tagFx(box);}
  catch(e){/* keep static sample list */}}
 const newsList=list=>{const t=T();return list.map((n,i)=>`<button class="nitem" data-news="${i}"><span class="col" style="gap:6px"><span class="row cap" style="gap:6px;color:var(--deep)">${ic(n.type==='event'?'cal':'shield',13,'#22393A',2)}${n.type==='event'?t.event:t.official}${n.sample?` · ${t.sample}`:''}${n.date?` · ${esc(n.date)}`:''}</span><span class="serif" style="font-size:17px">${esc(n.title)}</span><span class="small muted" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(n.body)}</span></span></button>`).join('')};
 SCR.ndetail=()=>{const t=T();const n=(st.news[st.lang]&&st.news[st.lang].notices||[])[st.nsel]||{};const tr=!isKo()&&n.title_ko;const o=tr&&st.showOrig;
@@ -1179,7 +1181,7 @@ app.addEventListener('click',e=>{const el=e.target.closest('[data-sel],[data-go]
  const a=el.dataset.act;
  if(a==='back')back();else if(a==='home')home();else if(a==='loc')locSheet();
  else if(a==='sample'){stopCam();st.photo=null;go('w3');}
- else if(a==='rsave'){const R=st.rulesDraft;R.from=document.getElementById('rfrom').value||'20:00';R.to=document.getElementById('rto').value||'06:00';saveRules(JSON.stringify(R)===JSON.stringify(CITY)?null:R);back();toast(T().rulesSaved);}
+ else if(a==='rsave'){const R=st.rulesDraft;const tm=(id,d)=>{const v=document.getElementById(id).value;return /^\d{2}:\d{2}$/.test(v)?v:d};R.from=tm('rfrom','20:00');R.to=tm('rto','06:00');if(!validRules(R))return;saveRules(JSON.stringify(R)===JSON.stringify(CITY)?null:R);back();toast(T().rulesSaved);}
  else if(a==='rcity'){st.rulesDraft=JSON.parse(JSON.stringify(CITY));render();}
  else if(a==='samplestop'){st.stop=null;go('b4');}
  else if(a==='orig'){st.showOrig=!st.showOrig;render();}
