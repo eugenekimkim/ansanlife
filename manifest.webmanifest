@@ -1,0 +1,16 @@
+{
+  "name": "안산살이 Ansan Life",
+  "short_name": "안산살이",
+  "description": "안산 거주 외국인 주민을 위한 다국어 생활 안내 · Life in Ansan for foreign residents",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F3F2EF",
+  "theme_color": "#22393A",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

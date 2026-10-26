@@ -1,6 +1,19 @@
-# 사진 분석 서버
+# API 서버 (Cloudflare Worker)
 
-앱의 "사진으로 물어보기"가 찍은 사진을 받아 Claude API(이미지 입력)로 품목을 판별하고, 안산시 배출 분류 하나를 돌려주는 Cloudflare Worker 입니다.
+`worker.js` 하나로 세 가지를 맡습니다.
+
+| 경로 | 하는 일 | 필요한 secret |
+| --- | --- | --- |
+| `POST /analyze` (또는 `/`) | 사진 → 배출 분류 (Claude API 이미지 입력) | `ANTHROPIC_API_KEY` |
+| `GET /bus/stops?lat=&lng=` | 주변 정류장 최대 8곳 (경기도 정류소 조회 v2) | `DATA_GO_KR_KEY` |
+| `GET /bus/arrivals?stationId=` | 정류장 도착 정보 (경기도 버스도착정보 v2) | `DATA_GO_KR_KEY` |
+| `GET /notices?lang=vi` | `NOTICES_URL` 의 한국어 공지를 번역해 원문과 함께 | `ANTHROPIC_API_KEY` |
+
+모든 경로는 `ALLOWED_ORIGIN` 에 등록한 주소에서 온 요청만 받습니다. 키가 없는 기능은 503 을 돌려주고, 앱은 예시 데이터로 대신 보여줍니다.
+
+## 사진 분석
+
+앱의 "사진으로 물어보기"가 찍은 사진을 받아 Claude API(이미지 입력)로 품목을 판별하고, 안산시 배출 분류 하나를 돌려줍니다.
 
 - 사진은 저장·기록하지 않고 메모리에서만 처리합니다.
 - 판별은 `RULES` 표의 8개 분류로만 제한합니다: `pet` 투명 페트병 · `rec` 재활용 · `food` 음식물 · `gen` 일반 · `glass` 깨진 유리 · `bat` 건전지·형광등 · `bulky` 대형폐기물 · `unknown` 판단 불가
@@ -15,22 +28,23 @@
 ```bash
 cd server
 npx wrangler login
-npx wrangler secret put ANTHROPIC_API_KEY      # 키 붙여넣기
-# wrangler.toml 의 ALLOWED_ORIGIN 을 앱 주소로 바꾼 뒤
+npx wrangler secret put ANTHROPIC_API_KEY      # Claude API 키
+npx wrangler secret put DATA_GO_KR_KEY         # 공공데이터포털 인증키 (Decoding 키)
+# wrangler.toml 의 ALLOWED_ORIGIN, NOTICES_URL 을 앱 주소에 맞게 바꾼 뒤
 npx wrangler deploy
 ```
 
-배포가 끝나면 나오는 `https://ansanlife-analyze.<계정>.workers.dev` 주소를 앱 빌드에 넣습니다.
+배포가 끝나면 나오는 `https://ansanlife-api.<계정>.workers.dev` 주소를 앱 빌드에 넣습니다.
 
 ```bash
 cd ..
-ANALYZE_URL=https://ansanlife-analyze.<계정>.workers.dev NAVER_KEY=... python3 build.py
+API_URL=https://ansanlife-api.<계정>.workers.dev NAVER_KEY=... python3 build.py
 ```
 
 ## 요청과 응답
 
 ```
-POST /   { "image": "<base64>", "mediaType": "image/jpeg", "lang": "vi" }
+POST /analyze   { "image": "<base64>", "mediaType": "image/jpeg", "lang": "vi" }
 200      { "dest": "rec", "name": "Lon nhôm", "name_ko": "알루미늄 캔", "confidence": 0.86, "candidates": [] }
 ```
 
@@ -43,8 +57,29 @@ POST /   { "image": "<base64>", "mediaType": "image/jpeg", "lang": "vi" }
 | `ANTHROPIC_API_KEY` | 예 (secret) | Claude API 키 |
 | `ALLOWED_ORIGIN` | 예 | 앱 주소. 여러 개면 쉼표로 구분 (예: `https://eugenekimkim.github.io,http://localhost:8000`) |
 | `MODEL` | 아니오 | 기본 `claude-sonnet-5-5`. 비용을 줄이려면 `claude-haiku-5-5` 로 시험 |
+| `DATA_GO_KR_KEY` | 버스 기능 (secret) | 공공데이터포털 인증키(Decoding). 경기도 버스도착정보·정류소 조회 v2 활용 신청 필요 |
+| `NOTICES_URL` | 공지 기능 | 앱과 함께 배포된 `data/notices.json` 주소 |
+
+## 버스 · 공지 응답
+
+```
+GET /bus/stops?lat=37.32&lng=126.80
+200 { "stops": [ { "id": "224000123", "name": "초지역", "no": "37123", "dist": 120, "lat": 37.32, "lng": 126.807 } ] }
+
+GET /bus/arrivals?stationId=224000123
+200 { "stationId": "224000123", "at": 1793025386745, "arrivals": [
+      { "route": "99", "dest": "안산역", "type": 13, "ended": false,
+        "buses": [ { "min": 7, "stops": 3, "crowd": 2, "seats": null, "low": false } ] } ] }
+
+GET /notices?lang=vi
+200 { "lang": "vi", "notices": [ { "id": "...", "title": "(번역)", "body": "(번역)", "title_ko": "...", "body_ko": "...", "type": "official", "date": null, "url": null } ] }
+```
+
+경기도 버스 API 응답은 공식 매뉴얼의 필드명(`predictTime1`, `locationNo1`, `crowded1`, `remainSeatCnt1`, `flag` 등)을 기준으로 바꿉니다. 실제 키로 **첫 호출 때 응답 구조를 한 번 확인**하세요(`mapArrivals`, `mapStops`). 목록이 1건이면 객체로 오는 경우도 처리합니다.
 
 ## 출시 전 확인
+
+- 버스: 실제 키로 `/bus/stops`, `/bus/arrivals` 를 한 번씩 불러 필드가 맞는지 확인
 
 - `RULES` 의 분류 설명과 예시는 일반적인 분리배출 기준으로 적은 것입니다. 안산시 자원순환과(031-481-2259)에 확인한 뒤 고치세요. 분류를 바꾸면 앱의 `DEST` 도 함께 고쳐야 합니다.
 - 사진 수집·전송에 대한 동의 문구(모국어)를 개인정보 검토 때 함께 확인하세요.

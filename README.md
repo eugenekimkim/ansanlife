@@ -3,7 +3,7 @@
 안산 거주 외국인 주민을 위한 다국어 생활 안내 모바일웹 프로토타입입니다.
 분리배출, 버스·교통, 관공서, 병원, 공지·행사, 설문을 한곳에서 안내합니다.
 
-- 운영 언어: 한국어 · English · Tiếng Việt (中文 · Русский · O‘zbekcha · Монгол 은 "준비 중")
+- 운영 언어: 한국어 · English · Tiếng Việt · 中文 · Русский · O‘zbekcha · Монгол (베트남어 이후 5개 언어는 AI 번역 · 원어민 검수 전)
 - 디자인 시안: Figma "아이디어_안산시생활지원" (Page 1)
 - 인수인계 메모: [docs/HANDOFF.md](docs/HANDOFF.md)
 
@@ -30,16 +30,25 @@ NAVER_KEY=발급받은_Client_ID python3 build.py
 키가 없거나 인증에 실패하면 그림 지도가 대신 보여서 화면이 깨지지 않습니다.
 지역 "변경"도 키 없이 동작하지만, 이때는 GPS 위치를 주소로 바꾸지 못해 주소를 직접 입력하게 안내합니다.
 
-## 사진 분석 켜기
+## API 서버 켜기 (사진 분석 · 버스 실시간 · 공지 번역)
 
-"사진으로 물어보기"는 실시간 카메라로 찍은 사진을 분석 서버로 보내 배출 분류를 받습니다.
-서버(`server/analyze-worker.js`)는 Claude API 이미지 입력을 쓰는 Cloudflare Worker 이고, 배포 방법은 [server/README.md](server/README.md) 에 있습니다.
+`server/worker.js` 는 Cloudflare Worker 하나로 세 가지를 맡습니다. 배포 방법은 [server/README.md](server/README.md) 에 있습니다.
+
+| 기능 | 필요한 키 (Worker secret) | 서버 없을 때 |
+| --- | --- | --- |
+| 사진으로 물어보기 | `ANTHROPIC_API_KEY` | 카메라는 동작, 결과는 "예시 결과" |
+| 주변 정류장 · 도착 시간 | `DATA_GO_KR_KEY` | Sample 정류장·도착 시간 |
+| 공지 번역 (`data/notices.json`) | `ANTHROPIC_API_KEY` + `NOTICES_URL` | 화면에 넣어 둔 예시 공지 |
 
 ```bash
-NAVER_KEY=발급받은_Client_ID ANALYZE_URL=https://ansanlife-analyze.계정.workers.dev python3 build.py
+NAVER_KEY=발급받은_Client_ID API_URL=https://ansanlife-api.계정.workers.dev python3 build.py
 ```
 
-`ANALYZE_URL` 없이 빌드하면 카메라·사진 선택은 그대로 되고, 결과는 "예시 결과" 표시와 함께 투명 페트병으로 나옵니다.
+공지는 `data/notices.json` 에 **한국어 원문**으로 넣으면, 서버가 사용자의 언어로 번역하고(내용이 바뀔 때만) 앱에서 "원문 보기"로 한국어를 볼 수 있습니다.
+
+## 앱으로 설치 (PWA)
+
+`manifest.webmanifest` 와 `sw.js` 가 함께 배포되면 휴대폰에서 "홈 화면에 추가"로 앱처럼 설치되고, 한 번 열었던 화면은 오프라인에서도 열립니다. 안드로이드는 홈에 설치 카드가 뜨고, 아이폰은 "공유 → 홈 화면에 추가" 안내가 뜹니다. `--inline` 단일 파일(아티팩트용)에서는 꺼집니다.
 
 ## 배포 (예: GitHub Pages)
 
@@ -52,20 +61,27 @@ NAVER_KEY=발급받은_Client_ID ANALYZE_URL=https://ansanlife-analyze.계정.wo
 | --- | --- |
 | `src/app.template.html` | 앱 원본 (CSS + JS 한 파일). 수정은 여기서 |
 | `build.py` | 템플릿 → `index.html` 빌드, `--inline` 은 이미지 내장 단일 파일 |
-| `index.html` | 빌드 결과 (네이버 키·분석 서버 없이 빌드됨) |
-| `assets/` | 인트로 배경 이미지 (주황 노을, 하늘색), 원본 PNG |
-| `server/` | 사진 분석 서버 (Cloudflare Worker + Claude API) |
+| `index.html` | 빌드 결과 (네이버 키·API 서버 없이 빌드됨) |
+| `manifest.webmanifest`, `sw.js` | 앱 설치(PWA) · 오프라인 |
+| `data/notices.json` | 공지·행사 한국어 원문 (서버가 번역) |
+| `assets/` | 인트로 배경 이미지 (주황 노을, 하늘색), 원본 PNG, 앱 아이콘 |
+| `server/` | API 서버 (Cloudflare Worker): 사진 분석, 경기도 버스, 공지 번역 |
 | `docs/HANDOFF.md` | 인수인계 메모: 디자인 규칙, 구현 상태, 남은 일, 출처 |
+| `docs/CHECKLIST.md` | 출시 전 확인·신청 목록 (안산시 문의, API 신청, 번역 검수) |
+| `docs/PRIVACY_DRAFT.md` | 개인정보 처리·동의 문구 초안 (법률 검토용) |
 
 ## 코드 구조 한눈에
 
 - 화면은 `SCR.<이름>()` 함수가 HTML 문자열을 돌려주는 방식 (`intro`, `home`, `w1`–`w6` 분리배출, `b1`–`b6` 교통, `hosp`, `hdetail`, `offices`, `news`, `surv`, `sq`, `sdone`)
 - 상태는 `st` 객체, 화면 이동은 `go()` / `back()` / `home()`
-- 문구는 `S.en` / `S.vi` / `S.ko` 사전
+- 문구는 `S.en` / `S.vi` / `S.ko` / `S.zh` / `S.ru` / `S.uz` / `S.mn` 사전 (키 226개, 모두 같은 구조)
 - 네이버 지도 연동: `NAVER_KEY`, `MAPS`, `mountMaps()`
 - 네이버지도 앱/웹 열기: `openNaver()`, `nApp()`, `nWeb()`
 - 집 주소: `st.addr`, 지역 변경 시트 `locSheet()`, 좌표→주소 `revGeo()`
-- 카메라: `startCam()` / `capture()` / `stopCam()`, 사진 분석: `ANALYZE_URL`, `analyze()`, `runScan()`, 결과 분류 `DEST`
+- 카메라: `startCam()` / `capture()` / `stopCam()`, 사진 분석: `API_URL`, `analyze()`, `runScan()`, 결과 분류 `DEST`
+- 단지별 배출 요일: `st.rules`, `CITY`(안산시 기본값), `sched()`, 편집 화면 `SCR.rules`
+- 버스 실시간: `loadStops()`, `loadArr()` (30초마다 갱신) · 공지: `loadNews()`, `SCR.ndetail`
+- 언어: `COUNTRIES`, `S.<언어>`, `DAYS`, `DAYLONG`, `LOCALE` (키릴·중국어는 `.l-ru/.l-mn/.l-zh` 글꼴)
 
 ## 수정 후
 

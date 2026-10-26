@@ -1,0 +1,20 @@
+[
+  {
+    "id": "sample-1",
+    "sample": true,
+    "type": "official",
+    "date": null,
+    "title": "외국인 주민 무료 한국어 교실",
+    "body": "예시 공지입니다. 실제 공지는 안산시 누리집 등에서 확인한 내용을 한국어 원문 그대로 여기에 넣으면, 앱이 사용자의 언어로 번역해 보여줍니다.",
+    "url": null
+  },
+  {
+    "id": "sample-2",
+    "sample": true,
+    "type": "event",
+    "date": null,
+    "title": "근로자 주말 건강검진",
+    "body": "예시 행사입니다. 장소, 날짜, 시간, 신청 방법을 한국어로 적어 주세요.",
+    "url": null
+  }
+]
