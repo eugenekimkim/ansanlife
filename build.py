@@ -75,6 +75,11 @@ def main() -> None:
                               '<meta name="apple-mobile-web-app-capable" content="yes">\n'
                               '<meta name="apple-mobile-web-app-title" content="안산살이">\n')
     out.write_text(HEAD.replace("__PWA__", pwa) + html + TAIL, encoding="utf-8")
+    # 관리 페이지 (공지 등록). Supabase 공개 키만 들어감
+    if not inline:
+        adm = (ROOT / "src" / "admin.template.html").read_text(encoding="utf-8")
+        adm = adm.replace("'__SUPABASE_URL__'", f"'{sb_url}'").replace("'__SUPABASE_ANON_KEY__'", f"'{sb_key}'")
+        (ROOT / "admin.html").write_text(adm, encoding="utf-8")
     print(f"built {out.relative_to(ROOT)}  (naver map: {'on' if key else 'off'}, api: {analyze or 'off'}, supabase: {'on' if sb_url and sb_key else 'off'})")
 
 

@@ -46,6 +46,10 @@ NAVER_KEY=발급받은_Client_ID API_URL=https://ansanlife-api.계정.workers.de
 
 공지는 `data/notices.json` 에 **한국어 원문**으로 넣으면, 서버가 사용자의 언어로 번역하고(내용이 바뀔 때만) 앱에서 "원문 보기"로 한국어를 볼 수 있습니다.
 
+## 공지 관리 페이지
+
+`admin.html` 에서 로그인한 관리자가 공지를 쓰고, 고치고, 게시를 켜고 끄고, 순서를 바꿉니다. 앱에서 보일 모습이 바로 옆에 미리 나옵니다. 관리자 계정 만드는 법은 [supabase/README.md](supabase/README.md) 2번.
+
 ## Supabase 켜기 (공지·광고 관리, 설문 저장)
 
 공지·광고 등록과 설문 결과 확인은 Supabase 대시보드에서 합니다. 처음 설정과 운영 방법은 [supabase/README.md](supabase/README.md) 에 있습니다.
@@ -81,7 +85,8 @@ Supabase 없이 빌드하면 예시 광고가 나오고, 설문 응답은 기기
 | `data/notices.json` | Supabase 를 쓰기 전 임시 공지 원문 (서버가 번역) |
 | `assets/` | 인트로 배경 이미지 (주황 노을, 하늘색), 원본 PNG, 앱 아이콘 |
 | `server/` | API 서버 (Cloudflare Worker): 사진 분석, 경기도 버스, 공지 번역 |
-| `supabase/` | DB 스키마·보안 규칙(`schema.sql`), 설정·운영 방법 |
+| `supabase/` | DB 스키마·보안 규칙(`schema.sql`), 관리자 권한(`admin.sql`), 설정·운영 방법 |
+| `src/admin.template.html` → `admin.html` | 공지 관리 페이지 (빌드 시 Supabase 공개 키가 들어감) |
 | `docs/HANDOFF.md` | 인수인계 메모: 디자인 규칙, 구현 상태, 남은 일, 출처 |
 | `docs/CHECKLIST.md` | 출시 전 확인·신청 목록 (안산시 문의, API 신청, 번역 검수) |
 | `docs/PRIVACY_DRAFT.md` | 개인정보 처리·동의 문구 초안 (법률 검토용) |

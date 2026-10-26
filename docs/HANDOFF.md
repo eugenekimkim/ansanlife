@@ -82,7 +82,7 @@ Figma 색상 변수 컬렉션 "Ansan Life" (color/accent, deep, sage, background
 | 완료 | Supabase 프로젝트 | 2026-10-27 생성: gogeangs 조직 `ansanlife`(서울 ap-northeast-2), URL `https://mriuywhiaaslmcdrfhfh.supabase.co`. schema.sql 적용, 공개 키 보안 규칙 실서버 확인, 빌드에 연결. 예시 공지 2건 들어 있음 |
 | 중간 | 회원 기능 | 지금은 회원 없이 동작. 기기 바꿔도 설정·광고 제거 유지가 필요해지면 Supabase Auth(익명 로그인) 추가 |
 | 중간 | 푸시 알림 | 배출일 전날, 버스 2정류장 전 |
-| 중간 | 공지·광고 운영자 정하기 | 관리 화면은 Supabase Table Editor (`supabase/README.md`). 누가 올릴지 정하고 대시보드에 초대 |
+| 중간 | 공지 운영자 계정 | 2026-10-27 공지 관리 페이지(`admin.html`) 추가, `admin.sql` 실서버 적용. Authentication 에서 운영자 계정을 만들고 `admins` 에 등록, 가입 허용 끄기 (`supabase/README.md` 2번). 광고는 아직 Table Editor 에서 |
 | 중간 | 번역 원어민 검수 | 베트남어 포함 6개 외국어 (`docs/CHECKLIST.md`) |
 | 낮음 | 빈 정보 채우기 | 병원 외래시간, 관공서 2곳 주소, 대형폐기물 수수료, 병원 사진 |
 | 낮음 | 하늘색 인트로 이미지 고해상도 교체 | 지금은 390×700 캡처 |

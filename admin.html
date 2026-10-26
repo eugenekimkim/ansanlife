@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>안산살이 관리</title>
+<link rel="icon" href="assets/icon-192.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@700&display=swap">
+<style>
+:root{--bg:#F3F2EF;--sheet:#fff;--ink:#1E2221;--muted:#6E7472;--hair:#DCDCD8;--deep:#22393A;--sage:#8FA7AC;--accent:#E45C4E;--accent-soft:#FBE7E4;--ok:#2F8F5B;
+ --serif:"Noto Serif KR",Georgia,serif;--sans:"Noto Sans KR",system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:light}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+[hidden]{display:none!important}
+.top{display:flex;align-items:center;gap:14px;padding:18px 28px;border-bottom:1px solid var(--hair);background:var(--bg);position:sticky;top:0;z-index:5}
+.top .logo{width:34px;height:34px;border-radius:10px;flex:none}
+.top h1{font-family:var(--serif);font-size:19px;margin:0}
+.top .sub{color:var(--muted);font-size:13px}
+.top .sp{flex:1}
+.who{font-size:13px;color:var(--muted)}
+.lnk{font-size:13px;font-weight:700;color:var(--deep);text-decoration:underline;text-underline-offset:3px}
+.wrap{max-width:1240px;margin:0 auto;padding:24px 28px 60px;display:grid;grid-template-columns:minmax(300px,1fr) minmax(360px,1.25fr) 330px;gap:22px;align-items:start}
+@media (max-width:1180px){.wrap{grid-template-columns:minmax(300px,1fr) minmax(360px,1.3fr)}.pv{grid-column:1/-1}}
+@media (max-width:760px){.wrap{grid-template-columns:1fr;padding:16px}.top{padding:14px 16px}}
+.card{background:var(--sheet);border-radius:24px;padding:20px;box-shadow:0 1px 0 rgba(30,34,33,.04)}
+.card.tl{border-top-left-radius:40px}
+.h2{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:17px;margin:0 0 14px}
+.h2 .ln{flex:1;height:1px;background:var(--ink);opacity:.18}
+.h2 .n{font-family:var(--sans);font-size:12px;color:var(--muted);font-weight:500}
+.btn{height:46px;border-radius:15px;padding:0 18px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:14px;transition:filter .15s,transform .1s}
+.btn:active{transform:scale(.98)}
+.btn.dark{background:var(--deep);color:#fff}
+.btn.line{background:#fff;border:1px solid var(--hair)}
+.btn.danger{background:#fff;border:1px solid #E7B4AE;color:#A3352A}
+.btn.sm{height:36px;border-radius:12px;padding:0 12px;font-size:13px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn:hover:not([disabled]){filter:brightness(.97)}
+/* login */
+.login{max-width:420px;margin:9vh auto;padding:0 16px}
+.login .card{padding:30px;display:flex;flex-direction:column;gap:14px;border-top-left-radius:48px}
+.login h2{font-family:var(--serif);font-size:26px;margin:0}
+.fld{display:flex;flex-direction:column;gap:6px}
+.fld label,.lbl{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.3px}
+.in{width:100%;border:1px solid transparent;background:var(--bg);border-radius:14px;padding:12px 14px;font-size:15px;outline:none;transition:border-color .15s}
+.in:focus{border-color:var(--deep);background:#fff}
+textarea.in{min-height:220px;resize:vertical;line-height:1.7}
+.cnt{font-size:11px;color:var(--muted);text-align:right}
+.cnt.over{color:#A3352A;font-weight:700}
+.err{color:#A3352A;font-size:13px;min-height:1em}
+.hint{font-size:12px;color:var(--muted);line-height:1.6}
+/* list */
+.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.tab{border-radius:12px;padding:6px 12px;font-size:13px;font-weight:700;background:var(--bg);color:var(--muted)}
+.tab[aria-pressed="true"]{background:var(--deep);color:#fff}
+.item{display:flex;gap:10px;align-items:flex-start;padding:12px 10px;border-radius:16px;cursor:pointer;border:1.5px solid transparent}
+.item:hover{background:var(--bg)}
+.item.sel{border-color:var(--accent);background:#fff}
+.item .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.item .t{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item.off .t{color:var(--muted)}
+.meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:11px;color:var(--muted)}
+.badge{border-radius:8px;padding:1px 7px;font-size:11px;font-weight:700}
+.b-off{background:#EEF3F1;color:var(--deep)}
+.b-ev{background:#FDEBD8;color:#9A5A1E}
+.b-live{background:#E2F2E8;color:var(--ok)}
+.b-hid{background:#ECEDEB;color:var(--muted)}
+.b-sm{background:var(--accent-soft);color:#A3352A}
+.ord{display:flex;flex-direction:column;gap:2px}
+.ord button{width:26px;height:22px;border-radius:7px;color:var(--muted);display:grid;place-items:center}
+.ord button:hover{background:var(--bg);color:var(--ink)}
+.empty{color:var(--muted);font-size:14px;padding:18px 6px}
+/* switch */
+.sw{display:inline-flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.sw input{position:absolute;opacity:0;width:1px;height:1px}
+.sw .tr{width:44px;height:26px;border-radius:13px;background:#D5D8D6;position:relative;transition:background .2s;flex:none}
+.sw .tr::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.15);transition:left .2s}
+.sw input:checked+.tr{background:var(--ok)}
+.sw input:checked+.tr::after{left:21px}
+.sw input:focus-visible+.tr{outline:2px solid var(--accent);outline-offset:2px}
+.seg{display:inline-flex;background:var(--bg);border-radius:14px;padding:4px;gap:4px}
+.seg button{border-radius:11px;padding:7px 16px;font-size:13px;font-weight:700;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.grid2{grid-template-columns:1fr}}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.acts .grow{flex:1}
+.ed{display:flex;flex-direction:column;gap:14px}
+.confirm{background:var(--accent-soft);border-radius:16px;padding:12px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px}
+/* preview phone */
+.pv .phone{width:300px;max-width:100%;margin:0 auto;border-radius:34px;background:var(--bg);box-shadow:0 0 0 8px #1B2526,0 18px 50px rgba(20,35,36,.25);overflow:hidden}
+.pv .ph-top{padding:30px 18px 8px;display:flex;align-items:center;gap:8px;font-size:12px}
+.pv .ph-top i{flex:1;height:1px;background:currentColor;opacity:.4}
+.pv .ph-ttl{padding:6px 22px 16px}
+.pv .ph-ttl h3{font-family:var(--serif);font-size:22px;margin:0;line-height:1.25;word-break:keep-all}
+.pv .ph-ttl span{font-size:11px;color:var(--muted)}
+.pv .ph-sheet{background:#fff;border-top-left-radius:34px;padding:18px 18px 22px;min-height:260px;display:flex;flex-direction:column;gap:10px}
+.pv .cap{font-size:9px;font-weight:700;letter-spacing:1px;color:var(--deep);text-transform:uppercase}
+.pv .ph-body{white-space:pre-line;font-size:13px;line-height:1.7;word-break:keep-all}
+.pv .ph-link{border:1px solid var(--hair);border-radius:14px;padding:10px;text-align:center;font-size:12px;font-weight:700}
+.pv .ph-foot{background:var(--sage);color:#fff;font-size:10px;text-align:right;padding:8px 18px}
+.pv .note{margin-top:14px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--deep);color:#fff;border-radius:16px;padding:11px 18px;font-size:14px;font-weight:600;z-index:50;box-shadow:0 10px 24px rgba(20,35,36,.25)}
+.skel{height:52px;border-radius:14px;background:linear-gradient(90deg,var(--bg),#ECEBE7,var(--bg));background-size:200% 100%;animation:sk 1.2s infinite;margin:6px 0}
+@keyframes sk{to{background-position:-200% 0}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(()=>{
+const SB_URL='https://mriuywhiaaslmcdrfhfh.supabase.co'.replace(/\/+$/,''),SB_KEY='sb_publishable_a4KmdsVZm1nrH-FvxA3RrQ_RfZxHyIr';
+const root=document.getElementById('root');
+const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>root.querySelector(s);
+function toast(m){const o=document.createElement('div');o.className='toast';o.setAttribute('role','status');o.textContent=m;document.body.appendChild(o);setTimeout(()=>o.remove(),2400);}
+
+if(!SB_URL||SB_URL.startsWith('__')||!SB_KEY||SB_KEY.startsWith('__')||!window.supabase){
+ root.innerHTML=`<div class="login"><div class="card"><h2>설정 필요</h2><p class="hint">Supabase 주소와 공개 키를 넣어 빌드해야 관리 페이지를 쓸 수 있어요. <code>SUPABASE_URL=… SUPABASE_ANON_KEY=… python3 build.py</code></p></div></div>`;return;}
+const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,storageKey:'ansanlife-admin'}});
+
+const LIMIT={title:300,body:4000};
+const st={user:null,list:[],sel:null,filter:'all',draft:null,dirty:false,confirmDel:false,busy:false};
+const blank=()=>({id:null,type:'official',title:'',body:'',date:'',url:'',published:true,sample:false,sort:0});
+const header=()=>`<header class="top"><img class="logo" src="assets/icon-192.png" alt=""><div><h1>안산살이 관리</h1><div class="sub">공지·행사</div></div><span class="sp"></span>${st.user?`<span class="who">${esc(st.user.email)}</span><button class="lnk" id="out">로그아웃</button>`:''}</header>`;
+
+/* ---------- login ---------- */
+function loginView(msg=''){
+ root.innerHTML=header()+`<div class="login"><form class="card" id="lf"><span class="lbl">관리자 로그인</span><h2>공지를 올려 볼까요?</h2>
+  <div class="fld"><label for="em">이메일</label><input class="in" id="em" type="email" autocomplete="username" required></div>
+  <div class="fld"><label for="pw">비밀번호</label><input class="in" id="pw" type="password" autocomplete="current-password" required></div>
+  <div class="err" id="le" role="alert">${esc(msg)}</div>
+  <button class="btn dark" type="submit">로그인</button>
+  <p class="hint">관리자 계정은 Supabase 대시보드에서 만들고 관리자로 등록해야 해요. (supabase/README.md)</p></form></div>`;
+ $('#lf').addEventListener('submit',async e=>{e.preventDefault();const b=e.target.querySelector('button[type=submit]');b.disabled=true;$('#le').textContent='';
+  const {error}=await sb.auth.signInWithPassword({email:$('#em').value.trim(),password:$('#pw').value});
+  b.disabled=false;if(error){$('#le').textContent=error.message.includes('Invalid')?'이메일이나 비밀번호가 맞지 않아요.':'로그인하지 못했어요: '+error.message;return;}
+  boot();});
+}
+async function boot(){
+ const {data:{session}}=await sb.auth.getSession();
+ if(!session){st.user=null;return loginView();}
+ st.user=session.user;
+ const {data:isAdmin,error}=await sb.rpc('is_admin');
+ if(error||!isAdmin){root.innerHTML=header()+`<div class="login"><div class="card"><h2>관리자 등록이 필요해요</h2><p class="hint">${esc(st.user.email)} 계정은 아직 관리자로 등록되지 않았어요. Supabase SQL Editor에서 등록한 뒤 다시 로그인하세요.</p><button class="btn line" id="out2">다른 계정으로 로그인</button></div></div>`;
+  bindOut();$('#out2').addEventListener('click',logout);return;}
+ mainView();await load();
+}
+async function logout(){await sb.auth.signOut();st.user=null;loginView();}
+function bindOut(){const o=$('#out');o&&o.addEventListener('click',logout);}
+
+/* ---------- data ---------- */
+async function load(keepId){
+ const {data,error}=await sb.from('notices').select('id,type,title,body,date,url,published,sample,sort,created_at,updated_at').order('sort',{ascending:false}).order('created_at',{ascending:false});
+ if(error){toast('목록을 불러오지 못했어요');return;}
+ st.list=data||[];
+ if(keepId){const n=st.list.find(x=>x.id===keepId);if(n){st.sel=n.id;st.draft={...n,date:n.date||'',url:n.url||''};}}
+ renderList();
+}
+const nextSort=()=>st.list.reduce((m,n)=>Math.max(m,n.sort||0),0)+1;
+
+/* ---------- main ---------- */
+function mainView(){
+ root.innerHTML=header()+`<main class="wrap">
+  <section class="card tl" aria-labelledby="lh"><div class="h2"><span id="lh">공지 목록</span><span class="n" id="cnt"></span><span class="ln"></span><button class="btn dark sm" id="new">+ 새 공지</button></div>
+   <div class="tabs" role="group" aria-label="보기">${[['all','전체'],['live','게시 중'],['hidden','숨김']].map(([k,l])=>`<button class="tab" data-f="${k}" aria-pressed="${st.filter===k}">${l}</button>`).join('')}</div>
+   <div id="list"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></section>
+  <section class="card" aria-labelledby="eh" id="edc"></section>
+  <aside class="pv" aria-label="앱 미리보기"><div class="h2"><span>앱 미리보기</span><span class="ln"></span></div><div id="pv"></div>
+   <p class="hint note">한국어로 올리면 베트남어·영어·중국어·러시아어·우즈베크어·몽골어 사용자에게는 <b>자동 번역</b>되어 보여요. 사용자는 "원문 보기"로 한국어도 볼 수 있어요.</p></aside>
+ </main>`;
+ bindOut();
+ $('#new').addEventListener('click',()=>guard(()=>edit(null)));
+ root.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>{st.filter=b.dataset.f;root.querySelectorAll('[data-f]').forEach(x=>x.setAttribute('aria-pressed',x===b));renderList();}));
+ edit(null);
+}
+function guard(fn){if(st.dirty&&!confirmLeave())return;fn();}
+function confirmLeave(){return window.confirm('저장하지 않은 내용이 있어요. 버리고 이동할까요?');}
+
+function renderList(){
+ const box=$('#list');if(!box)return;
+ const live=st.list.filter(n=>n.published).length;
+ $('#cnt').textContent=`게시 ${live} · 전체 ${st.list.length}`;
+ const rows=st.list.filter(n=>st.filter==='all'||(st.filter==='live'?n.published:!n.published));
+ if(!rows.length){box.innerHTML=`<p class="empty">${st.list.length?'이 보기에는 공지가 없어요.':'아직 공지가 없어요. 오른쪽 위 "+ 새 공지"로 시작하세요.'}</p>`;return;}
+ box.innerHTML=rows.map(n=>`<div class="item ${n.id===st.sel?'sel':''} ${n.published?'':'off'}" data-id="${n.id}" tabindex="0" role="button" aria-label="${esc(n.title)} 편집">
+  <div class="ord"><button data-up="${n.id}" aria-label="위로" title="위로">▲</button><button data-down="${n.id}" aria-label="아래로" title="아래로">▼</button></div>
+  <div class="body"><span class="t">${esc(n.title)}</span><span class="meta"><span class="badge ${n.type==='event'?'b-ev':'b-off'}">${n.type==='event'?'행사':'공지'}</span><span class="badge ${n.published?'b-live':'b-hid'}">${n.published?'게시 중':'숨김'}</span>${n.sample?'<span class="badge b-sm">예시</span>':''}${n.date?`<span>${esc(n.date)}</span>`:''}</span></div>
+  <label class="sw" title="게시" onclick="event.stopPropagation()"><input type="checkbox" data-pub="${n.id}" ${n.published?'checked':''} aria-label="게시"><span class="tr"></span></label></div>`).join('');
+ box.querySelectorAll('.item').forEach(el=>{const open=()=>guard(()=>{const n=st.list.find(x=>x.id===el.dataset.id);if(n)edit(n)});el.addEventListener('click',e=>{if(e.target.closest('[data-up],[data-down],.sw'))return;open()});el.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target===el)open()});});
+ box.querySelectorAll('[data-pub]').forEach(cb=>cb.addEventListener('change',()=>togglePub(cb.dataset.pub,cb.checked,cb)));
+ box.querySelectorAll('[data-up]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();move(b.dataset.up,-1)}));
+ box.querySelectorAll('[data-down]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();move(b.dataset.down,1)}));
+}
+async function togglePub(id,on,cb){
+ const {error}=await sb.from('notices').update({published:on}).eq('id',id);
+ if(error){cb.checked=!on;toast('바꾸지 못했어요');return;}
+ const n=st.list.find(x=>x.id===id);if(n)n.published=on;if(st.draft&&st.draft.id===id){st.draft.published=on;const p=$('#f-pub');if(p)p.checked=on;renderPreview();}
+ renderList();toast(on?'앱에 게시했어요':'앱에서 숨겼어요');
+}
+async function move(id,dir){
+ const i=st.list.findIndex(x=>x.id===id),j=i+dir;if(i<0||j<0||j>=st.list.length)return;
+ const a=st.list[i],b=st.list[j];
+ // 순서를 확실히 바꾸기 위해 화면 순서대로 sort 를 다시 매김
+ const order=[...st.list];order[i]=b;order[j]=a;const top=order.length;
+ const ups=order.map((n,k)=>({id:n.id,sort:top-k})).filter((u,k)=>order[k].sort!==u.sort);
+ for(const u of ups){const {error}=await sb.from('notices').update({sort:u.sort}).eq('id',u.id);if(error){toast('순서를 바꾸지 못했어요');return load();}}
+ order.forEach((n,k)=>n.sort=top-k);st.list=order;renderList();
+}
+
+/* ---------- editor ---------- */
+function edit(n){
+ st.sel=n?n.id:null;st.draft=n?{...n,date:n.date||'',url:n.url||''}:blank();st.dirty=false;st.confirmDel=false;
+ renderEditor();renderList();
+}
+function renderEditor(){
+ const d=st.draft,isNew=!d.id;
+ $('#edc').innerHTML=`<div class="h2"><span id="eh">${isNew?'새 공지 쓰기':'공지 고치기'}</span><span class="ln"></span>${d.sample?'<span class="badge b-sm">예시 공지</span>':''}</div>
+ <form class="ed" id="ef" novalidate>
+  <div class="row"><div class="seg" role="group" aria-label="종류">${[['official','공지'],['event','행사']].map(([k,l])=>`<button type="button" data-type="${k}" aria-pressed="${d.type===k}">${l}</button>`).join('')}</div>
+   <span class="sp" style="flex:1"></span><label class="sw"><input type="checkbox" id="f-pub" ${d.published?'checked':''}><span class="tr"></span><span style="font-size:14px;font-weight:700">앱에 게시</span></label></div>
+  <div class="fld"><label for="f-title">제목</label><input class="in" id="f-title" maxlength="${LIMIT.title}" value="${esc(d.title)}" placeholder="예: 외국인 주민 무료 한국어 교실 (11월)" required><div class="cnt" id="c-title"></div></div>
+  <div class="fld"><label for="f-body">내용</label><textarea class="in" id="f-body" maxlength="${LIMIT.body}" placeholder="누가, 언제, 어디서, 무엇을, 어떻게 신청하는지 짧은 문장으로 적어 주세요.&#10;&#10;예)&#10;일시: 11월 8일(토) 오후 2시&#10;장소: 안산시 외국인주민지원본부 3층&#10;신청: 전화 031-000-0000">${esc(d.body)}</textarea><div class="cnt" id="c-body"></div></div>
+  <div class="grid2"><div class="fld"><label for="f-date">날짜 (선택)</label><input class="in" id="f-date" type="date" value="${esc(d.date)}"></div>
+   <div class="fld"><label for="f-url">자세히 보기 링크 (선택)</label><input class="in" id="f-url" type="url" inputmode="url" value="${esc(d.url)}" placeholder="https://www.ansan.go.kr/…"></div></div>
+  <p class="hint">번역이 잘 되도록 <b>짧은 문장</b>으로, 날짜·시간·장소·전화번호는 <b>숫자 그대로</b> 적어 주세요. 줄을 바꾸면 앱에서도 줄이 바뀌어요.</p>
+  <div class="err" id="fe" role="alert"></div>
+  <div id="del-area"></div>
+  <div class="acts"><button class="btn dark grow" type="submit" id="save">${isNew?'공지 올리기':'저장'}</button>${isNew?'':`<button class="btn line" type="button" id="dup">복사해서 새로</button><button class="btn danger" type="button" id="del">삭제</button>`}</div>
+ </form>`;
+ const f=$('#ef');
+ const sync=()=>{d.title=$('#f-title').value;d.body=$('#f-body').value;d.date=$('#f-date').value;d.url=$('#f-url').value.trim();d.published=$('#f-pub').checked;st.dirty=true;counts();renderPreview();};
+ ['#f-title','#f-body','#f-date','#f-url'].forEach(s=>$(s).addEventListener('input',sync));$('#f-pub').addEventListener('change',sync);
+ f.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',()=>{d.type=b.dataset.type;f.querySelectorAll('[data-type]').forEach(x=>x.setAttribute('aria-pressed',x===b));st.dirty=true;renderPreview();}));
+ f.addEventListener('submit',e=>{e.preventDefault();save();});
+ if(!isNew){$('#del').addEventListener('click',()=>{st.confirmDel=true;renderDel();});
+  $('#dup').addEventListener('click',()=>guard(()=>{const c={...blank(),type:d.type,title:d.title,body:d.body,date:d.date,url:d.url,published:false};st.sel=null;st.draft=c;st.dirty=true;renderEditor();renderList();toast('복사했어요. 고친 뒤 올리세요');}));}
+ counts();renderPreview();
+}
+function renderDel(){const a=$('#del-area');if(!a)return;a.innerHTML=st.confirmDel?`<div class="confirm" role="alertdialog" aria-label="삭제 확인"><span style="flex:1">이 공지를 지울까요? 지우면 되돌릴 수 없어요. 잠시 내리려면 "앱에 게시"를 끄세요.</span><button class="btn sm line" type="button" id="dno">취소</button><button class="btn sm danger" type="button" id="dyes">지우기</button></div>`:'';
+ if(st.confirmDel){$('#dno').addEventListener('click',()=>{st.confirmDel=false;renderDel();});$('#dyes').addEventListener('click',remove);}}
+function counts(){const d=st.draft;[['title','c-title'],['body','c-body']].forEach(([k,id])=>{const el=$('#'+id);if(!el)return;const n=[...(d[k]||'')].length;el.textContent=`${n.toLocaleString()} / ${LIMIT[k].toLocaleString()}`;el.classList.toggle('over',n>LIMIT[k]);});}
+function validate(d){
+ if(!d.title.trim())return '제목을 적어 주세요.';
+ if([...d.title].length>LIMIT.title)return `제목은 ${LIMIT.title}자까지예요.`;
+ if([...d.body].length>LIMIT.body)return `내용은 ${LIMIT.body.toLocaleString()}자까지예요.`;
+ if(d.url&&!/^https:\/\/[^\s]+\.[^\s]+/.test(d.url))return '링크는 https:// 로 시작하는 주소만 넣을 수 있어요.';
+ return '';
+}
+async function save(){
+ if(st.busy)return;const d=st.draft;d.title=d.title.trim();const msg=validate(d);$('#fe').textContent=msg;if(msg)return;
+ st.busy=true;const btn=$('#save');btn.disabled=true;
+ const row={type:d.type,title:d.title,body:d.body,date:d.date||null,url:d.url||null,published:d.published};
+ let res;
+ if(d.id)res=await sb.from('notices').update(row).eq('id',d.id).select().single();
+ else res=await sb.from('notices').insert({...row,sort:nextSort()}).select().single();
+ st.busy=false;btn.disabled=false;
+ if(res.error){$('#fe').textContent='저장하지 못했어요: '+res.error.message;return;}
+ st.dirty=false;toast(d.id?'저장했어요':(d.published?'공지를 올렸어요. 앱에 바로 보여요':'저장했어요 (숨김 상태)'));
+ await load(res.data.id);renderEditor();
+}
+async function remove(){
+ const d=st.draft;if(!d.id)return;
+ const {error}=await sb.from('notices').delete().eq('id',d.id);
+ if(error){toast('지우지 못했어요');return;}
+ toast('지웠어요');await load();edit(null);
+}
+
+/* ---------- preview (앱 공지 상세와 같은 모양) ---------- */
+function renderPreview(){
+ const d=st.draft,box=$('#pv');if(!box)return;
+ box.innerHTML=`<div class="phone"><div class="ph-top">‹ <span>공지·행사</span><i></i></div>
+  <div class="ph-ttl"><h3>${esc(d.title||'제목이 여기에 나와요')}</h3><span>${d.type==='event'?'행사':'공식 · 안산시'}${d.date?' · '+esc(d.date):''}${d.published?'':' · 숨김(앱에 안 보임)'}</span></div>
+  <div class="ph-sheet"><span class="cap">${d.type==='event'?'EVENT':'OFFICIAL · ANSAN CITY'}</span><div class="ph-body">${esc(d.body||'내용이 여기에 나와요.')}</div>${d.url?'<div class="ph-link">자세히 보기 ↗</div>':''}</div>
+  <div class="ph-foot">ansan life · Gyeonggi-do, Ansan</div></div>`;
+}
+
+addEventListener('beforeunload',e=>{if(st.dirty){e.preventDefault();e.returnValue='';}});
+sb.auth.onAuthStateChange((ev)=>{if(ev==='SIGNED_OUT'&&st.user){st.user=null;loginView();}});
+boot();
+})();
+</script>
+</body>
+</html>
