@@ -1,0 +1,788 @@
+<title>안산살이 Ansan Life</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@700&family=Playfair+Display:ital,wght@0,700;1,400&family=Quicksand:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one phone-sized app; on desktop it sits in a framed device on a sage backdrop */
+:root{
+  --bg:#F3F2EF; --sheet:#FFFFFF; --ink:#1E2221; --muted:#6E7472; --hair:#DCDCD8;
+  --deep:#22393A; --sage:#8FA7AC; --accent:#E45C4E; --accent-soft:#FBE7E4;
+  --gen:#3A4442; --food:#EE8A3C; --rec:#4E8F87; --bus:#2F8F5B; --l4:#00A5DE; --sb:#F5A200; --sh:#8FC31F; --walk:#A3A8A6;
+  --backdrop:#C9D6D8;
+  --serif:"Playfair Display","Noto Serif KR",Georgia,serif;
+  --serif-ko:"Noto Serif KR","Playfair Display",serif;
+  --sans:"Quicksand","Noto Sans KR",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --ko:"Noto Sans KR",system-ui,sans-serif;
+  color-scheme:light;
+}
+html,body{height:100%}
+body{background:var(--backdrop);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px))}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+
+/* stage + device */
+#stage{height:100%;display:flex;align-items:center;justify-content:center;gap:56px;padding-block:24px}
+#phone{position:relative;width:390px;height:844px;border-radius:44px;overflow:hidden;background:var(--bg);box-shadow:0 0 0 10px #1B2526,0 30px 80px rgba(20,35,36,.35);flex:none;transform-origin:center}
+#aside{max-width:300px;display:flex;flex-direction:column;gap:14px;color:var(--deep)}
+#aside h1{font-family:var(--serif-ko);font-size:40px;margin:0;line-height:1.1}
+#aside p{margin:0;font-size:14px;line-height:1.6;color:#41534F}
+#aside .tag{font-size:11px;letter-spacing:3px;font-weight:700;text-transform:uppercase}
+@media (max-width:820px){#aside{display:none}}
+@media (max-width:500px){
+  body{background:var(--bg)}
+  #stage{padding:0;display:block}
+  #phone{width:100%;height:100%;border-radius:0;box-shadow:none;transform:none!important}
+}
+#app{position:absolute;inset:0;overflow:hidden}
+
+/* screen scaffolding */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);overflow-y:auto;overflow-x:hidden;animation:in .28s ease both;scrollbar-width:none}
+.scr::-webkit-scrollbar{display:none}
+@keyframes in{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+.nav{display:flex;align-items:center;gap:10px;padding:52px 22px 0;flex:none}
+.nav .rule{flex:1;height:1px;background:currentColor;opacity:.45}
+.nav .lbl{font-weight:500;font-size:14px}
+.ibtn{width:40px;height:40px;display:grid;place-items:center;border-radius:20px;margin:-8px}
+.pill{display:flex;align-items:center;gap:6px;background:#fff;border-radius:16px;padding:4px 10px 4px 4px;font-size:12px;font-weight:700}
+.ttl{padding:20px 28px 22px;display:flex;flex-direction:column;gap:4px;flex:none}
+.eyebrow{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--muted)}
+.h1{font-family:var(--serif);font-weight:700;font-size:31px;line-height:1.2;margin:0;text-wrap:balance;letter-spacing:-.3px}
+.ko .h1,.h1.ko{font-family:var(--serif-ko)}
+.sub{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.kr{font-family:var(--ko)}
+.sheet{flex:1 0 auto;background:var(--sheet);border-top-left-radius:48px;padding:26px 24px 22px;display:flex;flex-direction:column;gap:14px}
+.foot{flex:none;background:var(--sage);color:#fff;font-size:12px;text-align:right;padding:12px 28px calc(12px + env(safe-area-inset-bottom,0px))}
+.spacer{flex:1}
+.h2{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:700;font-size:17px}
+.h2 .k{font-family:var(--ko);font-weight:400;font-size:11px;color:var(--muted)}
+.h2 .ln{flex:1;height:1px;background:var(--ink);opacity:.25}
+.muted{color:var(--muted)}
+.small{font-size:12px}.tiny{font-size:11px}.micro{font-size:10px}
+.b{font-weight:700}
+.card{background:var(--bg);border-radius:20px;padding:14px 16px}
+.row{display:flex;align-items:center;gap:12px}
+.col{display:flex;flex-direction:column;gap:2px;min-width:0}
+.grow{flex:1;min-width:0}
+.dot{width:8px;height:8px;border-radius:50%;flex:none;display:inline-block}
+.idot{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none}
+.btn{height:54px;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:15px;width:100%}
+.btn.dark{background:var(--deep);color:#fff}
+.btn.line{background:#fff;border:1px solid var(--hair)}
+.btn.sq{width:54px;flex:none}
+.btn[disabled]{background:#ECEDEB;color:#A3A8A6;cursor:not-allowed}
+.acts{display:flex;gap:10px}
+.tag{display:inline-flex;align-items:center;gap:5px;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700;background:#fff;color:var(--deep)}
+.badge{border-radius:8px;padding:2px 7px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.hair{height:1px;background:var(--ink);opacity:.12}
+.ticket{display:flex;align-items:center;gap:14px;background:var(--bg);border-radius:20px;padding:14px 16px}
+.dash{width:0;align-self:stretch;border-left:1px dashed rgba(30,34,33,.3)}
+.cap{font-size:10px;font-weight:700;letter-spacing:1.2px;color:var(--muted);text-transform:uppercase}
+.serif{font-family:var(--serif);font-weight:700}
+.it{font-family:var(--serif);font-style:italic}
+.accent{color:var(--accent)}
+.soft-accent{background:var(--accent-soft);border-radius:16px;padding:12px 14px}
+.toggle{width:44px;height:26px;border-radius:13px;background:#D5D8D6;position:relative;flex:none;transition:background .2s}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.15);transition:left .2s}
+.toggle[aria-pressed="true"]{background:var(--accent)}
+.toggle[aria-pressed="true"]::after{left:21px}
+
+/* intro */
+.intro{background:#fff}
+.hero{position:relative;flex:1 0 auto;min-height:640px;border-bottom-right-radius:120px;overflow:hidden;color:var(--deep)}
+.bgl{position:absolute;inset:0;background-size:cover;background-position:center 60%;transition:opacity 1.8s ease}
+.shade{position:absolute;left:0;right:0;bottom:0;height:46%;background:linear-gradient(to bottom,rgba(22,41,42,0),rgba(22,41,42,.45) 35%,rgba(18,34,36,.88))}
+.hero-in{position:relative;height:100%;display:flex;flex-direction:column;padding:72px 0 30px}
+.toprule{display:flex;align-items:center;gap:10px;padding:0 32px}
+.toprule i{display:block;width:120px;height:1px;background:var(--deep);opacity:.55}
+.welcome{padding:24px 32px 0}
+.welcome .w{font-family:var(--serif);font-style:italic;font-size:20px;opacity:.85}
+.welcome .t{font-family:var(--serif-ko);font-weight:700;font-size:48px;letter-spacing:-1px;line-height:1.2}
+.welcome .s{font-size:12px;font-weight:600;letter-spacing:4px;opacity:.8;display:flex;gap:8px;align-items:center}
+.welcome .s em{font-family:var(--serif);letter-spacing:0;font-size:13px}
+.q{padding:22px 32px 0}
+.q i{display:block;width:28px;height:1.5px;background:var(--deep);margin-bottom:14px}
+.q b{font-family:var(--serif-ko);font-size:20px;display:block}
+.q span{font-family:var(--serif);font-style:italic;font-size:14px}
+.rail{margin-top:auto;display:flex;align-items:flex-end;overflow-x:auto;scroll-snap-type:x proximity;scroll-padding-left:32px;padding:30px 80px 4px 32px;scrollbar-width:none;min-height:160px;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:pan-x pan-y}
+.rail.dragging{cursor:grabbing;scroll-snap-type:none}
+.rail.dragging .cc{pointer-events:none}
+.cc img,.cc svg{-webkit-user-drag:none;pointer-events:none}
+/* press (touchdown) + hover feedback on every control */
+.fx{transition:transform .14s ease,filter .14s ease,box-shadow .2s ease,background-color .2s ease}
+.fx.is-pressed{transform:scale(.97);filter:brightness(.94)}
+.btn.fx.is-pressed,.go.fx.is-pressed{transform:scale(.96)}
+.toc .fx.is-pressed,.listrow.fx.is-pressed{transform:none;filter:none;background:rgba(30,34,33,.05);border-radius:12px}
+.toc .fx.is-pressed .idot,.listrow.fx.is-pressed .bag{transform:scale(1.08)}
+.toc .idot,.listrow .bag{transition:transform .14s ease}
+.opt.fx.is-pressed,.choice.fx.is-pressed,.qopt.fx.is-pressed,.card.fx.is-pressed,.ticket.fx.is-pressed{transform:translateY(-3px) scale(.99);box-shadow:0 10px 22px rgba(30,34,33,.12);filter:none}
+.shutter.fx.is-pressed i{transform:scale(.88)}
+.shutter i{transition:transform .14s ease}
+.cc.is-pressed{transform:translateY(-12px) rotate(-1.5deg)}
+.cc.is-pressed ~ .cc{transform:translateX(30px)}
+@media (hover:hover){
+ .cc:hover{transform:translateY(-12px) rotate(-1.5deg)}
+ .cc:hover ~ .cc{transform:translateX(30px)}
+ .fx:not(.cc):hover{filter:brightness(.97)}
+ .opt.fx:hover,.choice.fx:hover,.qopt.fx:hover,.card.fx:hover,.ticket.fx:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(30,34,33,.1);filter:none}
+ .toc .fx:hover .idot,.listrow.fx:hover .bag{transform:scale(1.08)}
+ .toc .fx:hover,.listrow.fx:hover{filter:none}
+}
+.rail.dragging .cc{transform:none!important}
+@media (prefers-reduced-motion:reduce){.fx,.cc{transition:none}}
+.rail::-webkit-scrollbar{display:none}
+.cc{position:relative;flex:none;width:132px;height:116px;border-radius:20px;margin-left:-34px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;color:#fff;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.6);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:-10px 6px 24px rgba(13,26,26,.28);scroll-snap-align:start;transition:height .25s,width .25s,background .25s,transform .25s}
+.cc:first-child{margin-left:0}
+.cc .fl{width:32px;height:32px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,255,255,.9)}
+.cc .num{position:absolute;right:14px;top:22px;font-family:var(--serif);font-style:italic;font-size:13px;opacity:.85}
+.cc .nm{font-family:var(--serif);font-weight:700;font-size:17px;line-height:1.15}
+.cc .nm.zh{font-family:"Noto Serif KR",serif;font-size:19px}
+.cc .nm.cy{font-family:"Noto Serif KR",Georgia,serif}
+.cc .kk{font-family:var(--ko);font-size:11px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cc[aria-pressed="true"]{width:140px;height:128px;background:rgba(255,255,255,.95);color:var(--deep);z-index:5;box-shadow:-10px 6px 24px rgba(13,26,26,.38)}
+.cc[aria-pressed="true"] .num{display:none}
+.cc .chk{position:absolute;right:14px;top:18px;width:24px;height:24px;border-radius:12px;background:var(--accent);display:none;place-items:center}
+.cc[aria-pressed="true"] .chk{display:grid}
+.locrow{display:flex;align-items:center;justify-content:space-between;padding:22px 32px 0;color:#fff;font-size:13px;font-weight:500}
+.swipe{display:flex;align-items:center;gap:8px;font-family:var(--serif);font-style:italic;margin-right:40px}
+.swipe i{display:block;width:56px;height:2px;background:rgba(255,255,255,.3);position:relative;overflow:hidden;border-radius:1px}
+.swipe i b{position:absolute;left:0;top:0;height:2px;width:20px;background:#fff;transition:left .2s}
+.cont{display:flex;align-items:center;justify-content:space-between;padding:26px 32px calc(30px + env(safe-area-inset-bottom,0px));flex:none}
+.cont .l b{font-family:var(--serif);font-size:22px;display:block}
+.cont .l.ko b{font-family:var(--serif-ko);font-size:20px}
+.go{width:56px;height:56px;border-radius:28px;display:grid;place-items:center;background:#ECEDEB;color:#A3A8A6;transition:all .25s}
+.go:not([disabled]){background:var(--accent);color:#fff;box-shadow:0 8px 18px rgba(228,92,78,.35)}
+.soon{margin:10px 32px 0;align-self:flex-start;display:flex;gap:8px;align-items:center;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;border-radius:16px;padding:7px 12px;font-size:12px}
+@media (prefers-reduced-motion:reduce){.bgl{transition:none}.scr{animation:none}}
+
+/* home list */
+.toc a,.toc button{display:flex;align-items:center;gap:14px;padding:12px 0 10px;border-bottom:1px solid rgba(30,34,33,.3);width:100%;text-align:left}
+.toc .lab{flex:1;display:flex;align-items:baseline;gap:8px;font-family:var(--serif);font-size:17px;font-weight:700;min-width:0}
+.ko .toc .lab{font-family:var(--serif-ko);font-weight:700;font-size:16px}
+.toc .lab small{font-family:var(--ko);font-weight:400;font-size:11px;color:var(--muted)}
+.toc .n{font-family:var(--serif);font-weight:700}
+.toc .adnote{flex-basis:100%;font-family:var(--sans);font-style:normal;font-weight:600;font-size:11px;color:var(--accent);letter-spacing:0}
+.quote{display:flex;gap:14px}
+.quote::before{content:"";width:1.5px;background:var(--ink);flex:none}
+
+/* waste */
+.week{display:flex;justify-content:space-between}
+.day{width:42px;border-radius:14px;padding:8px 0;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.day.today{background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent);color:var(--ink);font-weight:700}
+.dots{display:flex;flex-direction:column;gap:3px;align-items:center}
+.dots i{width:7px;height:7px;border-radius:50%;display:block}
+.bag{width:40px;height:40px;border-radius:12px;background:var(--bg);display:grid;place-items:center;flex:none}
+.listrow{display:flex;align-items:center;gap:12px;padding:8px 0;width:100%;text-align:left}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:12px;padding:4px 10px 4px 8px;font-size:11px;font-weight:600}
+
+/* camera */
+.cam{background:radial-gradient(circle at 50% 42%,#6B7A76 0,#2A3533 55%,#151D1C 100%);color:#fff}
+.vf{position:absolute;left:60px;right:60px;top:250px;height:320px}
+.vf svg.c{position:absolute;inset:0;width:100%;height:100%}
+.vf img{position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px);object-fit:cover;border-radius:12px}
+.camtop{position:absolute;left:24px;right:24px;top:calc(48px + env(safe-area-inset-top,0px));display:flex;justify-content:space-between;align-items:center}
+.glass{background:rgba(0,0,0,.35);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.camhint{position:absolute;left:50%;transform:translateX(-50%);top:196px;display:flex;gap:8px;align-items:center;border-radius:20px;padding:8px 14px 8px 12px;white-space:nowrap}
+.camctl{position:absolute;left:0;right:0;bottom:0;padding:16px 45px calc(40px + env(safe-area-inset-bottom,0px));background:linear-gradient(to bottom,rgba(15,23,22,0),rgba(15,23,22,.9) 35%,#0F1716);display:flex;flex-direction:column;gap:18px}
+.modes{display:flex;gap:22px;justify-content:center;font-size:13px}
+.shutter{width:78px;height:78px;border-radius:50%;border:4px solid #fff;display:grid;place-items:center}
+.shutter i{width:62px;height:62px;border-radius:50%;background:#fff;display:block}
+.scanline{position:absolute;left:0;right:0;height:70px;background:linear-gradient(to bottom,rgba(228,92,78,0),rgba(228,92,78,.35) 92%,var(--accent));animation:scan 1.6s ease-in-out infinite alternate}
+@keyframes scan{from{top:0}to{top:calc(100% - 70px)}}
+.bottomsheet{position:absolute;left:0;right:0;bottom:0;background:#fff;color:var(--ink);border-top-left-radius:48px;padding:26px 28px calc(30px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
+.ld i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-left:4px;animation:blink 1s infinite}
+.ld i:nth-child(2){animation-delay:.2s}.ld i:nth-child(3){animation-delay:.4s}
+@keyframes blink{50%{opacity:.25}}
+.stat{width:24px;height:24px;border-radius:12px;display:grid;place-items:center;flex:none;border:2px solid var(--hair)}
+.stat.done{background:var(--deep);border-color:var(--deep)}
+.stat.doing{border-color:var(--accent)}
+.stat.doing::after{content:"";width:8px;height:8px;border-radius:4px;background:var(--accent)}
+
+/* search */
+.field{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:22px;height:46px;padding:0 16px}
+.field input{flex:1;border:0;background:none;font:inherit;font-size:14px;outline:none;color:var(--ink);min-width:0}
+
+/* transit */
+.seg{height:20px;border-radius:6px;display:grid;place-items:center;color:#fff;font-size:10px;font-weight:700;padding:0 6px;white-space:nowrap;overflow:hidden}
+.opt{display:flex;flex-direction:column;gap:10px;border-radius:20px;padding:14px 16px;background:var(--bg);text-align:left;width:100%}
+.opt.best{background:#fff;box-shadow:inset 0 0 0 1.5px var(--accent)}
+.tl{display:flex;gap:14px}
+.tl .rail2{display:flex;flex-direction:column;align-items:center;flex:none}
+.tl .rail2 .ln{flex:1;width:3px;min-height:16px}
+.tl .rail2 .ln.walk{width:0;border-left:2px dashed var(--walk)}
+.board{background:var(--deep);color:#fff}
+.sheetover{position:absolute;inset:0;background:rgba(12,20,20,.55);display:flex;align-items:flex-end;z-index:20;animation:fade .2s}
+@keyframes fade{from{opacity:0}}
+.bs{background:#fff;width:100%;border-top-left-radius:32px;border-top-right-radius:32px;padding:12px 24px calc(30px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;animation:up .25s ease}
+@keyframes up{from{transform:translateY(40px)}}
+.grab{width:40px;height:4px;border-radius:2px;background:var(--hair);align-self:center}
+.choice{display:flex;align-items:center;gap:14px;border-radius:18px;padding:14px 16px 14px 14px;background:var(--bg);text-align:left;width:100%}
+.choice.rec{background:#fff;box-shadow:inset 0 0 0 1.5px var(--accent)}
+.ck{width:20px;height:20px;border-radius:6px;border:1.5px solid #B9C2BE;display:grid;place-items:center;flex:none}
+.ck[aria-checked="true"]{background:var(--deep);border-color:var(--deep)}
+
+/* survey */
+.qopt{display:flex;align-items:center;gap:14px;border-radius:18px;padding:0 16px 0 14px;height:64px;background:var(--bg);width:100%;text-align:left}
+.qopt[aria-pressed="true"]{background:#fff;box-shadow:inset 0 0 0 1.5px var(--accent),0 6px 16px rgba(228,92,78,.15)}
+.radio{width:22px;height:22px;border-radius:11px;border:1.5px solid #B9C2BE;display:grid;place-items:center;flex:none;background:#fff}
+.qopt[aria-pressed="true"] .radio{background:var(--accent);border-color:var(--accent)}
+.prog{flex:1;height:3px;border-radius:2px;background:rgba(30,34,33,.12);position:relative;overflow:hidden}
+.prog b{position:absolute;left:0;top:0;bottom:0;background:var(--accent);transition:width .3s}
+
+/* live map (Naver Maps JS v3) */
+.nmap{position:relative;overflow:hidden;background:#DCE6E7}
+.nmap.mini{height:170px;border-radius:20px;flex:none}
+.nmap .live{position:absolute;inset:0;opacity:0;transition:opacity .4s}
+.nmap.ready .live{opacity:1}
+.nmap.ready .fallback{visibility:hidden}
+.nmap .fallback{position:absolute;inset:0;width:100%;height:100%}
+.nmap .maptag{position:absolute;left:12px;bottom:10px;z-index:2;font-size:10px;font-weight:700;color:#4E6B70;background:rgba(255,255,255,.8);border-radius:8px;padding:2px 7px}
+.nmap.ready .maptag{display:none}
+.npin{transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;gap:2px}
+.npin b{display:block;width:26px;height:26px;border-radius:13px 13px 13px 0;transform:rotate(-45deg);background:var(--accent);box-shadow:0 4px 10px rgba(0,0,0,.25)}
+.npin b::after{content:"";position:absolute;left:8px;top:8px;width:10px;height:10px;border-radius:50%;background:#fff}
+.npin b{position:relative}
+.npin span{font:700 11px/1.2 var(--sans);background:#fff;color:var(--ink);border-radius:8px;padding:3px 7px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.15);margin-top:4px}
+.npin.home b{background:var(--deep)}
+
+/* modal */
+#modal[hidden]{display:none}
+#modal{position:fixed;inset:0;background:rgba(19,32,33,.55);display:grid;place-items:center;z-index:100;padding:24px}
+#modal .box{background:#fff;border-radius:28px;max-width:380px;width:100%;padding:28px;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+#modal h2{font-family:var(--serif-ko);margin:0;font-size:22px}
+#modal p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
+.qr{display:flex;gap:12px;align-items:center;background:var(--bg);border-radius:16px;padding:12px 14px;font-size:12px;color:var(--muted)}
+.qr code{font-size:11px;color:var(--ink);word-break:break-all}
+</style>
+
+<div id="stage">
+  <div id="aside">
+    <span class="tag">Prototype · Mobile web</span>
+    <h1>안산살이</h1>
+    <p>안산에 사는 외국인 주민을 위한 다국어 생활 안내 서비스 시안입니다. 분리배출, 버스, 병원, 관공서, 공지, 설문을 한곳에서 보여줍니다.</p>
+    <p class="small">예시 데이터가 포함되어 있습니다. 실제 서비스에서는 공공 API와 연결됩니다.</p>
+  </div>
+  <div id="phone"><div id="app" aria-live="polite"></div></div>
+</div>
+
+<div id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mtitle">
+  <div class="box">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#E45C4E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 18h4"/></svg>
+    <h2 id="mtitle">모바일에서 보시는 것을 권장합니다.</h2>
+    <p>안산살이는 휴대폰 화면에 맞춰 만들어졌어요. 지금은 모바일 크기로 보여드릴게요.<br><span class="it">Best viewed on your phone.</span></p>
+    <div class="qr"><span>휴대폰에서 이 페이지 링크를 열어보세요.</span></div>
+    <button class="btn dark" id="mclose" type="button">확인 · OK</button>
+  </div>
+</div>
+
+<script>
+(()=>{
+const BG={orange:"__ORANGE__",sky:"__SKY__"};
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const enc=encodeURIComponent;
+
+/* ---------- icons ---------- */
+const P={menu:'<path d="M4 7h16M4 12h16M4 17h10"/>',back:'<path d="M15 6l-6 6 6 6"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>',arrow:'<path d="M9 6l6 6-6 6"/>',arrowR:'<path d="M5 12h14M13 6l6 6-6 6"/>',spot:'<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',trash:'<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 14h10l1-14"/>',bus:'<rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16"/><path d="M7 21l1-3M17 21l-1-3"/>',office:'<path d="M3 21h18"/><path d="M4 10h16"/><path d="M12 3l8 5H4z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/>',med:'<rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',mega:'<path d="M3 11v2a1 1 0 0 0 1 1h3l6 4V6L7 10H4a1 1 0 0 0-1 1z"/><path d="M17 9a4 4 0 0 1 0 6"/>',survey:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>',camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',sofa:'<rect x="3" y="8" width="18" height="10" rx="2"/><path d="M6 18v2M18 18v2M6 8V6h12v2"/>',recycle:'<path d="M7 19H4l3-5"/><path d="M17 19h3l-3-5"/><path d="M9 6l3-3 3 3"/><path d="M12 3v7M5 14l7-4 7 4"/>',flash:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',img:'<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M21 16l-5-5-8 8"/>',flip:'<path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/>',globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.5 4 5.5 4 9s-1.2 6.5-4 9c-2.8-2.5-4-5.5-4-9s1.2-6.5 4-9z"/>',phone:'<path d="M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',fridge:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M6 10h12M9 6v2M9 13v3"/>',home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>',work:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5h8v2"/>',train:'<rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 10h14M8 21l2-4M16 21l-2-4"/>',walk:'<circle cx="13" cy="4" r="2"/><path d="M10 22l2-7-3-3 2-5 4 3 3 1M9 12l-3 2"/>',card:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h4"/>',star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',route:'<circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/>',map:'<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',ext:'<path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',web:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/>',mobile:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/>',download:'<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 19h16"/>',tap:'<rect x="6" y="3" width="12" height="18" rx="2"/><path d="M10 17h4"/>',speak:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v4M12 17.5v.5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',shield:'<path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M9 12l2 2 4-4"/>',gift:'<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 12h18M12 8v13"/><path d="M12 8c-2-4-6-4-6-1.5S10 8 12 8zM12 8c2-4 6-4 6-1.5S14 8 12 8z"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',van:'<path d="M3 7h12l4 4v6H3z"/><circle cx="7" cy="18" r="1.5"/><circle cx="16" cy="18" r="1.5"/>',dots:'<circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/>',refresh:'<path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"/>'};
+const ic=(n,s=20,c='currentColor',w=1.8)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
+const dotI=(n,bg,fg='#fff',s=36)=>`<span class="idot" style="width:${s}px;height:${s}px;background:${bg}">${ic(n,s/2,fg,2)}</span>`;
+
+/* ---------- flags ---------- */
+function star(cx,cy,R,rot=0){const r=R*.382;let d='';for(let i=0;i<10;i++){const a=(-90+rot+i*36)*Math.PI/180,rr=i%2?r:R;d+=(i?'L':'M')+(cx+rr*Math.cos(a)).toFixed(2)+','+(cy+rr*Math.sin(a)).toFixed(2);}return d+'Z';}
+function tri(y,p){return p.map((v,i)=>{const yy=y+i*2.2;return v?`<rect x="16.5" y="${yy}" width="7" height="1.4"/>`:`<rect x="16.5" y="${yy}" width="3" height="1.4"/><rect x="20.5" y="${yy}" width="3" height="1.4"/>`}).join('')}
+const big=[14,16];
+const FL={
+kr:`<rect width="40" height="40" fill="#fff"/><g transform="rotate(33.7 20 20)"><circle cx="20" cy="20" r="8" fill="#0047A0"/><path d="M12,20 A8,8 0 0 1 28,20 A4,4 0 0 1 20,20 A4,4 0 0 0 12,20 Z" fill="#CD2E3A"/></g><g fill="#000"><g transform="rotate(-56.3 20 20)">${tri(3.6,[1,1,1])}${tri(31.2,[0,0,0])}</g><g transform="rotate(56.3 20 20)">${tri(3.6,[0,1,0])}${tri(31.2,[1,0,1])}</g></g>`,
+en:`<rect width="40" height="40" fill="#5F8590"/><g fill="none" stroke="#fff" stroke-width="2.4"><circle cx="20" cy="20" r="11"/><path d="M9 20h22"/><path d="M20 9c3.5 3.2 5 7 5 11s-1.5 7.8-5 11c-3.5-3.2-5-7-5-11s1.5-7.8 5-11z"/></g>`,
+vn:`<rect width="40" height="40" fill="#DA251D"/><path d="${star(20,20.5,10)}" fill="#FFCD00"/>`,
+cn:`<rect width="40" height="40" fill="#EE1C25"/><path d="${star(14,16,6.5)}" fill="#FFDE00"/>${[[23.5,9],[27,13],[27,18.5],[23.5,22.5]].map(([x,y])=>`<path d="${star(x,y,1.9,Math.atan2(big[1]-y,big[0]-x)*180/Math.PI+90)}" fill="#FFDE00"/>`).join('')}`,
+ru:`<rect width="40" height="13.4" fill="#fff"/><rect y="13.3" width="40" height="13.4" fill="#0039A6"/><rect y="26.6" width="40" height="13.4" fill="#D52B1E"/>`,
+uz:`<rect width="40" height="13" fill="#0099B5"/><rect y="13" width="40" height=".8" fill="#CE1126"/><rect y="13.8" width="40" height="12.4" fill="#fff"/><rect y="26.2" width="40" height=".8" fill="#CE1126"/><rect y="27" width="40" height="13" fill="#1EB53A"/><circle cx="12.5" cy="7.2" r="3.6" fill="#fff"/><circle cx="13.9" cy="7.2" r="3.1" fill="#0099B5"/>${[[18.5,4.6],[20.7,4.6],[22.9,4.6],[18.5,7],[20.7,7],[22.9,7],[16.3,9.4],[18.5,9.4],[20.7,9.4],[22.9,9.4]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r=".65" fill="#fff"/>`).join('')}`,
+mn:`<rect width="13.4" height="40" fill="#C4272F"/><rect x="13.3" width="13.4" height="40" fill="#015197"/><rect x="26.6" width="13.4" height="40" fill="#C4272F"/><g fill="#F9CF02"><path d="M8,8.6 L6.9,11 L9.1,11 Z"/><circle cx="8" cy="12.9" r="1.3"/><path d="M5.8,15 L10.2,15 L8,16.6 Z"/><rect x="5.8" y="17.2" width="4.4" height=".9"/><circle cx="8" cy="21" r="2"/><rect x="5.8" y="23.8" width="4.4" height=".9"/><path d="M5.8,25.3 L10.2,25.3 L8,26.9 Z"/><rect x="4.2" y="15" width=".9" height="12"/><rect x="10.9" y="15" width=".9" height="12"/></g>`};
+const flag=(c,s=32)=>`<svg width="${s}" height="${s}" viewBox="0 0 40 40" aria-hidden="true" style="display:block">${FL[c]}</svg>`;
+
+/* ---------- countries ---------- */
+const COUNTRIES=[
+ {c:'kr',name:'대한민국',ko:'한국어',lang:'ko'},
+ {c:'en',name:'English',ko:'영어 · 기타 국가',lang:'en'},
+ {c:'vn',name:'Việt Nam',ko:'베트남어',lang:'vi'},
+ {c:'cn',name:'中国',ko:'중국어',lang:null,soon:'敬请期待',cls:'zh'},
+ {c:'ru',name:'Россия',ko:'러시아어',lang:null,soon:'Скоро',cls:'cy'},
+ {c:'uz',name:'O‘zbekiston',ko:'우즈베크어',lang:null,soon:'Tez orada'},
+ {c:'mn',name:'Монгол',ko:'몽골어',lang:null,soon:'Удахгүй',cls:'cy'}];
+
+/* ---------- strings ---------- */
+const DAYS={en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],vi:['CN','T2','T3','T4','T5','T6','T7'],ko:['일','월','화','수','목','금','토']};
+const DAYLONG={en:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],vi:['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'],ko:['일요일','월요일','화요일','수요일','목요일','금요일','토요일']};
+const S={
+en:{cont:'Continue',contSub:'다음 단계로',menu:'Menu',welcome:'Welcome to Ansan',homeT:'Life in Ansan',
+ items:['Waste sorting','Bus & transit','Public offices','Hospitals','News & events','Surveys'],
+ sponsored:'SPONSORED · SAMPLE',adT:'Send money home for less',adS:'Example ad · remittance, mobile plans, local shops',tipT:"Today's tip",tipB:'Food waste never goes in the regular bag. Drain it and use the orange food-waste bag.',
+ wasteT:'Waste sorting',change:'Change',tonight:'TONIGHT',tonightNone:'No collection tonight',canTonight:'You can put out tonight',weekT:'This week',rest:'Off',
+ gen:'General',food:'Food',rec:'Recycling',genL:'General waste',foodL:'Food waste',recL:'Recyclables',bagW:'Milky-white pay-as-you-throw bag',bagO:'Orange food-waste bag',bagC:'Clear plastic bag',bulky:'Bulky items',bulkyS:'Apply first · pickup Mon & Thu',ask:'Ask with a photo',
+ camT:'Snap what you want to throw out',camH:'Fit the item inside the frame',photo:'Photo',barcode:'Barcode',analyzing:'Analyzing',st1:'Recognizing the item',st2:'Checking Ansan rules',st3:'Finding the right way',
+ thisIs:'This is',pet:'Clear PET bottle',goesIn:'GOES IN',petDest:'Recycling · PET',bag:'BAG',clear:'Clear',tonightYes:'You can put it out tonight',tonightNo:'Next collection night',
+ before:'Before you throw it out',petSteps:['Empty it','Peel off the label','Crush it and close the cap','Put it in the clear PET collection'],notRight:'Not right?',pickAgain:'Choose the item',remind:'Remind me at 20:00',reminded:'Reminder set for 20:00',
+ lookT:'Find an item',lookPh:'Search items… (e.g. battery)',confused:'Often confused',noteBat:'Batteries and fluorescent lamps go in separate collection boxes at your building or the community center.',
+ items8:[['Eggshells','계란 껍데기','gen'],['Chicken & fish bones','닭뼈 · 생선뼈','gen'],['Onion & garlic skins','양파 · 마늘 껍질','gen'],['Tea bags','티백','gen'],['Fruit peels','과일 껍질','food'],['Clean white styrofoam','깨끗한 스티로폼','rec'],['Batteries','폐건전지','bat'],['Broken glass','깨진 유리','glass']],
+ dest:{gen:'General',food:'Food',rec:'Recycling',bat:'Battery box',glass:'General · wrap it'},
+ bulkyT:'Bulky items',pickDays:'PICKUP DAYS',monThu:'Monday & Thursday',askQ:'ASK',how:'How it works',
+ bulkySteps:[['Apply online','ansan.go.kr/waste or at the community center'],['Choose items & pay','The fee depends on type and size'],['Write the number','Attach the application number to the item'],['Put it out','At your building’s collection spot before pickup day']],
+ freeT:'Fridges & washers: free pickup',applyOnline:'Apply online',
+ busT:'Bus & Transit',whereTo:'Where to?',home:'Home',saved:'Saved',toWork:'To work · Banwol Industrial Complex',nearby:'Nearby',choji:'Choji Station',busStop:'Bus stop near you',busStopS:'Live arrivals · sample',
+ quick:['Card & fares','On board guide','Route options'],sortBy:['Fastest','Fewer transfers','Less walking'],best:'BEST',min:'min',transfers:n=>`${n} transfer${n==1?'':'s'}`,sampleNote:'Sample times · real service uses live bus data',
+ routeT:'Route',leaveBy:'Leave about 5 min before the bus arrives',
+ rsteps:[['walk','Walk to the bus stop','About 4 min','걸어서 정류장까지'],['bus','Board the bus','Tap your card at the front door','앞문 승차 · 카드 태그'],['spot','Get off at your stop','Press the red stop button first','하차벨 누르기 · 뒷문 하차'],['tap','Tap your card when you leave','Needed for free transfers','내릴 때도 카드 태그'],['walk','Walk to work','About 5 min','회사까지 도보']],
+ openNaver:'Open in Naver Map',guideApp:'Guide me in this app',
+ chooseT:'Open this in',naverApp:'Naver Map app',naverAppS:'Opens the app. Best for walking directions and live arrivals.',rec2:'RECOMMENDED',naverWeb:'Naver Map on the web',naverWebS:'Opens in a new window — no app needed.',always:'Always open this way',langTip:'Naver Map speaks your language',langTipS:'Switch it to English, 中文 or 日本語 in Naver Map settings.',
+ notInst:'Naver Map isn’t installed?',notInstS:'Install it once and places will open straight in the app next time. Or keep going on the web.',install:'Install Naver Map',onWeb:'Open on the web instead',
+ stopT:'Bus stop',updated:'Updated just now',notify:'Notify me 2 stops before',crowd:['crowd: low','crowd: medium','crowd: high'],next:'next',nightNote:'Night: transfers allowed within 60 min (21:00–07:00)',lastBus:'Finished today',
+ onboard:'On board',stopsLeft:'stops left',getOffAt:'Get off at your stop · about 6 min',whenOff:'When you get off',offSteps:['Press the red stop button','Exit by the back door','Tap your card on the way out'],showDriver:'Show the driver',
+ faresT:'Card & fares',needCard:'YOU NEED',tmoney:'T-money or transit card',tmoneyS:'Buy and top up at convenience stores, with cash',fares:'Fares',adult:'adult card',cityBus:'Gyeonggi city bus',subway:'Subway · base fare',cashNote:'Cash costs more. Longer subway trips add distance fare.',freeTr:'Free transfers',trRules:[['30','min','daytime'],['60','min','21:00–07:00'],['4','times','max per trip']],tapWarn:'Always tap when you get off',asOf:'Fares as of Oct 2025 · check for updates',
+ hospT:'Hospitals',near:'Near you',emerg:'Emergency? Call 119',emergS:'Interpretation is available on the line',more:'More places will be added',univ:'Korea University Ansan Hospital',univS:'University hospital · ER',hours:'Hours',addr:'Address',tel:'Phone',checkHours:'Check before visiting',staff:'SHOW THIS TO STAFF',staffEn:'I need an interpreter. Can you help me in English?',
+ offT:'Public offices',offS:'Tap a place to open it in Naver Map',offices:[['Ansan City Hall','안산시청','City services · certificates'],['Foreign Residents Support Center','안산시 외국인주민지원본부','Counseling · multilingual help'],['Immigration Office, Ansan','출입국·외국인청 안산출장소','Visa · alien registration · book ahead']],
+ newsT:'News & Events',official:'OFFICIAL · ANSAN CITY',sample:'Sample',newsItems:[['Free Korean class for residents','Sample notice · translated from Korean'],['Weekend health check for workers','Sample event · location and time will show here']],
+ survT:'Surveys',survS:'Share your voice, get rewards',newB:'NEW',survF:'Getting to work in Ansan',survFS:'How do you commute? Help the city plan better routes.',time:'TIME',qs:'QUESTIONS',reward:'REWARD',start:'Start survey',anon:'Anonymous. We never share your name or visa details.',
+ sq:[['How do you usually get to work?','출근할 때 주로 어떻게 가나요?',[['van','Company shuttle','회사 통근버스'],['bus','City bus','시내버스'],['walk','Walk or bicycle','걷기 · 자전거'],['dots','Other','기타']]],['How long is your commute?','출근 시간은 얼마나 걸리나요?',[['clock','Under 20 min','20분 미만'],['clock','20–40 min','20–40분'],['clock','40–60 min','40–60분'],['clock','Over an hour','1시간 이상']]],['What is hardest about the bus?','버스 이용에서 가장 어려운 점은?',[['speak','Language','언어'],['clock','Waiting time','대기 시간'],['map','Finding the stop','정류장 찾기'],['dots','Other','기타']]]],
+ choose1:'Choose one',nextB:'Next',finish:'Finish',thanks:'Thank you!',thanksS:'Your answers help Ansan plan better for everyone.',yourReward:'YOUR REWARD',giftcard:'Mobile gift card (sample)',sentTo:'SENT TO',backHome:'Back to home',moreSurveys:'See more surveys',
+ locT:'Where do you live?',locS:'Used for waste days and nearby places.',useGps:'Use my current location',gpsWorking:'Finding your location…',gpsDenied:'Location isn’t available here. Type your address instead.',gpsNoKey:'Location found. A Naver Maps key is needed to turn it into an address — type it below for now.',addrPh:'e.g. 원포공원1로 59',save:'Save',onlyAnsan:'Only addresses in Ansan are supported for now.',locSaved:'Address saved',
+ anaFail:'We couldn’t analyze this photo.',tryAgain:'Try again',demoNote:'Example result · live photo analysis isn’t available in this view',resultLbl:'Result',batNote:'Battery collection box · any day',bulkyNote:'Apply first · pickup Mon & Thu',unknownNote:'Not sure — check the item list',
+ survNote:'Ad-free for a day when you take part',adFreeShort:'24h ad-free',adFreeOn:u=>`Ad-free until ${u}`,adFreeS:'Thanks for taking a survey',adFreeTomorrow:u=>`No ads until ${u}`,
+ lang:'EN'},
+vi:{cont:'Tiếp tục',contSub:'다음 단계로',menu:'Menu',welcome:'Chào mừng đến Ansan',homeT:'Cuộc sống ở Ansan',
+ items:['Phân loại rác','Xe buýt','Cơ quan','Bệnh viện','Tin tức & sự kiện','Khảo sát'],
+ sponsored:'QUẢNG CÁO · MẪU',adT:'Chuyển tiền về nhà phí thấp',adS:'Quảng cáo mẫu · chuyển tiền, viễn thông, cửa hàng',tipT:'Mẹo hôm nay',tipB:'Không bỏ rác thực phẩm vào túi rác thường. Chắt nước và bỏ vào túi màu cam.',
+ wasteT:'Phân loại rác',change:'Đổi',tonight:'TỐI NAY',tonightNone:'Tối nay không thu gom',canTonight:'오늘 밤 배출 가능',weekT:'Lịch tuần này',rest:'Nghỉ',
+ gen:'Thường',food:'Thực phẩm',rec:'Tái chế',genL:'Rác thường',foodL:'Rác thực phẩm',recL:'Rác tái chế',bagW:'Túi trắng sữa (종량제)',bagO:'Túi màu cam',bagC:'Túi nilon trong suốt',bulky:'Đồ cồng kềnh',bulkyS:'Đăng ký trước · thu gom T2, T5',ask:'Chụp ảnh để hỏi',
+ camT:'Chụp đồ cần bỏ',camH:'Đặt đồ vật vào trong khung',photo:'Ảnh',barcode:'Mã vạch',analyzing:'Đang phân tích',st1:'Nhận diện đồ vật',st2:'Kiểm tra quy định của Ansan',st3:'Tìm cách bỏ đúng',
+ thisIs:'Đây là',pet:'Chai nhựa PET',goesIn:'BỎ VÀO',petDest:'Tái chế · Chai PET',bag:'TÚI',clear:'Trong suốt',tonightYes:'Tối nay được bỏ',tonightNo:'Tối thu gom tiếp theo',
+ before:'Trước khi bỏ',petSteps:['Đổ hết nước','Bóc nhãn nilon','Ép dẹp, đậy nắp','Bỏ riêng chỗ thu chai PET trong suốt'],notRight:'Không đúng?',pickAgain:'Chọn lại đồ vật',remind:'Nhắc tôi lúc 20:00',reminded:'Đã đặt nhắc lúc 20:00',
+ lookT:'Tra cứu đồ vật',lookPh:'Tìm đồ vật… (vd: pin)',confused:'Hay nhầm lẫn',noteBat:'Pin, bóng đèn huỳnh quang: bỏ vào thùng thu riêng ở khu nhà hoặc 행정복지센터.',
+ items8:[['Vỏ trứng','계란 껍데기','gen'],['Xương gà, xương cá','닭뼈 · 생선뼈','gen'],['Vỏ hành, vỏ tỏi','양파 · 마늘 껍질','gen'],['Túi trà','티백','gen'],['Vỏ trái cây','과일 껍질','food'],['Xốp trắng sạch','깨끗한 스티로폼','rec'],['Pin','폐건전지','bat'],['Thủy tinh vỡ','깨진 유리','glass']],
+ dest:{gen:'Rác thường',food:'Thực phẩm',rec:'Tái chế',bat:'Thùng thu pin',glass:'Rác thường · gói kỹ'},
+ bulkyT:'Đồ cồng kềnh',pickDays:'NGÀY THU GOM',monThu:'Thứ Hai & Thứ Năm',askQ:'HỎI',how:'Cách làm',
+ bulkySteps:[['Đăng ký online','ansan.go.kr/waste hoặc tại 행정복지센터'],['Chọn đồ & trả phí','Phí tùy loại và kích thước'],['Ghi số đăng ký','Dán số đăng ký lên đồ vật'],['Đặt ra ngoài','Chỗ thu gom của tòa nhà, trước ngày thu']],
+ freeT:'Tủ lạnh, máy giặt lớn: thu miễn phí',applyOnline:'Đăng ký online',
+ busT:'Xe buýt & tàu',whereTo:'Đi đâu?',home:'Nhà',saved:'Đã lưu',toWork:'Đi làm · KCN Banwol',nearby:'Gần đây',choji:'Ga Choji',busStop:'Trạm xe buýt gần bạn',busStopS:'Giờ xe đến · mẫu',
+ quick:['Thẻ & giá vé','Hướng dẫn trên xe','Lộ trình'],sortBy:['Nhanh nhất','Ít chuyển','Ít đi bộ'],best:'TỐT NHẤT',min:'phút',transfers:n=>`${n} lần chuyển`,sampleNote:'Thời gian mẫu · bản thật dùng dữ liệu xe buýt trực tiếp',
+ routeT:'Lộ trình',leaveBy:'Ra khỏi nhà khoảng 5 phút trước khi xe đến',
+ rsteps:[['walk','Đi bộ đến trạm xe buýt','Khoảng 4 phút','걸어서 정류장까지'],['bus','Lên xe buýt','Quẹt thẻ ở cửa trước','앞문 승차 · 카드 태그'],['spot','Xuống ở trạm của bạn','Bấm nút đỏ trước','하차벨 누르기 · 뒷문 하차'],['tap','Quẹt thẻ khi xuống xe','Cần để được chuyển miễn phí','내릴 때도 카드 태그'],['walk','Đi bộ đến nơi làm','Khoảng 5 phút','회사까지 도보']],
+ openNaver:'Mở bằng Naver Map',guideApp:'Hướng dẫn trong ứng dụng này',
+ chooseT:'Mở bằng',naverApp:'Ứng dụng Naver Map',naverAppS:'Mở ứng dụng. Tốt nhất để chỉ đường và xem xe đến.',rec2:'KHUYÊN DÙNG',naverWeb:'Naver Map trên web',naverWebS:'Mở trong cửa sổ mới — không cần ứng dụng.',always:'Luôn mở theo cách này',langTip:'Naver Map có tiếng Anh',langTipS:'Chọn English, 中文 hoặc 日本語 trong cài đặt Naver Map.',
+ notInst:'Chưa cài Naver Map?',notInstS:'Cài một lần, lần sau sẽ mở thẳng trong ứng dụng. Hoặc tiếp tục trên web.',install:'Cài Naver Map',onWeb:'Mở trên web',
+ stopT:'Trạm xe buýt',updated:'Vừa cập nhật',notify:'Báo tôi trước 2 trạm',crowd:['vắng','vừa','đông'],next:'chuyến sau',nightNote:'Ban đêm: được chuyển trong 60 phút (21:00–07:00)',lastBus:'Hết chuyến hôm nay',
+ onboard:'Trên xe',stopsLeft:'trạm nữa',getOffAt:'Xuống ở trạm của bạn · khoảng 6 phút',whenOff:'Khi xuống xe',offSteps:['Bấm nút đỏ báo xuống','Xuống bằng cửa sau','Quẹt thẻ khi xuống'],showDriver:'Cho tài xế xem',
+ faresT:'Thẻ & giá vé',needCard:'BẠN CẦN',tmoney:'Thẻ T-money hoặc thẻ giao thông',tmoneyS:'Mua và nạp ở cửa hàng tiện lợi, bằng tiền mặt',fares:'Giá vé',adult:'thẻ người lớn',cityBus:'Xe buýt nội thành Gyeonggi',subway:'Tàu điện · giá cơ bản',cashNote:'Trả tiền mặt đắt hơn. Đi tàu xa sẽ tính thêm.',freeTr:'Chuyển miễn phí',trRules:[['30','phút','ban ngày'],['60','phút','21:00–07:00'],['4','lần','tối đa']],tapWarn:'Luôn quẹt thẻ khi xuống xe',asOf:'Giá vé tính đến 10/2025 · hãy kiểm tra cập nhật',
+ hospT:'Bệnh viện',near:'Gần bạn',emerg:'Cấp cứu? Gọi 119',emergS:'Có phiên dịch qua điện thoại',more:'Sẽ thêm nhiều nơi khác',univ:'Bệnh viện ĐH Korea Ansan',univS:'Bệnh viện đại học · cấp cứu',hours:'Giờ',addr:'Địa chỉ',tel:'Điện thoại',checkHours:'Kiểm tra trước khi đến',staff:'CHO NHÂN VIÊN XEM',staffEn:'Tôi cần phiên dịch. Có thể giúp tôi bằng tiếng Anh không?',
+ offT:'Cơ quan',offS:'Chạm để mở trong Naver Map',offices:[['Tòa thị chính Ansan','안산시청','Hành chính · giấy tờ'],['Trung tâm hỗ trợ cư dân nước ngoài','안산시 외국인주민지원본부','Tư vấn · đa ngôn ngữ'],['Văn phòng xuất nhập cảnh Ansan','출입국·외국인청 안산출장소','Visa · đăng ký người nước ngoài · đặt hẹn']],
+ newsT:'Tin tức & sự kiện',official:'CHÍNH THỨC · TP ANSAN',sample:'Mẫu',newsItems:[['Lớp tiếng Hàn miễn phí cho cư dân','Thông báo mẫu · dịch từ tiếng Hàn'],['Khám sức khỏe cuối tuần cho người lao động','Sự kiện mẫu · thời gian, địa điểm sẽ hiện ở đây']],
+ survT:'Khảo sát',survS:'Chia sẻ ý kiến, nhận quà',newB:'MỚI',survF:'Đi làm ở Ansan',survFS:'Bạn đi làm bằng gì? Giúp thành phố cải thiện tuyến xe.',time:'THỜI GIAN',qs:'CÂU HỎI',reward:'QUÀ',start:'Bắt đầu',anon:'Ẩn danh. Không chia sẻ tên hay thông tin visa của bạn.',
+ sq:[['Bạn thường đi làm bằng gì?','출근할 때 주로 어떻게 가나요?',[['van','Xe đưa đón công ty','회사 통근버스'],['bus','Xe buýt','시내버스'],['walk','Đi bộ, xe đạp','걷기 · 자전거'],['dots','Khác','기타']]],['Đi làm mất bao lâu?','출근 시간은 얼마나 걸리나요?',[['clock','Dưới 20 phút','20분 미만'],['clock','20–40 phút','20–40분'],['clock','40–60 phút','40–60분'],['clock','Hơn 1 tiếng','1시간 이상']]],['Điều gì khó nhất khi đi xe buýt?','버스 이용에서 가장 어려운 점은?',[['speak','Ngôn ngữ','언어'],['clock','Chờ lâu','대기 시간'],['map','Tìm trạm','정류장 찾기'],['dots','Khác','기타']]]],
+ choose1:'Chọn một',nextB:'Tiếp',finish:'Hoàn tất',thanks:'Cảm ơn bạn!',thanksS:'Câu trả lời của bạn giúp Ansan tốt hơn cho mọi người.',yourReward:'QUÀ CỦA BẠN',giftcard:'Thẻ quà tặng (mẫu)',sentTo:'GỬI ĐẾN',backHome:'Về trang chủ',moreSurveys:'Xem khảo sát khác',
+ survNote:'Tham gia: không quảng cáo trong 1 ngày',adFreeShort:'24h không QC',adFreeOn:u=>`Không quảng cáo đến ${u}`,adFreeS:'Cảm ơn bạn đã tham gia khảo sát',adFreeTomorrow:u=>`Không quảng cáo đến ${u}`,
+ lang:'VI'},
+ko:{cont:'다음',contSub:'안산살이 시작하기',menu:'메뉴',welcome:'Welcome to Ansan',homeT:'안산 생활 안내',
+ items:['분리배출','버스·교통','관공서','병원·약국','공지·행사','설문 참여'],
+ sponsored:'광고 · 예시',adT:'해외송금 수수료 아끼기',adS:'예시 광고 · 송금, 통신, 지역 상점',tipT:'오늘의 생활 팁',tipB:'음식물 쓰레기는 일반 종량제 봉투에 넣지 말고, 물기를 빼서 주황색 음식물 봉투에 버려요.',
+ wasteT:'분리배출',change:'변경',tonight:'오늘 밤',tonightNone:'오늘 밤은 수거하지 않아요',canTonight:'오늘 밤 배출 가능',weekT:'이번 주 배출 요일',rest:'쉼',
+ gen:'일반',food:'음식물',rec:'재활용',genL:'일반쓰레기',foodL:'음식물쓰레기',recL:'재활용품',bagW:'유백색 일반 종량제 봉투',bagO:'주황색 음식물 봉투',bagC:'투명 비닐봉투',bulky:'대형폐기물',bulkyS:'사전 신고 · 월·목 수거',ask:'사진으로 물어보기',
+ camT:'버릴 물건을 찍어주세요',camH:'물건을 네모 안에 맞춰주세요',photo:'사진',barcode:'바코드',analyzing:'분석 중이에요',st1:'물건 인식',st2:'안산시 배출 기준 확인',st3:'올바른 배출 방법 찾기',
+ thisIs:'이 물건은',pet:'투명 페트병',goesIn:'배출',petDest:'재활용 · 투명 페트병',bag:'봉투',clear:'투명',tonightYes:'오늘 밤 배출 가능',tonightNo:'다음 배출일',
+ before:'버리기 전에',petSteps:['내용물 비우기','라벨 떼기','찌그러뜨리고 뚜껑 닫기','투명 페트병 전용 수거함에'],notRight:'결과가 틀렸나요?',pickAgain:'직접 고르기',remind:'오후 8시에 알려주기',reminded:'오후 8시 알림을 설정했어요',
+ lookT:'품목 검색',lookPh:'품목 검색… (예: 건전지)',confused:'자주 헷갈리는 품목',noteBat:'건전지, 형광등은 아파트나 행정복지센터의 전용 수거함에 버려요.',
+ items8:[['계란 껍데기','','gen'],['닭뼈 · 생선뼈','','gen'],['양파 · 마늘 껍질','','gen'],['티백','','gen'],['과일 껍질','','food'],['깨끗한 스티로폼','','rec'],['폐건전지','','bat'],['깨진 유리','','glass']],
+ dest:{gen:'일반쓰레기',food:'음식물',rec:'재활용',bat:'건전지 수거함',glass:'일반 · 신문지에 싸서'},
+ bulkyT:'대형폐기물',pickDays:'수거일',monThu:'매주 월요일 · 목요일',askQ:'문의',how:'신청 방법',
+ bulkySteps:[['온라인 신청','ansan.go.kr/waste 또는 행정복지센터'],['품목 선택 · 수수료 결제','품목과 크기에 따라 달라요'],['신고번호 적기','물건에 신고번호를 붙여요'],['내놓기','수거일 전에 건물 배출 장소에']],
+ freeT:'냉장고 · 세탁기 등 대형 폐가전 무상 수거',applyOnline:'온라인 신청',
+ busT:'버스·교통',whereTo:'어디로 갈까요?',home:'집',saved:'자주 가는 곳',toWork:'회사 · 반월국가산업단지',nearby:'주변',choji:'초지역',busStop:'가까운 정류장',busStopS:'실시간 도착 · 예시',
+ quick:['요금 · 카드','승차 안내','경로 보기'],sortBy:['최단 시간','최소 환승','최소 도보'],best:'추천',min:'분',transfers:n=>`환승 ${n}회`,sampleNote:'예시 시간이에요 · 실제 서비스는 실시간 버스 정보를 써요',
+ routeT:'경로',leaveBy:'버스 도착 5분 전쯤 출발하세요',
+ rsteps:[['walk','정류장까지 걷기','약 4분','Walk to the stop'],['bus','버스 승차','앞문으로 타고 카드 태그','Board · tap card'],['spot','목적지 정류장에서 하차','하차벨을 먼저 눌러요','Press the stop button'],['tap','내릴 때 카드 태그','환승 할인을 받으려면 꼭 필요해요','Tap off'],['walk','회사까지 걷기','약 5분','Walk to work']],
+ openNaver:'네이버지도로 열기',guideApp:'앱에서 안내받기',
+ chooseT:'어디서 열까요?',naverApp:'네이버지도 앱',naverAppS:'앱에서 바로 열려요. 길찾기와 실시간 도착 정보에 좋아요.',rec2:'추천',naverWeb:'웹 네이버지도',naverWebS:'새 창에서 열려요. 앱이 없어도 돼요.',always:'항상 이 방법으로 열기',langTip:'네이버지도는 외국어를 지원해요',langTipS:'설정에서 English, 中文, 日本語로 바꿀 수 있어요.',
+ notInst:'네이버지도 앱이 없나요?',notInstS:'한 번 설치하면 다음부터 앱으로 바로 열려요. 웹에서 계속 볼 수도 있어요.',install:'네이버지도 설치',onWeb:'웹으로 보기',
+ stopT:'정류장',updated:'방금 업데이트',notify:'2정류장 전에 알림',crowd:['여유','보통','혼잡'],next:'다음',nightNote:'밤 9시~아침 7시는 60분 이내 환승 가능',lastBus:'운행 종료',
+ onboard:'승차 중',stopsLeft:'정류장 남음',getOffAt:'내릴 정류장까지 약 6분',whenOff:'내릴 때',offSteps:['빨간 하차벨 누르기','뒷문으로 내리기','내리면서 카드 태그'],showDriver:'기사님께 보여주기',
+ faresT:'요금 · 카드',needCard:'필요한 것',tmoney:'티머니 등 교통카드',tmoneyS:'편의점에서 사고 현금으로 충전해요',fares:'요금',adult:'교통카드 · 성인',cityBus:'경기 시내버스 (일반형)',subway:'수도권 지하철 기본요금',cashNote:'현금은 더 비싸요. 지하철은 거리에 따라 추가 요금이 붙어요.',freeTr:'환승 할인',trRules:[['30','분','낮 시간'],['60','분','21:00–07:00'],['4','회','최대']],tapWarn:'내릴 때 꼭 카드를 찍어요',asOf:'2025년 10월 기준 요금 · 변경 여부를 확인하세요',
+ hospT:'병원·약국',near:'내 주변',emerg:'응급 상황이면 119',emergS:'전화 통역이 가능해요',more:'다른 병원은 곧 추가돼요',univ:'고려대학교 안산병원',univS:'대학병원 · 응급의료',hours:'진료시간',addr:'주소',tel:'대표전화',checkHours:'방문 전 확인하세요',staff:'직원에게 보여주기',staffEn:'I need an interpreter. Can you help me in English?',
+ offT:'관공서',offS:'누르면 네이버지도에서 열려요',offices:[['안산시청','Ansan City Hall','민원 · 증명서'],['안산시 외국인주민지원본부','Foreign Residents Support','상담 · 다국어 지원'],['출입국·외국인청 안산출장소','Immigration Office','비자 · 외국인등록 · 예약 필요']],
+ newsT:'공지·행사',official:'공식 · 안산시',sample:'예시',newsItems:[['외국인 주민 무료 한국어 교실','예시 공지 · 한국어 원문에서 번역'],['근로자 주말 건강검진','예시 행사 · 장소와 시간이 여기에 나와요']],
+ survT:'설문 참여',survS:'의견을 나누고 보상을 받아요',newB:'NEW',survF:'안산 출근길 설문',survFS:'어떻게 출근하나요? 시가 더 나은 노선을 만드는 데 쓰여요.',time:'시간',qs:'문항',reward:'보상',start:'설문 시작',anon:'익명이에요. 이름이나 비자 정보는 공유하지 않아요.',
+ sq:[['출근할 때 주로 어떻게 가나요?','How do you usually get to work?',[['van','회사 통근버스','Company shuttle'],['bus','시내버스','City bus'],['walk','걷기 · 자전거','Walk or bicycle'],['dots','기타','Other']]],['출근 시간은 얼마나 걸리나요?','How long is your commute?',[['clock','20분 미만','Under 20 min'],['clock','20–40분','20–40 min'],['clock','40–60분','40–60 min'],['clock','1시간 이상','Over an hour']]],['버스 이용에서 가장 어려운 점은?','What is hardest about the bus?',[['speak','언어','Language'],['clock','대기 시간','Waiting time'],['map','정류장 찾기','Finding the stop'],['dots','기타','Other']]]],
+ choose1:'하나를 골라주세요',nextB:'다음',finish:'완료',thanks:'감사합니다!',thanksS:'소중한 의견은 모두를 위한 안산을 만드는 데 쓰여요.',yourReward:'보상',giftcard:'모바일 상품권 (예시)',sentTo:'보낼 곳',backHome:'홈으로',moreSurveys:'다른 설문 보기',
+ survNote:'참여 시 하루 동안 광고 제거',adFreeShort:'24시간 광고 제거',adFreeOn:u=>`${u}까지 광고 없이 이용 중`,adFreeS:'설문에 참여해 주셔서 감사해요',adFreeTomorrow:u=>`${u}까지 광고가 보이지 않아요`,
+ lang:'KO'}};
+
+/* ---------- state ---------- */
+const st={lang:null,sel:null,stack:['intro'],bgOrange:true,photo:null,remind:false,notify:true,qi:0,answers:[],query:'',always:null};
+try{st.always=localStorage.getItem('al_naver')}catch(e){}
+st.adFreeUntil=0;try{st.adFreeUntil=+localStorage.getItem('al_adfree')||0}catch(e){}
+const adFree=()=>Date.now()<st.adFreeUntil;
+const hhmm=ms=>{const t=new Date(ms).toLocaleTimeString(st.lang==='vi'?'vi-VN':st.lang==='ko'?'ko-KR':'en-US',{hour:'2-digit',minute:'2-digit'});if(new Date(ms).toDateString()===new Date().toDateString())return t;return st.lang==='ko'?`내일 ${t}`:st.lang==='vi'?`${t} ngày mai`:`${t} tomorrow`;};
+function grantAdFree(){st.adFreeUntil=Date.now()+864e5;try{localStorage.setItem('al_adfree',String(st.adFreeUntil))}catch(e){}}
+const adFreeRow=()=>`<div class="row" style="border:1px dashed rgba(30,34,33,.25);border-radius:18px;padding:12px 14px">${dotI('check','var(--deep)','#fff',30)}<span class="col"><span class="b" style="font-size:13px">${T().adFreeOn(hhmm(st.adFreeUntil))}</span><span class="tiny muted">${T().adFreeS}</span></span></div>`;
+const T=()=>S[st.lang||'en'];
+const isKo=()=>st.lang==='ko';
+const cur=()=>st.stack[st.stack.length-1];
+function go(n){st.stack.push(n);render();}
+function back(){if(st.stack.length>1)st.stack.pop();render();}
+function home(){st.stack=['home'];render();}
+
+/* ---------- naver links ---------- */
+const appname=()=>{try{return location.href.split('#')[0]}catch(e){return 'ansanlife'}};
+const nApp=q=>`nmap://search?query=${enc(q)}&appname=${enc(appname())}`;
+const nWeb=q=>`https://map.naver.com/p/search/${enc(q)}`;
+const storeUrl=()=>/iPhone|iPad|iPod/i.test(navigator.userAgent)?'https://apps.apple.com/app/id311867728':'https://play.google.com/store/apps/details?id=com.nhn.android.nmap';
+let naverQ='';
+function openNaver(q){naverQ=q;if(st.always==='web'){window.open(nWeb(q),'_blank','noopener');return}if(st.always==='app'){tryApp(q);return}sheet('choose');}
+function watchApp(){let gone=false;const h=()=>{if(document.hidden)gone=true};document.addEventListener('visibilitychange',h);addEventListener('blur',h);setTimeout(()=>{document.removeEventListener('visibilitychange',h);removeEventListener('blur',h);if(!gone&&!document.hidden)sheet('notinst')},1800);}
+function tryApp(q){const a=document.createElement('a');a.href=nApp(q);a.rel='noopener';document.body.appendChild(a);a.click();a.remove();watchApp();}
+
+/* ---------- live map: NAVER Maps JS API v3 ----------
+   1) NCP 콘솔 > Maps > Application 등록 (Dynamic Map + Geocoding 체크)
+   2) Web 서비스 URL에 이 페이지를 올릴 도메인 등록
+   3) 발급받은 Client ID를 아래 NAVER_KEY에 넣기. 비어 있으면 그림 지도로 보여요. */
+const NAVER_KEY='__NAVER_KEY__';
+const MAPS={
+ hosp:{zoom:16,pts:[{addr:'경기도 안산시 단원구 적금로 123',label:'고려대학교 안산병원'}]},
+ near:{zoom:15,pts:[{addr:'경기도 안산시 단원구 원포공원1로 59',label:'Home',home:true},{addr:'경기도 안산시 단원구 중앙대로 620',label:'초지역 Choji'}]},
+ offices:{zoom:14,pts:[{addr:'경기도 안산시 단원구 원포공원1로 59',label:'Home',home:true},{addr:'경기도 안산시 단원구 화랑로 387',label:'안산시청'}]}};
+const miniMap=k=>`<div class="nmap mini" data-map="${k}"><div class="live"></div><svg class="fallback" viewBox="0 0 342 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g stroke="#fff" stroke-linecap="round" fill="none"><path d="M-10 120 C 80 100,150 140,230 95 S 330 60,350 70" stroke-width="12"/><path d="M110 -10 L 150 180" stroke-width="8"/><path d="M-10 50 L 350 30" stroke-width="6"/><path d="M260 -10 L 230 180" stroke-width="5"/></g><path d="M171 92s12-11 12-20a12 12 0 0 0-24 0c0 9 12 20 12 20z" fill="#E45C4E"/><circle cx="171" cy="72" r="4.5" fill="#fff"/></svg><span class="maptag">MAP · NAVER API</span></div>`;
+let naverP=null;const geoCache={};
+function loadNaver(){if(!NAVER_KEY||NAVER_KEY.startsWith('__'))return Promise.resolve(null);if(naverP)return naverP;
+ naverP=new Promise(res=>{window.navermap_authFailure=()=>res(null);const s=document.createElement('script');s.src=`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${enc(NAVER_KEY)}&submodules=geocoder`;s.onload=()=>res(window.naver&&window.naver.maps?window.naver:null);s.onerror=()=>res(null);document.head.appendChild(s);});return naverP;}
+function geocode(N,addr){if(geoCache[addr])return geoCache[addr];geoCache[addr]=new Promise(res=>{try{N.maps.Service.geocode({query:addr},(status,r)=>{const a=status===N.maps.Service.Status.OK&&r.v2&&r.v2.addresses&&r.v2.addresses[0];res(a?new N.maps.LatLng(+a.y,+a.x):null);});}catch(e){res(null)}});return geoCache[addr];}
+async function mountMaps(){const els=[...app.querySelectorAll('.nmap[data-map]')];if(!els.length)return;const N=await loadNaver();if(!N)return;
+ for(const el of els){if(!el.isConnected)continue;const spec=MAPS[el.dataset.map];const ll=(await Promise.all(spec.pts.map(p=>geocode(N,p.addr))));const pts=spec.pts.map((p,i)=>({...p,ll:ll[i]})).filter(p=>p.ll);if(!pts.length||!el.isConnected)continue;
+  const map=new N.maps.Map(el.querySelector('.live'),{center:pts[pts.length-1].ll,zoom:spec.zoom,scaleControl:false,mapDataControl:false,logoControlOptions:{position:N.maps.Position.BOTTOM_RIGHT}});
+  pts.forEach(p=>new N.maps.Marker({position:p.ll,map,icon:{content:`<div class="npin ${p.home?'home':''}"><b></b><span>${p.label}</span></div>`,anchor:new N.maps.Point(0,0)}}));
+  if(pts.length>1){const b=new N.maps.LatLngBounds(pts[0].ll,pts[0].ll);pts.forEach(p=>b.extend(p.ll));map.fitBounds(b,{top:50,right:40,bottom:30,left:40});}
+  el.classList.add('ready');}}
+
+/* ---------- common pieces ---------- */
+const nav=(label,{menu=false,right=''}={})=>`<div class="nav">${menu?`<button class="ibtn" data-act="intro" aria-label="Language">${ic('menu',20)}</button>`:`<button class="ibtn" data-act="back" aria-label="Back">${ic('back',22)}</button>`}<span class="lbl">${label}</span><span class="rule"></span>${right}</div>`;
+const foot=`<div class="foot">ansan life · Gyeonggi-do, Ansan</div>`;
+const langPill=()=>{const c=COUNTRIES.find(x=>x.lang===st.lang);return `<button class="pill" data-act="intro" aria-label="Change language">${flag(c.c,18)}<span style="border-radius:50%"></span>${T().lang}</button>`;};
+const ttl=(h,sub,{eye='',pin=false}={})=>`<div class="ttl">${eye?`<span class="eyebrow">${eye}</span>`:''}<h1 class="h1 ${isKo()?'ko':''}">${h}</h1>${sub?`<div class="sub">${pin?ic('spot',14,'#E45C4E'):''}${sub}</div>`:''}</div>`;
+const h2=(t,k='',r='')=>`<div class="h2"><span>${t}</span>${k&&!isKo()?`<span class="k">${k}</span>`:''}<span class="ln"></span>${r?`<span class="serif" style="font-size:13px">${r}</span>`:''}</div>`;
+const koSub=s=>isKo()||!s?'':`<span class="kr micro muted">${s}</span>`;
+
+/* ---------- waste schedule (Ansan city-wide public data) ---------- */
+const sched=d=>({g:d<=5,f:d<=5,r:[1,2,4,5].includes(d)});
+function nextNight(from){for(let i=1;i<=7;i++){const d=(from+i)%7;if(sched(d).r)return d}return from}
+
+/* ---------- screens ---------- */
+const SCR={};
+
+SCR.intro=()=>{const t=st.lang?S[st.lang]:null;const sel=st.sel?COUNTRIES.find(c=>c.c===st.sel):null;const ok=sel&&sel.lang;
+ const L=ok?S[sel.lang]:null;
+ return `<div class="scr intro">
+ <div class="hero">
+  <div class="bgl" id="bgA" style="background-image:url(${BG.orange});opacity:1"></div>
+  <div class="bgl" id="bgB" style="background-image:url(${BG.sky});opacity:0"></div>
+  <div class="shade"></div>
+  <div class="hero-in">
+   <div class="welcome"><div class="w">Welcome to</div><div class="t">안산살이</div><div class="s">ANSAN LIFE <span>·</span> <em>since 2026</em></div></div>
+   <div class="q"><i></i><b>어디에서 오셨나요?</b><span>Where are you from?</span></div>
+   <div class="rail" id="rail" role="group" aria-label="Choose your country">
+    ${COUNTRIES.map((c,i)=>`<button class="cc" data-sel="${c.c}" aria-pressed="${st.sel===c.c}"><span class="fl">${flag(c.c,32)}</span><span class="chk">${ic('check',14,'#fff',3)}</span><span class="col"><span class="nm ${c.cls||''}">${c.name}</span><span class="kk">${c.ko}</span></span></button>`).join('')}
+   </div>
+   <div class="locrow"><span class="row" style="gap:6px">${ic('spot',14,'#fff')}Gyeonggi-do, Ansan</span><span class="swipe">swipe <i><b id="swb"></b></i>${ic('arrowR',14,'#fff')}</span></div>
+  </div>
+ </div>
+ <div class="cont">
+  <div class="l ${ok&&sel.lang==='ko'||!ok?'ko':''}">${ok?`<b>${L.cont}</b><span class="small muted ${sel.lang==='ko'?'':'kr'}">${L.contSub}</span>`:sel?`<b>준비 중입니다</b><span class="small muted">Coming soon · ${sel.soon}</span>`:`<b>나라를 골라주세요</b><span class="small muted">Choose your country to begin</span>`}</div>
+  <button class="go" id="goBtn" ${ok?'':'disabled'} aria-label="Continue">${ic('arrowR',22,'currentColor',2)}</button>
+ </div></div>`;};
+
+SCR.home=()=>{const t=T();const icons=['trash','bus','office','med','mega','survey'];const to=['w1','b1','offices','hosp','news','surv'];const ko=S.ko.items;
+ return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu,{menu:true,right:langPill()})}
+ ${ttl(t.homeT,`<span>${new Date().toLocaleDateString(st.lang==='vi'?'vi-VN':st.lang==='ko'?'ko-KR':'en-US',{weekday:'long',month:'long',day:'numeric'})}</span>`,{eye:t.welcome})}
+ <div class="sheet"><nav class="toc">${t.items.map((x,i)=>`<button data-go="${to[i]}">${dotI(icons[i],'#2F3B3A','#fff',28)}<span class="lab" style="flex-wrap:wrap;row-gap:2px">${x}${isKo()?'':`<small>${ko[i]}</small>`}${i===5?`<em class="adnote">${adFree()?t.adFreeOn(hhmm(st.adFreeUntil)):t.survNote}</em>`:''}</span><span class="n">0${i+1}</span></button>`).join('')}</nav>
+ ${adFree()?`<div style="margin-top:8px">${adFreeRow()}</div>`:`<div class="card row" style="margin-top:8px"><div class="col grow" style="gap:3px"><span class="row cap" style="gap:6px"><span class="dot" style="background:var(--accent);width:6px;height:6px"></span>${t.sponsored}</span><span class="serif" style="font-size:15px">${t.adT}</span><span class="small muted">${t.adS}</span></div><span style="width:64px;height:64px;border-radius:14px;background:#FBE7D6;display:grid;place-items:center;flex:none">${ic('gift',22,'#9A6A44')}</span></div>`}
+ <div class="quote"><div class="col" style="gap:6px"><span class="serif" style="font-size:16px">${t.tipT}</span><span class="small muted" style="line-height:1.55">${t.tipB}</span></div></div>
+ </div>${foot}</div>`;};
+
+/* waste */
+SCR.w1=()=>{const t=T();const d=new Date().getDay();const s=sched(d);const any=s.g||s.r;const L=DAYS[st.lang];
+ const types=[['gen',t.genL,'일반쓰레기',t.bagW,'#ECE6D8'],['food',t.foodL,'음식물쓰레기',t.bagO,'#EE8A3C'],['rec',t.recL,'재활용품',t.bagC,'#CFE3EA']];
+ const bag=c=>`<svg width="18" height="21" viewBox="0 0 28 32" aria-hidden="true"><path d="M8 7c0-3 2.5-5 6-5s6 2 6 5" fill="none" stroke="${c}" stroke-width="2"/><path d="M3 8h22l-2 22H5z" fill="${c}"/></svg>`;
+ return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu,{right:`<button class="ibtn" aria-label="Notifications">${ic('bell',20)}</button>`})}
+ ${ttl(t.wasteT,`<span class="kr">원포공원1로 59 · 초지동</span><button class="b small" style="color:var(--ink)">${t.change}</button>`,{pin:true})}
+ <div class="sheet">
+  <div class="card" style="background:var(--deep);color:#fff;border-radius:22px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+   <div class="row" style="justify-content:space-between"><span class="row cap" style="color:rgba(255,255,255,.8);gap:6px">${ic('moon',14,'#fff')}${t.tonight} · ${DAYLONG[st.lang][d]}</span><span class="kr tiny" style="opacity:.7">${any?'오늘 밤 배출 가능':'오늘 밤 수거 없음'}</span></div>
+   <span class="serif" style="font-size:28px">${any?'20:00 – 06:00':t.tonightNone}</span>
+   <div class="chips">${[['g',t.gen,'#C9D2D0'],['f',t.food,'#EE8A3C'],['r',t.rec,'#4E8F87']].map(([k,n,c])=>`<span class="chip" style="background:rgba(255,255,255,.12);opacity:${s[k]?1:.45}"><span class="dot" style="background:${c}"></span>${n}${s[k]?ic('check',11,'#fff',2.4):ic('x',11,'#fff',2.4)}</span>`).join('')}</div>
+  </div>
+  ${h2(t.weekT,'이번 주 배출 요일')}
+  <div class="week">${[0,1,2,3,4,5,6].map(i=>{const x=sched(i);const none=!x.g&&!x.r;return `<div class="day ${i===d?'today':''}"><span>${L[i]}</span><span class="dots">${none?`<span class="micro">${t.rest}</span>`:[['g','#3A4442'],['f','#EE8A3C'],['r','#4E8F87']].map(([k,c])=>`<i style="background:${x[k]?c:'#E6E8E6'}"></i>`).join('')}</span></div>`}).join('')}</div>
+  <div class="row tiny muted" style="gap:12px;flex-wrap:wrap"><span class="row" style="gap:5px"><span class="dot" style="background:#3A4442;width:7px;height:7px"></span>${t.gen}</span><span class="row" style="gap:5px"><span class="dot" style="background:#EE8A3C;width:7px;height:7px"></span>${t.food}</span><span class="row" style="gap:5px"><span class="dot" style="background:#4E8F87;width:7px;height:7px"></span>${t.rec}</span><span>· 20:00–06:00</span></div>
+  <div>${types.map(([k,n,ko,b,c])=>`<button class="listrow" data-go="w5"><span class="bag">${bag(c)}</span><span class="col grow"><span class="row" style="gap:6px;align-items:baseline"><span class="serif" style="font-size:15px">${n}</span>${koSub(ko)}</span><span class="tiny muted">${b}</span></span>${ic('arrow',16,'#6E7472')}</button>`).join('')}
+  <button class="listrow" data-go="w6"><span class="bag">${ic('sofa',18,'#22393A')}</span><span class="col grow"><span class="row" style="gap:6px;align-items:baseline"><span class="serif" style="font-size:15px">${t.bulky}</span>${koSub('대형폐기물')}</span><span class="tiny muted">${t.bulkyS}</span></span>${ic('arrow',16,'#6E7472')}</button></div>
+  <div class="spacer"></div>
+  <div class="acts"><button class="btn line sq" data-go="w5" aria-label="${t.lookT}">${ic('search',18)}</button><button class="btn dark" data-go="w2">${ic('camera',18,'#fff')}${t.ask}</button></div>
+  <span class="micro muted">안산시 생활쓰레기 배출 공공데이터 기준 · 단지별 규칙이 다를 수 있어요</span>
+ </div>${foot}</div>`;};
+
+const bottleSVG=`<svg viewBox="0 0 110 230" width="110" height="230" aria-hidden="true" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)"><defs><linearGradient id="bg1" x1="0" x2="1"><stop offset="0" stop-color="#BFD8E0"/><stop offset=".5" stop-color="#EAF4F7"/><stop offset="1" stop-color="#A9C6CF"/></linearGradient></defs><rect x="40" y="0" width="30" height="20" rx="4" fill="#3E7FB6"/><path d="M42 20h26l6 30c18 10 26 22 26 40v124a12 12 0 0 1-12 12H22a12 12 0 0 1-12-12V90c0-18 8-30 26-40z" fill="url(#bg1)"/><rect x="10" y="110" width="90" height="46" fill="#5BA37A"/><path d="M26 133h58" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>`;
+const corners=c=>`<svg class="c" viewBox="0 0 270 320" preserveAspectRatio="none" aria-hidden="true"><g stroke="${c}" stroke-width="3" fill="none" stroke-linecap="round"><path d="M2 30V2h28M240 2h28v28M2 290v28h28M240 318h28v-28"/></g></svg>`;
+SCR.w2=()=>{const t=T();return `<div class="scr cam" style="overflow:hidden">
+ <div class="vf">${st.photo?`<img src="${st.photo}" alt="">`:bottleSVG}${corners('#fff')}</div>
+ <div class="camtop"><button class="ibtn glass" style="margin:0;width:44px;height:44px;border-radius:22px" data-act="back" aria-label="Close">${ic('x',20,'#fff')}</button><div class="col" style="align-items:center"><span class="serif" style="font-size:17px">${t.camT}</span>${koSub('버릴 물건을 찍어주세요')}</div><span class="idot glass" style="width:44px;height:44px">${ic('flash',20,'#fff')}</span></div>
+ <div class="camhint glass"><span class="dot" style="background:var(--accent)"></span><span class="col"><span class="small b">${t.camH}</span>${koSub('물건을 네모 안에 맞춰주세요')}</span></div>
+ <div class="camctl">
+  <div class="modes"><span class="b col" style="align-items:center;gap:4px">${t.photo}<span class="dot" style="background:var(--accent);width:5px;height:5px"></span></span><span style="opacity:.6">${t.barcode}</span></div>
+  <div class="row" style="justify-content:space-between">
+   <label class="idot" style="width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.5);cursor:pointer" aria-label="Choose photo">${ic('img',20,'#fff')}<input id="ph" type="file" accept="image/*" hidden></label>
+   <label class="shutter" style="cursor:pointer" aria-label="Take photo"><i></i><input id="ph2" type="file" accept="image/*" capture="environment" hidden></label>
+   <button class="idot" style="width:48px;height:48px;background:rgba(255,255,255,.15)" data-go="w3" aria-label="Use sample">${ic('flip',20,'#fff')}</button>
+  </div>
+  <span class="micro" style="text-align:center;opacity:.6">데모: 사진을 고르거나 오른쪽 버튼으로 예시 사진 사용</span>
+ </div></div>`;};
+SCR.w3=()=>{const t=T();return `<div class="scr cam" style="overflow:hidden">
+ <div class="vf" style="top:150px;height:300px;left:70px;right:70px">${st.photo?`<img src="${st.photo}" alt="">`:bottleSVG}<div class="scanline"></div>${corners('#E45C4E')}</div>
+ <span class="chip" style="position:absolute;top:122px;left:196px;background:#fff;color:var(--ink);font-size:12px;padding:6px 12px 6px 8px;border-radius:14px"><span class="dot" style="background:var(--accent)"></span>${t.pet} <span class="muted">92%</span></span>
+ <div class="camtop"><button class="ibtn glass" style="margin:0;width:44px;height:44px;border-radius:22px" data-act="back" aria-label="Close">${ic('x',20,'#fff')}</button></div>
+ <div class="bottomsheet"><div class="row"><span class="h1 ${isKo()?'ko':''}" style="font-size:24px">${t.analyzing}</span><span class="ld"><i></i><i></i><i></i></span></div>${koSub('분석 중이에요 · 잠시만 기다려주세요')}
+  <div class="col" style="gap:10px">${[[t.st1,'물건 인식','done'],[t.st2,'안산시 배출 기준 확인','doing'],[t.st3,'올바른 배출 방법 찾기','']].map(([a,b,s],i)=>`<div class="row" id="stp${i}"><span class="stat ${s}">${s==='done'?ic('check',12,'#fff',3):''}</span><span class="col"><span class="b" style="font-size:14px;${s?'':'color:var(--muted);font-weight:500'}">${a}</span>${koSub(b)}</span></div>`).join('')}</div>
+ </div></div>`;};
+SCR.w4=()=>{const t=T();const d=new Date().getDay();const ok=sched(d).r;const nd=nextNight(d);
+ return `<div class="scr ${isKo()?'ko':''}">${nav(t.routeT===undefined?'':(isKo()?'결과':st.lang==='vi'?'Kết quả':'Result'),{right:`<button class="ibtn" data-act="home" aria-label="Close">${ic('x',20)}</button>`})}
+ <div class="ttl" style="flex-direction:row;align-items:center;gap:16px"><div class="col grow"><span class="eyebrow">${t.thisIs}</span><h1 class="h1 ${isKo()?'ko':''}">${t.pet}</h1>${koSub('투명 페트병')}</div><span style="width:76px;height:76px;border-radius:18px;overflow:hidden;background:#DCE6E7;display:grid;place-items:center;flex:none">${st.photo?`<img src="${st.photo}" alt="" style="width:100%;height:100%;object-fit:cover">`:ic('img',20,'#4E6B70')}</span></div>
+ <div class="sheet">
+  <div class="ticket">${dotI('recycle','#4E8F87','#fff',40)}<div class="col grow"><span class="cap">${t.goesIn}</span><span class="serif" style="font-size:16px">${t.petDest}</span>${koSub('투명 페트병 별도 배출')}</div><span class="dash"></span><div class="col" style="align-items:center"><span class="cap">${t.bag}</span><span class="small b">${t.clear}</span></div></div>
+  <div class="soft-accent row">${ic('moon',16,'#E45C4E')}<div class="col"><span class="b" style="font-size:14px">${ok?t.tonightYes:t.tonightNo}</span><span class="tiny muted">${ok?DAYLONG[st.lang][d]:DAYLONG[st.lang][nd]} · 20:00 – 06:00</span></div></div>
+  ${h2(t.before)}
+  <div class="col" style="gap:10px">${t.petSteps.map((s,i)=>`<div class="row" style="align-items:flex-start"><span class="it ${i?'muted':'accent'}" style="font-size:15px;width:20px">0${i+1}</span><span class="col"><span class="b" style="font-size:14px">${s}</span>${koSub(S.ko.petSteps[i])}</span></div>`).join('')}</div>
+  <div class="spacer"></div>
+  <div class="row small"><span class="muted">${t.notRight}</span><button class="b" data-go="w5">${t.pickAgain}</button></div>
+  <div class="acts"><button class="btn line sq" data-go="w2" aria-label="${t.ask}">${ic('camera',18)}</button><button class="btn dark" id="remind">${ic(st.remind?'check':'bell',18,'#fff')}${st.remind?t.reminded:t.remind}</button></div>
+ </div>${foot}</div>`;};
+SCR.w5=()=>{const t=T();const col={gen:'#3A4442',food:'#EE8A3C',rec:'#4E8F87',bat:'#7A6AA8',glass:'#3A4442'};const q=st.query.toLowerCase();
+ const list=t.items8.map((x,i)=>[...x,S.ko.items8[i][0]]).filter(x=>!q||x[0].toLowerCase().includes(q)||x[3].includes(q)||x[1].includes(q));
+ return `<div class="scr ${isKo()?'ko':''}">${nav(t.wasteT)}${ttl(t.lookT,koSub('품목별 배출 방법'))}
+ <div class="sheet" style="gap:6px">
+  <label class="field">${ic('search',18,'#6E7472')}<input id="q" type="search" placeholder="${t.lookPh}" value="${st.query.replace(/"/g,'&quot;')}" aria-label="${t.lookT}"></label>
+  <div style="margin-top:10px">${h2(t.confused,'자주 헷갈리는 품목')}</div>
+  <div id="ilist">${list.length?list.map(([n,k,d])=>`<div class="row" style="padding:9px 0;border-bottom:1px solid rgba(30,34,33,.1)"><span class="col grow"><span class="b" style="font-size:14px">${n}</span>${koSub(k)}</span><span class="chip" style="background:var(--bg)"><span class="dot" style="background:${col[d]};width:7px;height:7px"></span>${t.dest[d]}</span></div>`).join(''):`<p class="small muted">—</p>`}</div>
+  <div class="spacer"></div>
+  <div class="row tiny muted" style="align-items:flex-start;margin-top:12px"><span class="dot" style="background:var(--accent);width:6px;height:6px;margin-top:5px"></span><span style="line-height:1.5">${t.noteBat}</span></div>
+ </div>${foot}</div>`;};
+SCR.w6=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.wasteT)}${ttl(t.bulkyT,koSub('대형폐기물 배출 · 사전 신고'))}
+ <div class="sheet">
+  <div class="ticket"><div class="col grow"><span class="cap">${t.pickDays}</span><span class="serif" style="font-size:18px">${t.monThu}</span>${koSub('매주 월·목 수거')}</div><span class="dash"></span><div class="col" style="align-items:center"><span class="cap">${t.askQ}</span><span class="small b" style="user-select:all">1666-1234</span></div></div>
+  ${h2(t.how)}
+  <div>${t.bulkySteps.map(([a,b],i)=>`<div class="tl"><div class="rail2"><span class="dot" style="width:10px;height:10px;margin-top:5px;background:${i?'var(--ink)':'var(--accent)'}"></span>${i<3?'<span class="ln" style="background:rgba(30,34,33,.25);width:1px"></span>':''}</div><div class="col" style="padding-bottom:14px"><span class="row" style="gap:8px;align-items:baseline"><span class="it muted" style="font-size:13px">0${i+1}</span><span class="serif" style="font-size:15px">${a}</span></span><span class="small muted">${b}</span></div></div>`).join('')}</div>
+  <div class="row" style="background:rgba(78,143,135,.12);border-radius:16px;padding:12px 14px">${dotI('fridge','#4E8F87','#fff',36)}<div class="col"><span class="b" style="font-size:13px">${t.freeT}</span><span class="kr micro muted">대형폐가전 무상 방문수거 · <span style="user-select:all">1599-0903</span></span></div></div>
+  <div class="spacer"></div>
+  <a class="btn dark" href="https://www.ansan.go.kr/waste/pc/web/order/insertAgreeForm.do" target="_blank" rel="noopener">${ic('globe',18,'#fff')}${t.applyOnline}${ic('ext',14,'#fff')}</a>
+ </div>${foot}</div>`;};
+
+/* transit */
+const LINES=`<span class="badge" style="background:var(--l4)">4</span><span class="badge" style="background:var(--sb);color:#3A2600">수인분당</span><span class="badge" style="background:var(--sh);color:#1E2A00">서해</span>`;
+SCR.b1=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.busT,`<span class="kr">원포공원1로 59 · 초지동</span>`,{pin:true})}
+ <div class="sheet">
+  <div class="card" style="padding:4px 16px"><div class="row" style="padding:11px 0;border-bottom:1px solid rgba(30,34,33,.1)">${ic('home',16)}<span class="kr b grow" style="font-size:14px">${t.home} · 원포공원1로 59</span></div><button class="row" style="padding:11px 0;width:100%" data-go="b2">${ic('work',16,'#E45C4E')}<span class="grow muted" style="text-align:left;font-size:14px">${t.whereTo}</span></button></div>
+  ${h2(t.saved,'자주 가는 곳')}
+  <button class="row" style="border:1px solid var(--hair);border-radius:18px;padding:12px 14px;text-align:left" data-go="b3">${dotI('work','#22393A','#fff',36)}<span class="col grow"><span class="b" style="font-size:13px">${t.toWork}</span><span class="row tiny muted" style="gap:6px"><span class="badge" style="background:var(--bus)">Bus</span>~35 ${t.min}</span></span>${ic('arrow',16,'#6E7472')}</button>
+  ${h2(t.nearby,'주변')}
+  ${miniMap('near')}
+  <button class="card row" style="text-align:left" data-naver="초지역">${dotI('train','#fff','#1E2221',36)}<span class="col grow" style="gap:4px"><span class="row" style="gap:6px;align-items:baseline"><span class="serif" style="font-size:15px">${t.choji}</span>${koSub('초지역')}</span><span class="row" style="gap:4px;flex-wrap:wrap">${LINES}</span></span>${ic('map',16,'#6E7472')}</button>
+  <button class="card row" style="text-align:left" data-go="b4">${dotI('bus','#fff','#1E2221',36)}<span class="col grow"><span class="serif" style="font-size:15px">${t.busStop}</span><span class="tiny muted">${t.busStopS}</span></span>${ic('arrow',16,'#6E7472')}</button>
+  <div class="acts">${[['card',t.quick[0],'b6'],['moon',t.quick[1],'b5'],['route',t.quick[2],'b2']].map(([i,l,g])=>`<button data-go="${g}" class="col" style="flex:1;align-items:center;gap:6px;border:1px solid var(--hair);border-radius:16px;padding:12px 6px">${ic(i,18,'#22393A')}<span class="b" style="font-size:12px;text-align:center">${l}</span></button>`).join('')}</div>
+ </div>${foot}</div>`;};
+const seg=(c,g,l='')=>`<span class="seg" style="background:${c};flex:${g}">${l}</span>`;
+SCR.b2=()=>{const t=T();const opts=[[35,0,[[ 'var(--walk)',1],['var(--bus)',5,'Bus'],['var(--walk)',1]],true],[42,1,[['var(--walk)',1],['var(--l4)',3,'Line 4'],['var(--bus)',3,'Bus'],['var(--walk)',1]]],[48,1,[['var(--walk)',2],['var(--bus)',3,'Bus'],['var(--bus)',3,'Bus'],['var(--walk)',1]]]];
+ return `<div class="scr ${isKo()?'ko':''}">${nav(t.busT)}
+ <div class="ttl" style="gap:0">${[['var(--ink)','원포공원1로 59',t.home],['var(--accent)',isKo()?'반월국가산업단지':'Banwol Industrial Complex','반월국가산업단지']].map(([c,a,b],i)=>`<div class="row" style="padding:6px 0"><span class="dot" style="background:${c};width:10px;height:10px"></span><span class="col"><span class="${i===0||isKo()?'kr b':'serif'}" style="font-size:17px">${a}</span><span class="tiny muted kr">${i===0?b:(isKo()?'':b)}</span></span></div>`).join('')}</div>
+ <div class="sheet" style="gap:12px">
+  <div class="row" style="gap:18px">${t.sortBy.map((s,i)=>`<span class="col" style="align-items:center;gap:4px"><span style="font-size:13px;${i?'color:var(--muted)':'font-weight:600'}">${s}</span><span style="height:2px;width:18px;background:${i?'transparent':'var(--accent)'}"></span></span>`).join('')}</div>
+  ${opts.map(([m,tr,segs,best])=>`<button class="opt ${best?'best':''}" data-go="b3"><span class="row" style="align-items:baseline;gap:8px;width:100%"><span class="serif" style="font-size:26px">${m}</span><span class="small muted">${t.min}</span><span class="grow"></span>${best?`<span class="badge" style="background:var(--accent)">${t.best}</span>`:''}</span><span class="row" style="gap:3px;width:100%">${segs.map(s=>seg(...s)).join('')}</span><span class="row tiny muted" style="gap:8px">${t.transfers(tr)} · ₩1,650+</span></button>`).join('')}
+  <div class="spacer"></div>
+  <button class="btn line" data-naver="반월국가산업단지">${ic('map',18)}${t.openNaver}</button>
+  <span class="row tiny muted" style="gap:8px"><span class="dot" style="background:var(--accent);width:6px;height:6px"></span>${t.sampleNote}</span>
+ </div>${foot}</div>`;};
+SCR.b3=()=>{const t=T();const cols={walk:'var(--walk)',bus:'var(--bus)',spot:'var(--bus)',tap:'var(--accent)'};
+ return `<div class="scr ${isKo()?'ko':''}">${nav(t.routeT,{right:`<button class="ibtn" aria-label="Notify">${ic('bell',20)}</button>`})}
+ <div class="ttl"><div class="row" style="align-items:baseline;gap:8px"><span class="serif" style="font-size:34px">~35</span><span class="muted">${t.min} · ₩1,650 · ${t.transfers(0)}</span></div><span class="small">${t.leaveBy}</span></div>
+ <div class="sheet" style="gap:0">
+  ${t.rsteps.map(([i,a,b,k],n)=>`<div class="tl"><div class="rail2">${dotI(i,cols[i],'#fff',30)}${n<4?`<span class="ln ${i==='walk'?'walk':''}" style="${i==='walk'?'':'background:var(--bus)'}"></span>`:''}</div><div class="col grow" style="padding:4px 0 18px"><span class="row" style="gap:8px"><span class="b grow" style="font-size:14px">${a}</span>${n===1?`<span class="chip" style="background:var(--accent-soft)"><span class="dot" style="background:var(--accent);width:6px;height:6px"></span>~4 ${t.min}</span>`:''}</span><span class="small muted">${b}</span><span class="micro muted ${isKo()?'':'kr'}">${k}</span></div></div>`).join('')}
+  <div class="spacer"></div>
+  <div class="acts"><button class="btn line sq" data-go="b5" aria-label="${t.guideApp}">${ic('route',18)}</button><button class="btn dark" data-naver="반월국가산업단지">${ic('map',18,'#fff')}${t.openNaver}${ic('ext',14,'#fff')}</button></div>
+ </div>${foot}</div>`;};
+SCR.b4=()=>{const t=T();const rows=[['Bus A',2,5,0,true],['Bus B',6,14,1],['Bus C',11,25,2],['Bus D',null]];
+ return `<div class="scr ${isKo()?'ko':''}">${nav(t.busT)}${ttl(t.busStop,`<span>${t.busStopS}</span>`,{eye:t.stopT})}
+ <div class="sheet" style="gap:10px">
+  <span class="row tiny muted" style="gap:6px">${ic('refresh',13,'#6E7472')}${t.updated}</span>
+  ${rows.map(([n,a,b,c,mine])=>`<div class="row" style="border-radius:18px;padding:12px 14px;background:${mine?'#fff':'var(--bg)'};${mine?'box-shadow:inset 0 0 0 1.5px var(--accent)':''}"><span class="col grow" style="gap:4px"><span><span class="badge" style="background:${a==null?'var(--walk)':'var(--bus)'}">${n}</span></span><span class="micro muted">${a==null?t.lastBus:t.crowd[c]}</span></span>${a==null?'<span class="serif">—</span>':`<span class="col" style="align-items:flex-end"><span><span class="serif ${mine?'accent':''}" style="font-size:22px">${a}</span> <span class="tiny muted">${t.min}</span></span><span class="micro muted">${t.next} ${b} ${t.min}</span></span>`}</div>`).join('')}
+  <div class="soft-accent row">${dotI('bell','var(--accent)','#fff',32)}<span class="col grow"><span class="b" style="font-size:13px">${t.notify}</span>${koSub('도착 2정류장 전 알림')}</span><button class="toggle" id="ntf" aria-pressed="${st.notify}" aria-label="${t.notify}"></button></div>
+  <div class="spacer"></div>
+  <span class="row tiny muted" style="gap:6px">${ic('moon',13,'#6E7472')}${t.nightNote}</span>
+ </div>${foot}</div>`;};
+SCR.b5=()=>{const t=T();return `<div class="scr board ${isKo()?'ko':''}" style="background:var(--deep)">${nav(t.onboard)}
+ <div class="ttl" style="color:#fff"><span class="row small" style="gap:8px;opacity:.8"><span class="badge" style="background:var(--bus)">Bus</span>→ Banwol</span><div class="row" style="align-items:baseline;gap:10px"><span class="serif" style="font-size:72px;line-height:1">3</span><span class="col"><span class="it" style="font-size:20px">${t.stopsLeft}</span>${koSub('3정류장 남았어요')}</span></div><span class="small" style="opacity:.85">${t.getOffAt}</span></div>
+ <div style="padding:6px 40px 16px;color:#fff;display:flex;flex-direction:column">${['now','','',''].map((x,i)=>`<div class="row" style="gap:14px;align-items:flex-start"><span class="col" style="align-items:center;width:16px"><span class="dot" style="width:${i===3?16:12}px;height:${i===3?16:12}px;background:${i===3?'var(--accent)':i===0?'#fff':'rgba(255,255,255,.35)'};${i===0?'box-shadow:0 0 0 3px var(--bus)':''}"></span>${i<3?'<span style="width:2px;height:22px;background:rgba(255,255,255,.25)"></span>':''}</span><span class="small" style="${i===0||i===3?'font-weight:700':'opacity:.65'}">${i===3?(isKo()?'내릴 정류장':st.lang==='vi'?'Trạm xuống':'Your stop'):(isKo()?'정류장':st.lang==='vi'?'Trạm':'Stop')+' '+(i+1)}${i===0?' <span class="badge" style="background:var(--bus);font-size:9px">NOW</span>':''}</span></div>`).join('')}</div>
+ <div class="spacer"></div>
+ <div class="bottomsheet" style="position:relative;border-top-left-radius:40px;border-top-right-radius:40px">
+  <span class="serif" style="font-size:17px">${t.whenOff}</span>
+  ${t.offSteps.map((s,i)=>`<div class="row"><span class="it ${i===2?'accent':'muted'}" style="width:20px">0${i+1}</span><span class="col"><span class="b" style="font-size:14px">${s}</span>${koSub(S.ko.offSteps[i])}</span></div>`).join('')}
+  <div class="card row">${ic('speak',16,'#E45C4E')}<span class="col"><span class="kr b" style="font-size:14px">다음 정류장에서 내려요.</span><span class="micro muted">${t.showDriver}</span></span></div>
+ </div></div>`;};
+SCR.b6=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.busT)}${ttl(t.faresT,koSub('교통카드 · 요금 · 환승'))}
+ <div class="sheet" style="gap:12px">
+  <div class="ticket" style="background:var(--deep);color:#fff">${dotI('card','#fff','#22393A',40)}<span class="col"><span class="cap" style="color:rgba(255,255,255,.7)">${t.needCard}</span><span class="serif" style="font-size:16px">${t.tmoney}</span><span class="tiny" style="opacity:.75">${t.tmoneyS}</span></span></div>
+  ${h2(t.fares,'',t.adult)}
+  ${[['bus','var(--bus)',t.cityBus,'경기 시내버스 (일반형)','₩1,650'],['train','var(--l4)',t.subway,'수도권 지하철 기본요금','₩1,550']].map(([i,c,a,k,v])=>`<div class="row">${dotI(i,c,'#fff',32)}<span class="col grow"><span class="b" style="font-size:14px">${a}</span>${koSub(k)}</span><span class="serif" style="font-size:18px">${v}</span></div>`).join('')}
+  <span class="tiny muted">${t.cashNote}</span>
+  ${h2(t.freeTr,'환승 할인')}
+  <div class="card row" style="justify-content:space-around;padding:14px 8px">${t.trRules.map(([n,u,d],i)=>`${i?'<span class="dash"></span>':''}<span class="col" style="align-items:center"><span><span class="serif ${i?'':'accent'}" style="font-size:24px">${n}</span> <span class="tiny muted">${u}</span></span><span class="micro muted">${d}</span></span>`).join('')}</div>
+  <div class="soft-accent row">${dotI('tap','var(--accent)','#fff',30)}<span class="col"><span class="b" style="font-size:13px">${t.tapWarn}</span>${koSub('하차 태그를 안 하면 환승이 안 돼요')}</span></div>
+  <div class="spacer"></div><span class="micro muted">${t.asOf}</span>
+ </div>${foot}</div>`;};
+
+/* hospitals / offices / news */
+SCR.hosp=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.hospT,`<span>${t.near}</span>`,{pin:true})}
+ <div class="sheet">
+  <div class="soft-accent row">${dotI('alert','var(--accent)','#fff',32)}<span class="col"><span class="serif" style="font-size:15px">${t.emerg}</span><span class="tiny muted">${t.emergS}</span></span></div>
+  <button class="col" style="gap:8px;text-align:left" data-go="hdetail"><span class="row" style="gap:10px"><span style="width:16px;height:1.5px;background:var(--ink)"></span><span class="serif grow" style="font-size:16px">${t.univ}</span></span><span class="ticket" style="width:100%"><span class="col grow" style="gap:5px"><span class="kr tiny muted">고려대학교 안산병원</span><span class="chips"><span class="tag">ER</span><span class="tag">University</span></span><span class="row tiny" style="gap:5px">${ic('spot',12,'#6E7472')}<span class="kr">단원구 적금로 123</span></span></span><span class="dash"></span><span class="idot" style="background:var(--accent)">${ic('map',16,'#fff',2)}</span></span></button>
+  <span class="small muted">${t.more}</span>
+  <div class="spacer"></div>
+ </div>${foot}</div>`;};
+SCR.hdetail=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">
+ <div class="nmap" data-map="hosp" style="height:250px;flex:none"><div class="live"></div><svg class="fallback" width="100%" height="100%" viewBox="0 0 390 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g stroke="#fff" stroke-linecap="round" fill="none"><path d="M-10 190 C 90 160,160 210,260 150 S 380 100,400 110" stroke-width="14"/><path d="M120 -10 L 170 260" stroke-width="10"/><path d="M-10 80 L 400 50" stroke-width="8"/><path d="M290 -10 L 250 260" stroke-width="6"/></g><g fill="#C9D8D9"><rect x="190" y="180" width="46" height="40" rx="6"/><rect x="20" y="110" width="60" height="44" rx="6"/><rect x="300" y="170" width="70" height="60" rx="6"/></g><path d="M195 135s16-15 16-27a16 16 0 0 0-32 0c0 12 16 27 16 27z" fill="#E45C4E"/><circle cx="195" cy="108" r="6" fill="#fff"/></svg>
+  <button class="idot" data-act="back" aria-label="Back" style="position:absolute;z-index:3;left:24px;top:calc(48px + env(safe-area-inset-top,0px));width:44px;height:44px;background:#fff">${ic('back',20)}</button></div>
+ <div class="sheet" style="border-top-right-radius:40px;border-top-left-radius:40px;margin-top:-36px;position:relative">
+  <div class="col" style="gap:4px"><span class="serif" style="font-size:22px;line-height:1.25">${t.univ}</span><span class="small muted kr">고려대학교 안산병원 · ${t.univS}</span></div>
+  <div>${[['clock',t.hours,t.checkHours],['spot',t.addr,'단원구 적금로 123'],['phone',t.tel,'1577-7516']].map(([i,k,v])=>`<div class="row" style="padding:11px 0;border-bottom:1px solid rgba(30,34,33,.12)">${ic(i,16,'#6E7472')}<span class="small muted">${k}</span><span class="grow b kr" style="text-align:right;font-size:13px;user-select:all">${v}</span></div>`).join('')}</div>
+  <div class="card col" style="gap:8px"><span class="row cap" style="gap:8px">${ic('speak',16,'#E45C4E')}${t.staff}</span><span class="h1 ko" style="font-size:16px;line-height:1.5">통역이 필요해요.<br>영어로 도와주실 수 있나요?</span><span class="tiny muted">${t.staffEn}</span></div>
+  <div class="spacer"></div>
+  <button class="btn dark" data-naver="고려대학교안산병원">${ic('map',18,'#fff')}${t.openNaver}${ic('ext',14,'#fff')}</button>
+ </div></div>`;};
+SCR.offices=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.offT,`<span>${t.offS}</span>`,{pin:true})}
+ <div class="sheet" style="gap:18px">${miniMap('offices')}${t.offices.map(([a,k,d],i)=>`<button class="col" style="gap:8px;text-align:left" data-naver="${S.ko.offices[i][0]}"><span class="row" style="gap:10px"><span style="width:16px;height:1.5px;background:var(--ink)"></span><span class="serif grow ${isKo()?'kr':''}" style="font-size:16px">${a}</span></span><span class="ticket" style="width:100%"><span class="col grow" style="gap:4px"><span class="tiny muted kr">${k}</span><span class="small">${d}</span></span><span class="dash"></span><span class="idot" style="background:var(--accent)">${ic('map',16,'#fff',2)}</span></span></button>`).join('')}<div class="spacer"></div></div>${foot}</div>`;};
+SCR.news=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.newsT,koSub('공지·행사'))}
+ <div class="sheet" style="gap:20px">${t.newsItems.map(([a,b],i)=>`<div class="quote"><div class="col" style="gap:6px"><span class="row cap" style="gap:6px;color:var(--deep)">${ic(i?'cal':'shield',13,'#22393A',2)}${i?(isKo()?'행사':st.lang==='vi'?'SỰ KIỆN':'EVENT'):t.official} · ${t.sample}</span><span class="serif" style="font-size:17px">${a}</span><span class="small muted">${b}</span></div></div>`).join('')}
+ ${adFree()?adFreeRow():`<div class="card row"><span class="col grow" style="gap:3px"><span class="row cap" style="gap:6px"><span class="dot" style="background:var(--accent);width:6px;height:6px"></span>${t.sponsored}</span><span class="serif" style="font-size:15px">${t.adT}</span></span><span style="width:60px;height:60px;border-radius:14px;background:#FBE7D6;display:grid;place-items:center">${ic('gift',20,'#9A6A44')}</span></div>`}
+ <div class="spacer"></div></div>${foot}</div>`;};
+
+/* survey */
+SCR.surv=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.survT,`<span>${t.survS}</span>`)}
+ <div class="sheet">
+  <div style="background:var(--deep);color:#fff;border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:10px">
+   <span class="row" style="justify-content:space-between"><span class="badge" style="background:var(--accent)">${t.newB}</span><span class="it small" style="opacity:.8">${t.sample}</span></span>
+   <span class="${isKo()?'h1 ko':'serif'}" style="font-size:22px">${t.survF}</span><span class="small" style="opacity:.8;line-height:1.5">${t.survFS}</span>
+   <div class="row" style="background:rgba(255,255,255,.1);border-radius:16px;padding:10px 14px">${[[t.time,'~2 min'],[t.qs,'3'],[t.reward,t.adFreeShort]].map(([k,v])=>`<span class="col grow"><span class="micro b" style="opacity:.7;letter-spacing:1px">${k}</span><span class="serif" style="font-size:15px">${v}</span></span>`).join('')}</div>
+   <button class="btn" style="background:#fff;color:var(--ink);height:46px" data-act="startsurv">${t.start}${ic('arrowR',16)}</button>
+  </div>
+  ${adFree()?adFreeRow():`<div class="soft-accent row">${dotI('gift','var(--accent)','#fff',32)}<span class="col"><span class="b" style="font-size:13px">${t.survNote}</span>${koSub('참여 시 하루 동안 광고 제거')}</span></div>`}
+  <div class="spacer"></div>
+  <span class="row tiny muted" style="gap:8px">${ic('lock',14,'#6E7472')}${t.anon}</span>
+ </div>${foot}</div>`;};
+SCR.sq=()=>{const t=T();const [q,k,opts]=t.sq[st.qi];const a=st.answers[st.qi];const last=st.qi===t.sq.length-1;
+ return `<div class="scr ${isKo()?'ko':''}"><div class="nav"><span class="serif" style="font-size:18px">0${st.qi+1}</span><span class="it muted">/ 0${t.sq.length}</span><span class="prog"><b style="width:${(st.qi+1)/t.sq.length*100}%"></b></span><button class="ibtn" data-act="home" aria-label="Close">${ic('x',22)}</button></div>
+ <div class="ttl" style="gap:8px;padding-top:28px"><span class="eyebrow">${t.survF}</span><h1 class="h1 ${isKo()?'ko':''}" style="font-size:28px">${q}</h1><span class="small muted ${isKo()?'':'kr'}">${k}</span></div>
+ <div class="sheet" style="gap:10px"><span class="cap">${t.choose1}</span>
+  ${opts.map(([i,a1,b1],n)=>`<button class="qopt" data-ans="${n}" aria-pressed="${a===n}">${dotI(i,a===n?'var(--accent)':'#fff',a===n?'#fff':'#22393A',36)}<span class="col grow"><span class="b" style="font-size:15px">${a1}</span><span class="micro muted ${isKo()?'':'kr'}">${b1}</span></span><span class="radio">${a===n?ic('check',12,'#fff',3):''}</span></button>`).join('')}
+  <div class="spacer"></div>
+  <div class="acts"><button class="btn line sq" data-act="qprev" aria-label="Back">${ic('back',18)}</button><button class="btn dark" data-act="qnext" ${a==null?'disabled':''}>${last?t.finish:t.nextB}${ic('arrowR',16,'currentColor')}</button></div>
+ </div></div>`;};
+SCR.sdone=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.survT)}
+ <div class="ttl" style="padding-top:36px;gap:8px"><span class="row" style="gap:6px"><span class="dot" style="background:var(--accent);width:10px;height:10px"></span><span class="dot" style="background:var(--deep);width:10px;height:10px"></span></span><h1 class="h1 ${isKo()?'ko':''}" style="font-size:40px">${t.thanks}</h1><span class="muted" style="line-height:1.5">${t.thanksS}</span></div>
+ <div class="sheet">
+  <div class="ticket" style="padding:18px">${dotI('gift','var(--accent)','#fff',48)}<span class="col grow"><span class="cap">${t.yourReward}</span><span class="serif" style="font-size:20px">${t.adFreeShort}</span><span class="tiny muted">${t.adFreeTomorrow(hhmm(st.adFreeUntil))}</span></span></div>
+  <span class="row tiny muted" style="gap:8px">${ic('shield',14,'#6E7472')}${t.anon}</span>
+  <div class="spacer"></div>
+  <button class="btn dark" data-act="home">${t.backHome}</button>
+ </div>${foot}</div>`;};
+
+/* ---------- bottom sheets (Naver) ---------- */
+function sheet(kind){const t=T();const o=document.createElement('div');o.className='sheetover';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
+ if(kind==='choose'){o.innerHTML=`<div class="bs"><span class="grab"></span><span class="eyebrow">${t.chooseT}</span><span class="h1" style="font-size:28px">Naver Map</span>
+  <div class="card row small" style="padding:10px 12px"><span class="dot" style="background:var(--accent)"></span><span class="kr b">${naverQ}</span></div>
+  <a class="choice rec" href="${nApp(naverQ)}" data-app="1">${dotI('mobile','var(--deep)','#fff',40)}<span class="col grow"><span class="row" style="gap:6px"><span class="b">${t.naverApp}</span><span class="badge" style="background:var(--accent);font-size:9px">${t.rec2}</span></span><span class="tiny muted">${t.naverAppS}</span></span>${ic('arrow',16,'#6E7472')}</a>
+  <a class="choice" href="${nWeb(naverQ)}" target="_blank" rel="noopener" data-web="1">${dotI('web','#fff','#22393A',40)}<span class="col grow"><span class="b">${t.naverWeb}</span><span class="tiny muted">${t.naverWebS}</span></span>${ic('ext',16,'#6E7472')}</a>
+  <button class="row small" id="alw" style="text-align:left"><span class="ck" role="checkbox" aria-checked="false"></span>${t.always}</button>
+  <div class="soft-accent row" style="background:rgba(228,92,78,.08)">${ic('globe',18,'#E45C4E')}<span class="col"><span class="b small">${t.langTip}</span><span class="tiny muted">${t.langTipS}</span></span></div></div>`;}
+ else{o.innerHTML=`<div class="bs"><span class="grab"></span>${dotI('download','var(--bg)','#22393A',44)}<span class="h1" style="font-size:24px">${t.notInst}</span><span class="small muted" style="line-height:1.5">${t.notInstS}</span>
+  <a class="btn dark" href="${storeUrl()}" target="_blank" rel="noopener">${ic('download',18,'#fff')}${t.install}</a>
+  <a class="btn line" href="${nWeb(naverQ)}" target="_blank" rel="noopener">${ic('web',18)}${t.onWeb}${ic('ext',14,'#6E7472')}</a></div>`;}
+ o.addEventListener('click',e=>{if(e.target===o)o.remove();const a=e.target.closest('[data-app]');const w=e.target.closest('[data-web]');const al=e.target.closest('#alw');
+  if(al){const c=al.querySelector('.ck');const v=c.getAttribute('aria-checked')!=='true';c.setAttribute('aria-checked',v);c.innerHTML=v?ic('check',12,'#fff',3):'';o.dataset.always=v?'1':'';}
+  if(a){remember(o,'app');setTimeout(()=>o.remove(),50);watchApp();}
+  if(w){remember(o,'web');setTimeout(()=>o.remove(),50);}});
+ app.appendChild(o);}
+function remember(o,v){if(o.dataset.always){st.always=v;try{localStorage.setItem('al_naver',v)}catch(e){}}}
+
+/* ---------- render + behaviors ---------- */
+let bgTimer=null,scanTimer=null;
+function render(){clearInterval(bgTimer);clearTimeout(scanTimer);const n=cur();app.innerHTML=SCR[n]();
+ if(n==='intro')bindIntro();
+ if(n==='w3')runScan();
+ mountMaps();
+ if(n==='w2'){['ph','ph2'].forEach(id=>{const i=document.getElementById(id);i&&i.addEventListener('change',()=>{const f=i.files&&i.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{st.photo=r.result;go('w3')};r.readAsDataURL(f);});});}
+ if(n==='w5'){const q=document.getElementById('q');q.addEventListener('input',()=>{st.query=q.value;const pos=q.selectionStart;app.innerHTML=SCR.w5();const q2=document.getElementById('q');q2.focus();try{q2.setSelectionRange(pos,pos)}catch(e){}render.bindW5&&0;rebindW5();});}
+}
+function rebindW5(){const q=document.getElementById('q');q.addEventListener('input',()=>{st.query=q.value;const pos=q.selectionStart;app.innerHTML=SCR.w5();const q2=document.getElementById('q');q2.focus();try{q2.setSelectionRange(pos,pos)}catch(e){}rebindW5();});}
+function bindIntro(start=true){const A=document.getElementById('bgA'),B=document.getElementById('bgB');let on=start;
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ bgTimer=setInterval(()=>{on=!on;A.style.opacity=on?1:0;B.style.opacity=on?0:1;},reduce?12000:5500);
+ const rail=document.getElementById('rail');const sw=document.getElementById('swb');
+ rail.addEventListener('scroll',()=>{const p=rail.scrollLeft/Math.max(1,rail.scrollWidth-rail.clientWidth);sw.style.left=(p*36)+'px'},{passive:true});
+ // drag-to-scroll with momentum (mouse/pen; touch keeps native swipe)
+ let down=false,sx=0,sl=0,lx=0,lt=0,v=0,raf=0;
+ rail.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'||e.button!==0)return;down=true;dragMoved=false;sx=lx=e.clientX;sl=rail.scrollLeft;lt=performance.now();v=0;cancelAnimationFrame(raf);});
+ rail.addEventListener('pointermove',e=>{if(!down)return;const dx=e.clientX-sx;if(!dragMoved&&Math.abs(dx)>5){dragMoved=true;rail.classList.add('dragging');try{rail.setPointerCapture(e.pointerId)}catch(_){}}
+  if(dragMoved){rail.scrollLeft=sl-dx;const now=performance.now();v=(e.clientX-lx)/Math.max(1,now-lt);lx=e.clientX;lt=now;}});
+ const up=e=>{if(!down)return;down=false;if(!dragMoved)return;let vel=v*16;const step=()=>{if(Math.abs(vel)<.4){rail.classList.remove('dragging');return}rail.scrollLeft-=vel;vel*=.94;raf=requestAnimationFrame(step)};step();setTimeout(()=>{dragMoved=false},0);};
+ rail.addEventListener('pointerup',up);rail.addEventListener('pointercancel',up);rail.addEventListener('pointerleave',up);
+ rail.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){rail.scrollLeft+=e.deltaY;e.preventDefault();}},{passive:false});
+}
+let dragMoved=false;
+function runScan(){const steps=[...app.querySelectorAll('.stat')];
+ scanTimer=setTimeout(()=>{steps[1].className='stat done';steps[1].innerHTML=ic('check',12,'#fff',3);steps[2].className='stat doing';
+  scanTimer=setTimeout(()=>{st.stack.pop();go('w4')},1100)},1300);}
+
+app.addEventListener('click',e=>{const el=e.target.closest('[data-sel],[data-go],[data-act],[data-naver],[data-ans],#goBtn,#remind,#ntf');if(!el)return;
+ if(el.dataset.sel){if(dragMoved)return;const keep=document.getElementById('rail').scrollLeft;const A0=document.getElementById('bgA');const orangeOn=A0&&A0.style.opacity!=='0';st.sel=el.dataset.sel;clearInterval(bgTimer);app.innerHTML=SCR.intro().replace('class="scr intro"','class="scr intro" style="animation:none"');
+  const A=document.getElementById('bgA'),B=document.getElementById('bgB');A.style.transition=B.style.transition='none';A.style.opacity=orangeOn?1:0;B.style.opacity=orangeOn?0:1;void A.offsetWidth;A.style.transition=B.style.transition='';
+  bindIntro(orangeOn);document.getElementById('rail').scrollLeft=keep;return;}
+ if(el.id==='goBtn'){const c=COUNTRIES.find(x=>x.c===st.sel);if(c&&c.lang){st.lang=c.lang;home();}return;}
+ if(el.id==='remind'){st.remind=!st.remind;render();return;}
+ if(el.id==='ntf'){st.notify=!st.notify;el.setAttribute('aria-pressed',st.notify);return;}
+ if(el.dataset.naver){openNaver(el.dataset.naver);return;}
+ if(el.dataset.ans!=null){st.answers[st.qi]=+el.dataset.ans;render();return;}
+ if(el.dataset.go){if(el.dataset.go==='w2')st.photo=null;go(el.dataset.go);return;}
+ const a=el.dataset.act;
+ if(a==='back')back();else if(a==='home')home();else if(a==='intro'){st.stack=['intro'];render();}
+ else if(a==='startsurv'){st.qi=0;st.answers=[];go('sq');}
+ else if(a==='qprev'){if(st.qi>0){st.qi--;render()}else back();}
+ else if(a==='qnext'){if(st.qi<T().sq.length-1){st.qi++;render()}else{grantAdFree();st.stack=['home','sdone'];render();}}
+});
+
+/* ---------- press feedback (touchdown) ---------- */
+const PRESS='button,a,label.shutter,label.idot,[data-go],[data-act],[data-naver],[data-sel],[data-ans],.cc,.choice,.opt,.qopt';
+function tagFx(root){root.querySelectorAll(PRESS).forEach(n=>n.classList.add('fx'));}
+new MutationObserver(m=>m.forEach(r=>r.addedNodes.forEach(n=>{if(n.nodeType===1){if(n.matches&&n.matches(PRESS))n.classList.add('fx');tagFx(n);}}))).observe(document.body,{childList:true,subtree:true});
+let pressed=null,pressTimer=0;
+const release=()=>{clearTimeout(pressTimer);if(pressed){const p=pressed;pressed=null;setTimeout(()=>p.classList.remove('is-pressed'),90);}};
+document.addEventListener('pointerdown',e=>{const el=e.target.closest(PRESS);if(!el||el.disabled)return;release();pressed=el;el.classList.add('is-pressed');},{passive:true});
+['pointerup','pointercancel','dragstart'].forEach(t=>document.addEventListener(t,release,{passive:true}));
+document.addEventListener('scroll',release,{passive:true,capture:true});
+document.addEventListener('pointermove',e=>{if(pressed&&e.pointerType!=='mouse'&&!pressed.contains(document.elementFromPoint(e.clientX,e.clientY)))release();},{passive:true});
+document.addEventListener('touchstart',()=>{},{passive:true}); /* enables :active on iOS */
+
+/* ---------- desktop fit + modal ---------- */
+function fit(){const ph=document.getElementById('phone');if(innerWidth<=500){ph.style.transform='';return}const s=Math.min(1,(innerHeight-48)/864);ph.style.transform=`scale(${s})`;ph.style.margin=`${-(844*(1-s))/2}px ${-(390*(1-s))/2}px`;}
+addEventListener('resize',fit);fit();
+const modal=document.getElementById('modal');
+let seen=false;try{seen=sessionStorage.getItem('al_modal')==='1'}catch(e){}
+if(innerWidth>500&&!seen){modal.hidden=false;document.getElementById('mclose').focus();}
+document.getElementById('mclose').addEventListener('click',()=>{modal.hidden=true;try{sessionStorage.setItem('al_modal','1')}catch(e){}});
+modal.addEventListener('click',e=>{if(e.target===modal)document.getElementById('mclose').click()});
+render();
+})();
+</script>
