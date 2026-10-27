@@ -2,7 +2,7 @@
    - 화면(index.html): 네트워크 우선, 오프라인이면 마지막으로 받은 화면
    - 이미지·글꼴·공지 원문: 캐시 우선(백그라운드로 갱신)
    - API 서버, 네이버 지도, 카메라 사진: 캐시하지 않음 */
-const CACHE = 'ansanlife-v3';
+const CACHE = 'ansanlife-v4';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'assets/intro-orange.jpg', 'assets/intro-sky.jpg', 'assets/icon-192.png'];
 
 self.addEventListener('install', e => {

@@ -1,0 +1,7 @@
+{
+  "source": "Medical Korea(한국보건산업진흥원) '외국인 자주 찾는 병원' · '언어종류' 공공데이터를 scripts/lang_hospitals_from_khidi.py 로 변환. 수동 추가분은 note 에 근거를 적을 것",
+  "updated": "2026-10-27",
+  "hospitals": [
+    { "name": "고려대학교 안산병원", "langs": ["en"], "note": "국제진료센터 운영(병원 안내 기준). 시범 데이터 — KHIDI 원본으로 덮어쓰기 전 병원에 확인 필요" }
+  ]
+}

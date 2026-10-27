@@ -19,6 +19,8 @@
 | 할 일 | 어디서 | 앱에서 쓰는 곳 |
 | --- | --- | --- |
 | 경기도 버스도착정보 v2 활용 신청 | 공공데이터포털(data.go.kr) | 정류장 도착 시간 |
+| 국립중앙의료원 전국 병·의원 찾기 서비스 · 전국 약국 정보 조회 서비스 활용 신청 (같은 인증키) | 공공데이터포털(data.go.kr) | 병원·약국 목록, 영업 중 여부, 진료시간 |
+| `data/lang_hospitals.json` 채우기 — KHIDI '외국인 자주 찾는 병원' CSV 2개 받아 `python3 scripts/lang_hospitals_from_khidi.py a.csv b.csv` | 공공데이터포털 | English OK 탭 |
 | 경기도 정류소 조회 v2 활용 신청 | 공공데이터포털 | 주변 정류장 |
 | 네이버 클라우드 Maps Application (Dynamic Map, Geocoding, Reverse Geocoding) | NAVER Cloud 콘솔 | 지도, 주소 ↔ 좌표 |
 | Claude API 키, 사용량 상한 | console.anthropic.com | 사진 분석, 공지 번역 |

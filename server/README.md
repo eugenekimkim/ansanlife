@@ -7,6 +7,8 @@
 | `POST /analyze` (또는 `/`) | 사진 → 배출 분류 (Claude API 이미지 입력) | `ANTHROPIC_API_KEY` |
 | `GET /bus/stops?lat=&lng=` | 주변 정류장 최대 8곳 (경기도 정류소 조회 v2) | `DATA_GO_KR_KEY` |
 | `GET /bus/arrivals?stationId=` | 정류장 도착 정보 (경기도 버스도착정보 v2) | `DATA_GO_KR_KEY` |
+| `GET /med/nearby?kind=hosp\|pharm&lat=&lng=` | 주변 병·의원 / 약국 40곳, 거리순 + 오늘 진료시간 (국립중앙의료원) | `DATA_GO_KR_KEY` |
+| `GET /med/detail?kind=hosp\|pharm&id=HPID` | 요일별 진료시간, 진료과목, 응급실 여부 | `DATA_GO_KR_KEY` |
 | `GET /notices?lang=vi` | `NOTICES_URL` 의 한국어 공지를 번역해 원문과 함께 | `ANTHROPIC_API_KEY` |
 
 모든 경로는 `ALLOWED_ORIGIN` 에 등록한 주소에서 온 요청만 받습니다. 키가 없는 기능은 503 을 돌려주고, 앱은 예시 데이터로 대신 보여줍니다.
@@ -59,7 +61,7 @@ POST /analyze   { "image": "<base64>", "mediaType": "image/jpeg", "lang": "vi" }
 | `MODEL` | 아니오 | 기본 `claude-haiku-5-5` (사진 분석·공지 번역) |
 | `VISION_MODEL` | 아니오 | 사진 분석만 다른 모델로. 정확도가 부족하면 `claude-sonnet-5-5` (약 20배 비쌈) |
 | `TR_KV` | 아니오 (KV 바인딩) | 공지 번역 저장소. 있으면 전 세계 공유로 30일 보관, 없으면 데이터센터별 Cache API |
-| `DATA_GO_KR_KEY` | 버스 기능 (secret) | 공공데이터포털 인증키(Decoding). 경기도 버스도착정보·정류소 조회 v2 활용 신청 필요 |
+| `DATA_GO_KR_KEY` | 버스 기능 (secret) | 공공데이터포털 인증키(Decoding). 경기도 버스도착정보·정류소 조회 v2, 국립중앙의료원 전국 병·의원 찾기 서비스, 전국 약국 정보 조회 서비스 활용 신청 필요 |
 | `NOTICES_URL` | 공지 기능 | Supabase `notices` REST 주소(`supabase/README.md`) 또는 `data/notices.json` 주소 |
 | `NOTICES_KEY` | Supabase 공지일 때 | Supabase anon(공개) 키 |
 
@@ -95,6 +97,7 @@ GET /notices?lang=vi
 - 모델 정하기: 실제 쓰레기 사진 50장 정도로 Haiku 와 Sonnet 을 비교해 `VISION_MODEL` 결정
 
 - 버스: 실제 키로 `/bus/stops`, `/bus/arrivals` 를 한 번씩 불러 필드가 맞는지 확인
+- 병원·약국: `/med/nearby?kind=hosp&lat=37.3163&lng=126.8226` 과 `kind=pharm`, 결과의 `id` 로 `/med/detail` 을 불러 필드(`dutyTime1s…8c`, `dgidIdName`, `dutyEryn`)가 맞는지 확인 (`mapMed`, `mapMedDetail`)
 
 - `RULES` 의 분류 설명과 예시는 일반적인 분리배출 기준으로 적은 것입니다. 안산시 자원순환과(031-481-2259)에 확인한 뒤 고치세요. 분류를 바꾸면 앱의 `DEST` 도 함께 고쳐야 합니다.
 - 사진 수집·전송에 대한 동의 문구(모국어)를 개인정보 검토 때 함께 확인하세요.

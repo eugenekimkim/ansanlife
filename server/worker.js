@@ -5,6 +5,8 @@
  *   GET  /bus/stops?lat&lng  주변 정류장 (경기도 정류소 조회 v2)
  *   GET  /bus/arrivals?stationId=  정류장 도착 정보 (경기도 버스도착정보 v2)
  *   GET  /notices?lang=vi    NOTICES_URL 의 공지(한국어)를 번역해 돌려줌. 번역은 내용이 바뀔 때만 다시 함
+ *   GET  /med/nearby?kind=hosp|pharm&lat&lng  주변 병·의원 / 약국 (국립중앙의료원, 거리순 + 오늘 진료시간)
+ *   GET  /med/detail?kind=hosp|pharm&id=HPID   요일별 진료시간, 진료과목, 응급실 운영 여부
  *
  * [사진 분석]
  * 앱이 보낸 사진을 Claude API(이미지 입력)로 판별해, 아래 RULES 표의 배출 분류 중 하나로 돌려줍니다.
@@ -206,6 +208,68 @@ async function busRoute(url, env, h) {
   } catch { return json({ error: 'upstream' }, 502, h); }
 }
 
+/* ---------- 병원 · 약국 (국립중앙의료원, 공공데이터포털) ----------
+   같은 DATA_GO_KR_KEY 로 "국립중앙의료원_전국 병·의원 찾기 서비스", "국립중앙의료원_전국 약국 정보 조회 서비스"
+   두 가지를 활용신청해야 합니다. 위치 조회는 거리순으로 오늘의 진료시간(startTime/endTime, HHMM)과 좌표를 줍니다.
+   상세 조회의 필드명(dutyTime1s…8c, dgidIdName, dutyEryn)은 활용가이드 기준이며, 실제 키로 첫 호출 때 한 번 확인하세요. */
+const NMC = 'https://apis.data.go.kr/B552657';
+const MED = {
+  hosp: { near: 'HsptlAsembySearchService/getHsptlMdcncLcinfoInqire', detail: 'HsptlAsembySearchService/getHsptlBassInfoInqire' },
+  pharm: { near: 'ErmctInsttInfoInqireService/getParmacyLcinfoInqire', detail: 'ErmctInsttInfoInqireService/getParmacyBassInfoInqire' },
+};
+async function nmc(path, params, env, ttl) {
+  const q = new URLSearchParams({ ...params, _type: 'json' });
+  const r = await fetch(`${NMC}/${path}?serviceKey=${encodeURIComponent(env.DATA_GO_KR_KEY)}&${q}`, { headers: { accept: 'application/json' }, cf: { cacheTtl: ttl, cacheEverything: true } });
+  if (!r.ok) throw new Error('upstream');
+  const j = await r.json().catch(() => null);
+  if (!j) throw new Error('upstream');
+  const code = String(findKey(j, 'resultCode') ?? '00');
+  if (code !== '00' && code !== '0') throw new Error('upstream ' + code);
+  return asList(findKey(j, 'item'));
+}
+const hhmm = v => { const n = num(v); return n != null && n >= 0 && n <= 4800 ? n : null; };
+export function mapMed(items, kind) {
+  return items.map(x => ({
+    id: String(x.hpid ?? ''),
+    kind,
+    name: String(x.dutyName ?? '').trim(),
+    type: kind === 'pharm' ? '약국' : String(x.dutyDivName ?? x.dutyDivNam ?? '').trim(),
+    addr: String(x.dutyAddr ?? '').trim(),
+    tel: String(x.dutyTel1 ?? '').trim(),
+    lat: num(x.latitude ?? x.wgs84Lat),
+    lng: num(x.longitude ?? x.wgs84Lon),
+    dist: x.distance == null ? null : Math.round(Number(x.distance) * 1000), // 원본 km → m
+    start: hhmm(x.startTime),
+    end: hhmm(x.endTime),
+  })).filter(x => x.name && x.lat != null && x.lng != null)
+    .sort((a, b) => (a.dist ?? 1e9) - (b.dist ?? 1e9));
+}
+export function mapMedDetail(x) {
+  if (!x) return { hours: [], depts: [], er: false };
+  return {
+    hours: [1, 2, 3, 4, 5, 6, 7, 8].map(i => [hhmm(x[`dutyTime${i}s`]), hhmm(x[`dutyTime${i}c`])]), // 월…일, 8 = 공휴일
+    depts: String(x.dgidIdName ?? '').split(',').map(s => s.trim()).filter(Boolean),
+    er: String(x.dutyEryn ?? '') === '1',
+  };
+}
+async function medRoute(url, env, h) {
+  if (!env.DATA_GO_KR_KEY) return json({ error: 'config' }, 503, h);
+  const kind = url.searchParams.get('kind') === 'pharm' ? 'pharm' : 'hosp';
+  try {
+    if (url.pathname === '/med/detail') {
+      const id = url.searchParams.get('id') || '';
+      if (!/^[A-Z]\d{7,10}$/.test(id)) return json({ error: 'id' }, 400, h);
+      const items = await nmc(MED[kind].detail, { HPID: id }, env, 86400);
+      return json(mapMedDetail(items[0]), 200, { ...h, 'cache-control': 'max-age=3600' });
+    }
+    const lat = Number(url.searchParams.get('lat')), lng = Number(url.searchParams.get('lng'));
+    if (!(lat > 33 && lat < 39 && lng > 124 && lng < 132)) return json({ error: 'coords' }, 400, h);
+    // 좌표를 약 100m 단위로 맞춰 캐시가 잘 맞게 함
+    const items = await nmc(MED[kind].near, { WGS84_LON: lng.toFixed(3), WGS84_LAT: lat.toFixed(3), pageNo: '1', numOfRows: '40' }, env, 600);
+    return json({ kind, items: mapMed(items, kind) }, 200, { ...h, 'cache-control': 'max-age=300' });
+  } catch { return json({ error: 'upstream' }, 502, h); }
+}
+
 /* ---------- 공지 번역 ----------
    앱이 보낸 글을 번역하지 않고, NOTICES_URL 의 공지만 번역합니다(남이 번역기로 쓰지 못하게).
    같은 내용·언어는 Cache API 에 하루 보관합니다. */
@@ -303,6 +367,7 @@ export default {
     if (req.method !== 'GET') return json({ error: 'method' }, 405, h);
     if (url.pathname === '/bus/arrivals' || url.pathname === '/bus/stops') return busRoute(url, env, h);
     if (url.pathname === '/notices') return noticesRoute(url, env, h);
+    if (url.pathname === '/med/nearby' || url.pathname === '/med/detail') return medRoute(url, env, h);
     return json({ error: 'not_found' }, 404, h);
   },
 };

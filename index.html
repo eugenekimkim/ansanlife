@@ -58,14 +58,45 @@ a{color:inherit;text-decoration:none}
 .nav .lbl{font-weight:500;font-size:14px}
 .ibtn{width:40px;height:40px;display:grid;place-items:center;border-radius:20px;margin:-8px}
 .pill{display:flex;align-items:center;gap:6px;background:#fff;border-radius:16px;padding:4px 10px 4px 4px;font-size:12px;font-weight:700}
+.pflag{width:20px;height:20px;border-radius:50%;overflow:hidden;flex:none;display:block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.pflag svg{width:100%;height:100%}
 .ttl{padding:20px 28px 22px;display:flex;flex-direction:column;gap:4px;flex:none}
 .eyebrow{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--muted)}
 .h1{font-family:var(--serif);font-weight:700;font-size:31px;line-height:1.2;margin:0;text-wrap:balance;letter-spacing:-.3px}
 .ko .h1,.h1.ko{font-family:var(--serif-ko)}
 .sub{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .kr{font-family:var(--ko)}
-.sheet{flex:1 0 auto;background:var(--sheet);border-top-left-radius:48px;padding:26px 24px 22px;display:flex;flex-direction:column;gap:14px}
-.foot{flex:none;background:var(--sage);color:#fff;font-size:12px;text-align:right;padding:12px 28px calc(12px + env(safe-area-inset-bottom,0px))}
+.sheet{flex:1 0 auto;background:var(--sheet);border-top-left-radius:48px;padding:26px 24px calc(28px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
+/* Naver-map card rows keep one height whatever the language */
+.card.row.fixh{height:76px;flex:none;overflow:hidden}
+.card.row.fixh .col{overflow:hidden}
+.card.row.fixh .serif,.card.row.fixh .tiny{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.card.row.fixh .lines{flex-wrap:nowrap;overflow:hidden}
+/* hospitals & pharmacies */
+.mtabs{display:flex;gap:18px;overflow-x:auto;scrollbar-width:none;flex:none;margin:0 -24px;padding:0 24px}
+.mtabs::-webkit-scrollbar{display:none}
+.mtab{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:14px;color:var(--muted);white-space:nowrap;padding:4px 0}
+.mtab i{display:block;height:2px;width:0;background:var(--accent);border-radius:1px;transition:width .2s}
+.mtab[aria-selected="true"]{color:var(--ink);font-weight:600}
+.mtab[aria-selected="true"] i{width:18px}
+.mtab sup{font-size:10px;color:var(--muted);font-weight:500;margin-left:2px}
+.mrow{display:flex;flex-direction:column;gap:8px;text-align:left;width:100%}
+.mrow .nm{display:flex;align-items:center;gap:10px;width:100%;text-align:left}
+.mrow .nm::before{content:"";width:16px;height:1.5px;background:var(--ink);flex:none}
+.mrow .nm b{font-family:var(--serif-ko);font-size:16px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow .ticket{width:100%;padding:12px 12px 12px 16px}
+.mstat{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600}
+.mstat .dot{width:7px;height:7px}
+.mstat.open{color:#1F7A55}.mstat.open .dot{background:#2FA36B}
+.mstat.closed{color:var(--muted)}.mstat.closed .dot{background:#B9C2BE}
+.macts{display:flex;gap:8px;flex:none}
+.macts .idot{width:40px;height:40px}
+.mskel{height:118px;border-radius:20px;background:linear-gradient(90deg,var(--bg) 0,#ECEBE7 50%,var(--bg) 100%);background-size:200% 100%;animation:sk 1.2s linear infinite}
+@keyframes sk{to{background-position:-200% 0}}
+.hrs{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:13px}
+.hrs .td{font-weight:700;color:var(--ink)}
+.hrs span:nth-child(odd){color:var(--muted)}
+.hrs span:nth-child(even){text-align:right;font-variant-numeric:tabular-nums}
 .spacer{flex:1}
 .h2{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:700;font-size:17px}
 .h2 .k{font-family:var(--ko);font-weight:400;font-size:11px;color:var(--muted)}
@@ -697,7 +728,7 @@ const API_URL=''.replace(/\/+$/,'');
 const hasApi=()=>!!API_URL&&!API_URL.startsWith('__');
 const hasAnalyzer=hasApi;
 /* Supabase (supabase/schema.sql): 공지·광고·설문 응답. 공개(anon) 키만 씁니다. 비어 있으면 예시 데이터 */
-const SB_URL='https://mriuywhiaaslmcdrfhfh.supabase.co'.replace(/\/+$/,''),SB_KEY='sb_publishable_a4KmdsVZm1nrH-FvxA3RrQ_RfZxHyIr';
+const SB_URL=''.replace(/\/+$/,''),SB_KEY='';
 const hasSb=()=>!!SB_URL&&!SB_URL.startsWith('__')&&!!SB_KEY&&!SB_KEY.startsWith('__');
 async function sb(path,opt={},ms=10000){const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),ms);
  try{const r=await fetch(`${SB_URL}/rest/v1/${path}`,{...opt,headers:{apikey:SB_KEY,authorization:`Bearer ${SB_KEY}`,'content-type':'application/json',...(opt.headers||{})},signal:ctl.signal});if(!r.ok)throw new Error('sb '+r.status);return r.status===201||r.status===204?null:await r.json();}finally{clearTimeout(to)}}
@@ -707,7 +738,7 @@ const hasAdsense=()=>/^ca-pub-\d+$/.test(ADS_CLIENT)&&/^\d+$/.test(ADS_SLOT);
 async function api(path,opt={},ms=12000){const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),ms);
  try{const r=await fetch(API_URL+path,{...opt,signal:ctl.signal});if(!r.ok)throw new Error('http '+r.status);return await r.json();}finally{clearTimeout(to)}}
 const MAPS={
- hosp:{zoom:16,pts:[{addr:'경기도 안산시 단원구 적금로 123',label:'고려대학교 안산병원'}]},
+ hosp:()=>{const m=st.med&&st.med.sel;if(!m||m.lat==null)return null;const p=[{lat:m.lat,lng:m.lng,label:esc(m.name)}];if(st.med.pos)p.unshift({lat:st.med.pos.lat,lng:st.med.pos.lng,label:esc(HT().you),home:true});return {zoom:16,pts:p};},
  near:{zoom:15,pts:[{addr:'경기도 안산시 단원구 원포공원1로 59',label:'Home',home:true},{addr:'경기도 안산시 단원구 중앙대로 620',label:'초지역 Choji'}]},
  offices:{zoom:14,pts:[{addr:'경기도 안산시 단원구 원포공원1로 59',label:'Home',home:true},{addr:'경기도 안산시 단원구 화랑로 387',label:'안산시청'}]}};
 const miniMap=k=>`<div class="nmap mini" data-map="${k}"><div class="live"></div><svg class="fallback" viewBox="0 0 342 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g stroke="#fff" stroke-linecap="round" fill="none"><path d="M-10 120 C 80 100,150 140,230 95 S 330 60,350 70" stroke-width="12"/><path d="M110 -10 L 150 180" stroke-width="8"/><path d="M-10 50 L 350 30" stroke-width="6"/><path d="M260 -10 L 230 180" stroke-width="5"/></g><path d="M171 92s12-11 12-20a12 12 0 0 0-24 0c0 9 12 20 12 20z" fill="#E45C4E"/><circle cx="171" cy="72" r="4.5" fill="#fff"/></svg><span class="maptag">MAP · NAVER API</span></div>`;
@@ -716,7 +747,7 @@ function loadNaver(){if(!NAVER_KEY||NAVER_KEY.startsWith('__'))return Promise.re
  naverP=new Promise(res=>{window.navermap_authFailure=()=>res(null);const s=document.createElement('script');s.src=`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${enc(NAVER_KEY)}&submodules=geocoder`;s.onload=()=>res(window.naver&&window.naver.maps?window.naver:null);s.onerror=()=>res(null);document.head.appendChild(s);});return naverP;}
 function geocode(N,addr){if(geoCache[addr])return geoCache[addr];geoCache[addr]=new Promise(res=>{try{N.maps.Service.geocode({query:addr},(status,r)=>{const a=status===N.maps.Service.Status.OK&&r.v2&&r.v2.addresses&&r.v2.addresses[0];res(a?new N.maps.LatLng(+a.y,+a.x):null);});}catch(e){res(null)}});return geoCache[addr];}
 async function mountMaps(){const els=[...app.querySelectorAll('.nmap[data-map]')];if(!els.length)return;const N=await loadNaver();if(!N)return;
- for(const el of els){if(!el.isConnected)continue;const spec=MAPS[el.dataset.map];const ll=(await Promise.all(spec.pts.map(p=>p.home&&st.addr.lat?new N.maps.LatLng(st.addr.lat,st.addr.lng):geocode(N,p.home?st.addr.full:p.addr))));const pts=spec.pts.map((p,i)=>({...p,ll:ll[i]})).filter(p=>p.ll);if(!pts.length||!el.isConnected)continue;
+ for(const el of els){if(!el.isConnected)continue;const sp0=MAPS[el.dataset.map];const spec=typeof sp0==='function'?sp0():sp0;if(!spec)continue;const ll=(await Promise.all(spec.pts.map(p=>p.lat!=null?new N.maps.LatLng(p.lat,p.lng):p.home&&st.addr.lat?new N.maps.LatLng(st.addr.lat,st.addr.lng):geocode(N,p.home?st.addr.full:p.addr))));const pts=spec.pts.map((p,i)=>({...p,ll:ll[i]})).filter(p=>p.ll);if(!pts.length||!el.isConnected)continue;
   const map=new N.maps.Map(el.querySelector('.live'),{center:pts[pts.length-1].ll,zoom:spec.zoom,scaleControl:false,mapDataControl:false,logoControlOptions:{position:N.maps.Position.BOTTOM_RIGHT}});
   pts.forEach(p=>new N.maps.Marker({position:p.ll,map,icon:{content:`<div class="npin ${p.home?'home':''}"><b></b><span>${p.label}</span></div>`,anchor:new N.maps.Point(0,0)}}));
   if(pts.length>1){const b=new N.maps.LatLngBounds(pts[0].ll,pts[0].ll);pts.forEach(p=>b.extend(p.ll));map.fitBounds(b,{top:50,right:40,bottom:30,left:40});}
@@ -724,8 +755,8 @@ async function mountMaps(){const els=[...app.querySelectorAll('.nmap[data-map]')
 
 /* ---------- common pieces ---------- */
 const nav=(label,{menu=false,right=''}={})=>`<div class="nav">${menu?`<button class="ibtn" data-act="intro" aria-label="Language">${ic('menu',20)}</button>`:`<button class="ibtn" data-act="back" aria-label="Back">${ic('back',22)}</button>`}<span class="lbl">${label}</span><span class="rule"></span>${right}</div>`;
-const foot=`<div class="foot">ansan life · Gyeonggi-do, Ansan</div>`;
-const langPill=()=>{const c=COUNTRIES.find(x=>x.lang===st.lang);return `<button class="pill" data-act="intro" aria-label="Change language">${flag(c.c,18)}<span style="border-radius:50%"></span>${T().lang}</button>`;};
+const foot=''; /* 하단 세이지 띠는 없앴어요 */
+const langPill=()=>{const c=COUNTRIES.find(x=>x.lang===st.lang);return `<button class="pill" data-act="intro" aria-label="Change language"><span class="pflag">${flag(c.c,20)}</span>${T().lang}</button>`;};
 const ttl=(h,sub,{eye='',pin=false}={})=>`<div class="ttl">${eye?`<span class="eyebrow">${eye}</span>`:''}<h1 class="h1 ${isKo()?'ko':''}">${h}</h1>${sub?`<div class="sub">${pin?ic('spot',14,'#E45C4E'):''}${sub}</div>`:''}</div>`;
 const h2=(t,k='',r='')=>`<div class="h2"><span>${t}</span>${k&&!isKo()?`<span class="k">${k}</span>`:''}<span class="ln"></span>${r?`<span class="serif" style="font-size:13px">${r}</span>`:''}</div>`;
 const koSub=s=>isKo()||!s?'':`<span class="kr micro muted">${s}</span>`;
@@ -873,8 +904,8 @@ SCR.b1=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)
   <button class="row" style="border:1px solid var(--hair);border-radius:18px;padding:12px 14px;text-align:left" data-route="0">${dotI('work','#22393A','#fff',36)}<span class="col grow"><span class="b" style="font-size:13px">${t.toWork}</span><span class="tiny muted">${t.openNaver}</span></span>${ic('arrow',16,'#6E7472')}</button>
   ${h2(t.nearby,'주변')}
   ${miniMap('near')}
-  <button class="card row" style="text-align:left" data-naver="초지역">${dotI('train','#fff','#1E2221',36)}<span class="col grow" style="gap:4px"><span class="row" style="gap:6px;align-items:baseline"><span class="serif" style="font-size:15px">${t.choji}</span>${koSub('초지역')}</span><span class="row" style="gap:4px;flex-wrap:wrap">${LINES}</span></span>${ic('map',16,'#6E7472')}</button>
-  <div id="stops" class="col" style="gap:10px"><button class="card row" style="text-align:left" data-act="samplestop">${dotI('bus','#fff','#1E2221',36)}<span class="col grow"><span class="serif" style="font-size:15px">${t.busStop}</span><span class="tiny muted">${t.busStopS}</span></span>${ic('arrow',16,'#6E7472')}</button></div>
+  <button class="card row fixh" style="text-align:left" data-naver="초지역">${dotI('train','#fff','#1E2221',36)}<span class="col grow" style="gap:4px"><span class="row" style="gap:6px;align-items:baseline"><span class="serif" style="font-size:15px">${t.choji}</span>${koSub('초지역')}</span><span class="row lines" style="gap:4px">${LINES}</span></span>${ic('map',16,'#6E7472')}</button>
+  <div id="stops" class="col" style="gap:10px"><button class="card row fixh" style="text-align:left" data-act="samplestop">${dotI('bus','#fff','#1E2221',36)}<span class="col grow"><span class="serif" style="font-size:15px">${t.busStop}</span><span class="tiny muted">${t.busStopS}</span></span>${ic('arrow',16,'#6E7472')}</button></div>
   <div class="acts">${[['card',t.quick[0],'b6'],['moon',t.quick[1],'b5'],['route',t.quick[2],'b2']].map(([i,l,g])=>`<button data-go="${g}" class="col" style="flex:1;align-items:center;gap:6px;border:1px solid var(--hair);border-radius:16px;padding:12px 6px">${ic(i,18,'#22393A')}<span class="b" style="font-size:12px;text-align:center">${l}</span></button>`).join('')}</div>
  </div>${foot}</div>`;};
 const seg=(c,g,l='')=>`<span class="seg" style="background:${c};flex:${g}">${l}</span>`;
@@ -917,22 +948,100 @@ SCR.b6=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.busT)
  </div>${foot}</div>`;};
 
 /* hospitals / offices / news */
-SCR.hosp=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.hospT,`<span>${t.near}</span>`,{pin:true})}
- <div class="sheet">
-  <div class="soft-accent row">${dotI('alert','var(--accent)','#fff',32)}<span class="col"><span class="serif" style="font-size:15px">${t.emerg}</span><span class="tiny muted">${t.emergS}</span></span></div>
-  <button class="col" style="gap:8px;text-align:left" data-go="hdetail"><span class="row" style="gap:10px"><span style="width:16px;height:1.5px;background:var(--ink)"></span><span class="serif grow" style="font-size:16px">${t.univ}</span></span><span class="ticket" style="width:100%"><span class="col grow" style="gap:5px"><span class="kr tiny muted">고려대학교 안산병원</span><span class="chips"><span class="tag">ER</span><span class="tag">University</span></span><span class="row tiny" style="gap:5px">${ic('spot',12,'#6E7472')}<span class="kr">단원구 적금로 123</span></span></span><span class="dash"></span><span class="idot" style="background:var(--accent)">${ic('map',16,'#fff',2)}</span></span></button>
-  <span class="small muted">${t.more}</span>
+/* ---------- hospitals & pharmacies: GPS → server /med/* (국립중앙의료원 공공데이터) ---------- */
+const HS={
+en:{tabs:['All','Open now','Pharmacy','English OK'],locating:'Finding places near you…',nearGps:'Near your current location',nearHome:a=>`Near ${a}`,refresh:'Refresh',noApi:'Live hospital and pharmacy data appears once the app server is connected.',searchNaver:'Search hospitals in Naver Map',err:"Couldn't load nearby places. Check your connection and try again.",retry:'Try again',none:'No places found nearby.',noneOpen:'Nothing nearby is open right now.',noneLang:'No English-friendly places listed nearby yet.',langNote:'English availability comes from Medical Korea data. Call ahead to confirm.',openUntil:t=>`Open until ${t}`,closed:'Closed now',noHours:'Hours not listed',call:'Call',naver:'Naver Map',today:'Today',hoursT:'Opening hours',deptsT:'Departments',er:'Emergency room',you:'You',holiday:'Holidays',src:'Source: National Medical Center public data. Hours can change, so call before you go.',staffMeaning:'I need an English interpreter. Can you help me?',gpsOff:'Location is off, so this shows places near your saved address.',langOk:'English OK',
+ types:{gh:'General hospital',h:'Hospital',c:'Clinic',d:'Dental',k:'Korean medicine',care:'Care hospital',ph:'Public health center',pharm:'Pharmacy',other:'Medical'}},
+vi:{tabs:['Tất cả','Đang mở cửa','Nhà thuốc','Nói tiếng Anh'],locating:'Đang tìm nơi gần bạn…',nearGps:'Gần vị trí hiện tại',nearHome:a=>`Gần ${a}`,refresh:'Làm mới',noApi:'Thông tin bệnh viện, nhà thuốc trực tiếp sẽ hiện khi máy chủ được kết nối.',searchNaver:'Tìm bệnh viện trên Naver Map',err:'Không tải được danh sách. Kiểm tra kết nối rồi thử lại.',retry:'Thử lại',none:'Không tìm thấy nơi nào gần đây.',noneOpen:'Hiện không có nơi nào gần đây đang mở cửa.',noneLang:'Chưa có nơi nói tiếng Anh gần đây.',langNote:'Thông tin tiếng Anh lấy từ Medical Korea. Hãy gọi trước để chắc chắn.',openUntil:t=>`Mở đến ${t}`,closed:'Đang đóng cửa',noHours:'Chưa có giờ mở cửa',call:'Gọi',naver:'Naver Map',today:'Hôm nay',hoursT:'Giờ mở cửa',deptsT:'Chuyên khoa',er:'Phòng cấp cứu',you:'Bạn',holiday:'Ngày lễ',src:'Nguồn: dữ liệu công của Trung tâm Y tế Quốc gia. Giờ có thể thay đổi, hãy gọi trước khi đến.',staffMeaning:'Tôi cần phiên dịch tiếng Việt. Anh/chị có thể giúp tôi không?',gpsOff:'Chưa bật vị trí, đang hiển thị nơi gần địa chỉ đã lưu.',langOk:'Tiếng Anh',
+ types:{gh:'Bệnh viện đa khoa',h:'Bệnh viện',c:'Phòng khám',d:'Nha khoa',k:'Đông y',care:'Bệnh viện dưỡng lão',ph:'Trung tâm y tế công',pharm:'Nhà thuốc',other:'Cơ sở y tế'}},
+ko:{tabs:['전체','진료 중','약국','영어 가능'],locating:'주변 병원을 찾고 있어요…',nearGps:'현재 위치 주변',nearHome:a=>`${a} 주변`,refresh:'새로고침',noApi:'앱 서버가 연결되면 실시간 병원·약국 정보가 나와요.',searchNaver:'네이버지도에서 병원 찾기',err:'주변 병원을 불러오지 못했어요. 연결을 확인하고 다시 시도하세요.',retry:'다시 시도',none:'주변에서 찾은 곳이 없어요.',noneOpen:'지금 진료 중인 곳이 주변에 없어요.',noneLang:'주변에 영어 가능 병원 정보가 아직 없어요.',langNote:'영어 가능 여부는 메디컬코리아 자료 기준이에요. 방문 전 전화로 확인하세요.',openUntil:t=>`${t}까지 진료`,closed:'지금은 문 닫음',noHours:'진료시간 정보 없음',call:'전화',naver:'네이버지도',today:'오늘',hoursT:'진료시간',deptsT:'진료과목',er:'응급실',you:'내 위치',holiday:'공휴일',src:'출처: 국립중앙의료원 공공데이터. 시간은 바뀔 수 있으니 방문 전 전화로 확인하세요.',staffMeaning:'',gpsOff:'위치 권한이 없어 저장한 주소 주변으로 보여드려요.',langOk:'영어 가능',
+ types:{gh:'종합병원',h:'병원',c:'의원',d:'치과',k:'한의원',care:'요양병원',ph:'보건소',pharm:'약국',other:'의료기관'}},
+zh:{tabs:['全部','营业中','药店','可说英语'],locating:'正在查找附近的医院…',nearGps:'当前位置附近',nearHome:a=>`${a} 附近`,refresh:'刷新',noApi:'连接应用服务器后，将显示实时医院和药店信息。',searchNaver:'在Naver地图中搜索医院',err:'无法加载附近地点，请检查网络后重试。',retry:'重试',none:'附近没有找到。',noneOpen:'附近目前没有营业中的地方。',noneLang:'附近暂无可说英语的医院信息。',langNote:'英语服务信息来自Medical Korea，请提前致电确认。',openUntil:t=>`营业至 ${t}`,closed:'目前休息',noHours:'暂无营业时间',call:'电话',naver:'Naver地图',today:'今天',hoursT:'营业时间',deptsT:'诊疗科目',er:'急诊室',you:'我的位置',holiday:'节假日',src:'来源：韩国国立中央医疗院公共数据。时间可能变动，请提前致电确认。',staffMeaning:'我需要中文翻译。可以帮我吗？',gpsOff:'未开启定位，按已保存的地址显示附近地点。',langOk:'可说英语',
+ types:{gh:'综合医院',h:'医院',c:'诊所',d:'牙科',k:'韩医院',care:'疗养医院',ph:'保健所',pharm:'药店',other:'医疗机构'}},
+ru:{tabs:['Все','Открыто','Аптеки','Английский'],locating:'Ищем места рядом…',nearGps:'Рядом с вами',nearHome:a=>`Рядом: ${a}`,refresh:'Обновить',noApi:'Данные о больницах и аптеках появятся после подключения сервера.',searchNaver:'Искать больницы в Naver Map',err:'Не удалось загрузить места рядом. Проверьте соединение и попробуйте снова.',retry:'Повторить',none:'Рядом ничего не найдено.',noneOpen:'Сейчас рядом ничего не открыто.',noneLang:'Пока нет данных о клиниках с английским языком рядом.',langNote:'Данные об английском языке взяты из Medical Korea. Позвоните заранее.',openUntil:t=>`Открыто до ${t}`,closed:'Сейчас закрыто',noHours:'Часы не указаны',call:'Позвонить',naver:'Naver Map',today:'Сегодня',hoursT:'Часы работы',deptsT:'Отделения',er:'Приёмный покой',you:'Вы',holiday:'Праздники',src:'Источник: открытые данные Национального медицинского центра. Часы могут меняться, позвоните заранее.',staffMeaning:'Мне нужен переводчик с русского. Вы можете помочь?',gpsOff:'Геолокация выключена, показываем места рядом с сохранённым адресом.',langOk:'Английский',
+ types:{gh:'Многопрофильная больница',h:'Больница',c:'Клиника',d:'Стоматология',k:'Корейская медицина',care:'Больница ухода',ph:'Центр здоровья',pharm:'Аптека',other:'Медучреждение'}},
+uz:{tabs:['Hammasi','Hozir ochiq','Dorixona','Ingliz tilida'],locating:'Yaqin joylar qidirilmoqda…',nearGps:'Joriy joylashuvingiz yaqinida',nearHome:a=>`${a} yaqinida`,refresh:'Yangilash',noApi:'Server ulangach, shifoxona va dorixonalar haqida jonli ma’lumot chiqadi.',searchNaver:'Naver Map’da shifoxona qidirish',err:'Yaqin joylarni yuklab bo‘lmadi. Internetni tekshirib, qayta urinib ko‘ring.',retry:'Qayta urinish',none:'Yaqinda hech narsa topilmadi.',noneOpen:'Hozir yaqinda ochiq joy yo‘q.',noneLang:'Yaqinda ingliz tilida xizmat ko‘rsatadigan joy hali yo‘q.',langNote:'Ingliz tili haqidagi ma’lumot Medical Korea’dan olingan. Oldindan qo‘ng‘iroq qiling.',openUntil:t=>`${t} gacha ochiq`,closed:'Hozir yopiq',noHours:'Ish vaqti ko‘rsatilmagan',call:'Qo‘ng‘iroq',naver:'Naver Map',today:'Bugun',hoursT:'Ish vaqti',deptsT:'Bo‘limlar',er:'Tez yordam bo‘limi',you:'Siz',holiday:'Bayramlar',src:'Manba: Milliy tibbiyot markazi ochiq ma’lumotlari. Vaqt o‘zgarishi mumkin, oldindan qo‘ng‘iroq qiling.',staffMeaning:'Menga o‘zbek tili tarjimoni kerak. Yordam bera olasizmi?',gpsOff:'Joylashuv o‘chiq, saqlangan manzil yaqinidagi joylar ko‘rsatilmoqda.',langOk:'Ingliz tili',
+ types:{gh:'Ko‘p tarmoqli shifoxona',h:'Shifoxona',c:'Klinika',d:'Stomatologiya',k:'Koreys tabobati',care:'Parvarish shifoxonasi',ph:'Sog‘liqni saqlash markazi',pharm:'Dorixona',other:'Tibbiyot muassasasi'}},
+mn:{tabs:['Бүгд','Одоо нээлттэй','Эмийн сан','Англи хэлтэй'],locating:'Ойролцоох газруудыг хайж байна…',nearGps:'Одоогийн байршлын ойролцоо',nearHome:a=>`${a} орчим`,refresh:'Шинэчлэх',noApi:'Сервер холбогдсоны дараа эмнэлэг, эмийн сангийн шууд мэдээлэл гарна.',searchNaver:'Naver Map-аас эмнэлэг хайх',err:'Ойролцоох газруудыг ачаалж чадсангүй. Холболтоо шалгаад дахин оролдоно уу.',retry:'Дахин оролдох',none:'Ойролцоо юу ч олдсонгүй.',noneOpen:'Одоогоор ойролцоо нээлттэй газар алга.',noneLang:'Ойролцоо англи хэлтэй эмнэлгийн мэдээлэл одоогоор алга.',langNote:'Англи хэлний мэдээллийг Medical Korea-аас авсан. Урьдчилан залгаж лавлаарай.',openUntil:t=>`${t} хүртэл нээлттэй`,closed:'Одоо хаалттай',noHours:'Цагийн хуваарь байхгүй',call:'Залгах',naver:'Naver Map',today:'Өнөөдөр',hoursT:'Ажлын цаг',deptsT:'Тасгууд',er:'Яаралтай тусламж',you:'Та',holiday:'Баярын өдөр',src:'Эх сурвалж: Үндэсний эрүүл мэндийн төвийн нээлттэй өгөгдөл. Цаг өөрчлөгдөж болох тул урьдчилан залгаарай.',staffMeaning:'Надад монгол хэлний орчуулагч хэрэгтэй. Туслах уу?',gpsOff:'Байршил унтраастай тул хадгалсан хаягийн ойролцоо харуулж байна.',langOk:'Англи хэл',
+ types:{gh:'Нэгдсэн эмнэлэг',h:'Эмнэлэг',c:'Клиник',d:'Шүдний эмнэлэг',k:'Солонгос уламжлалт эмнэлэг',care:'Асаргааны эмнэлэг',ph:'Эрүүл мэндийн төв',pharm:'Эмийн сан',other:'Эмнэлгийн байгууллага'}}};
+const HT=()=>HS[st.lang]||HS.en;
+const KO_LANG={en:'영어',vi:'베트남어',zh:'중국어',ru:'러시아어',uz:'우즈베크어',mn:'몽골어'};
+st.med={tab:'all',pos:null,hosp:null,pharm:null,err:null,loading:false,at:0,sel:null,detail:{},langSet:null};
+const MED_TABS=['all','open','pharm','lang'];
+function typeKey(it){const n=String(it.type||'')+(it.kind==='pharm'?'약국':'');
+ if(/약국/.test(n))return 'pharm';if(/치과/.test(n))return 'd';if(/한의|한방/.test(n))return 'k';if(/요양/.test(n))return 'care';if(/보건/.test(n))return 'ph';if(/종합병원|상급/.test(n))return 'gh';if(/병원/.test(n))return 'h';if(/의원/.test(n))return 'c';return 'other';}
+const hm=v=>v==null?'':`${String(Math.floor(v/100)).padStart(2,'0')}:${String(v%100).padStart(2,'0')}`;
+function openState(s,e){if(s==null||e==null)return null;const d=new Date(),now=d.getHours()*100+d.getMinutes();
+ if(e===s)return null;if(e>2400)return now>=s||now<e-2400;if(e<=s)return now>=s||now<e;return now>=s&&now<e;}
+const distTxt=m=>m==null?'':m<1000?`${m} m`:`${(m/1000).toFixed(1)} km`;
+const normName=s=>String(s||'').replace(/\(.*?\)|\s|주식회사|의료법인|재단법인|학교법인|사회복지법인/g,'').toLowerCase();
+function langOk(it){const L=st.med.langSet;if(!L||!L.length||it.kind==='pharm')return false;const n=normName(it.name);return L.some(x=>x.n&&(n===x.n||(x.n.length>=4&&(n.includes(x.n)||x.n.includes(n)))));}
+const statusChip=it=>{const h=HT();const o=openState(it.start,it.end);return o==null?`<span class="mstat closed"><span class="dot"></span>${h.noHours}</span>`:o?`<span class="mstat open"><span class="dot"></span>${h.openUntil(hm(it.end>2400?it.end-2400:it.end))}</span>`:`<span class="mstat closed"><span class="dot"></span>${h.closed}</span>`;};
+function medAll(){const m=st.med;return [...(m.hosp||[]),...(m.pharm||[])].sort((a,b)=>(a.dist??1e9)-(b.dist??1e9));}
+function medList(){const m=st.med;if(m.tab==='pharm')return m.pharm||[];if(m.tab==='open')return medAll().filter(x=>openState(x.start,x.end)===true);if(m.tab==='lang')return (m.hosp||[]).filter(langOk);return medAll();}
+function medRow(it,i){const h=HT();const k=typeKey(it);const tel=String(it.tel||'').replace(/[^\d-]/g,'');
+ return `<div class="mrow"><button class="nm" data-med="${i}"><b>${esc(it.name)}</b></button>
+  <div class="ticket"><button class="col grow" style="gap:5px;text-align:left" data-med="${i}"><span class="row" style="gap:6px;flex-wrap:wrap"><span class="tag">${h.types[k]}</span>${!isKo()?`<span class="kr micro muted">${HS.ko.types[k]}</span>`:''}${langOk(it)?`<span class="tag" style="background:var(--accent-soft)">${h.langOk}</span>`:''}</span>${statusChip(it)}<span class="row tiny muted" style="gap:5px">${ic('spot',12,'#6E7472')}<span>${distTxt(it.dist)}</span></span></button>
+  <span class="dash"></span><div class="macts">${tel?`<a class="idot fx" href="tel:${tel}" aria-label="${h.call} ${esc(it.name)}" style="background:#fff;box-shadow:inset 0 0 0 1px var(--hair)">${ic('phone',18,'#1E2221',2)}</a>`:''}<button class="idot" data-mnav="${i}" aria-label="${h.naver}" style="background:var(--accent)">${ic('map',18,'#fff',2)}</button></div></div></div>`;}
+function paintMed(){const box=document.getElementById('medlist');if(!box)return;const h=HT(),m=st.med;
+ const tabs=document.getElementById('medtabs');if(tabs){const counts=[medAll().length,medAll().filter(x=>openState(x.start,x.end)===true).length,(m.pharm||[]).length,(m.hosp||[]).filter(langOk).length];
+  tabs.innerHTML=MED_TABS.map((k,i)=>`<button class="mtab" role="tab" data-mtab="${k}" aria-selected="${m.tab===k}">${h.tabs[i]}${m.hosp&&!m.loading?`<sup>${counts[i]}</sup>`:''}<i></i></button>`).join('');}
+ const sub=document.getElementById('medsub');if(sub){const tx=!hasApi()?'':m.loading&&!m.pos?esc(h.locating):m.pos?esc(m.pos.src==='gps'?h.nearGps:h.nearHome(st.addr.road)):'';sub.innerHTML=tx;if(sub.parentElement)sub.parentElement.style.visibility=tx?'':'hidden';}
+ if(m.err==='noapi'){box.innerHTML=`<p class="small muted">${h.noApi}</p><button class="btn line" data-naver="안산 병원">${ic('map',18)}${h.searchNaver}</button>`;}
+ else if(m.loading&&!m.hosp){box.innerHTML='<div class="mskel"></div><div class="mskel"></div><div class="mskel"></div>';}
+ else if(m.err&&!m.hosp){box.innerHTML=`<p class="small muted">${h.err}</p><button class="btn line" data-act="medretry">${ic('refresh',18)}${h.retry}</button>`;}
+ else{const list=medList();const note=m.pos&&m.pos.src!=='gps'?`<span class="row tiny muted" style="gap:6px">${ic('spot',12,'#6E7472')}${h.gpsOff}</span>`:'';
+  box.innerHTML=note+(m.tab==='lang'?`<span class="row tiny muted" style="gap:6px;align-items:flex-start"><span class="dot" style="background:var(--accent);width:6px;height:6px;margin-top:5px"></span>${h.langNote}</span>`:'')+
+   (list.length?list.slice(0,40).map(it=>medRow(it,medAll().indexOf(it)>=0?'a'+medAll().indexOf(it):'')).join(''):`<p class="small muted">${m.tab==='open'?h.noneOpen:m.tab==='lang'?h.noneLang:h.none}</p>`)+
+   `<span class="micro muted">${h.src}</span>`;}
+ tagFx(box);if(tabs)tagFx(tabs);}
+async function getPos(){if(window.isSecureContext&&navigator.geolocation){try{const p=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:false,timeout:9000,maximumAge:300000}));return {lat:p.coords.latitude,lng:p.coords.longitude,src:'gps'};}catch(e){}}
+ const ll=await homeLL();return ll?{...ll,src:'home'}:null;}
+async function loadLangSet(){if(st.med.langSet)return;try{const r=await fetch('data/lang_hospitals.json',{cache:'no-cache'});const j=await r.json();st.med.langSet=(j.hospitals||[]).filter(x=>(x.langs||[]).includes('en')).map(x=>({n:normName(x.name)}));}catch(e){st.med.langSet=[];}}
+async function loadMed(force){const m=st.med;if(!document.getElementById('medlist'))return;
+ if(!hasApi()){m.err='noapi';paintMed();return;}
+ if(!force&&m.hosp&&Date.now()-m.at<300000){paintMed();return;}
+ if(m.loading)return;m.loading=true;m.err=null;paintMed();
+ try{const [pos]=await Promise.all([getPos(),loadLangSet()]);if(!pos)throw new Error('pos');m.pos=pos;paintMed();
+  const q=`lat=${pos.lat.toFixed(5)}&lng=${pos.lng.toFixed(5)}`;
+  const [h,p]=await Promise.allSettled([api(`/med/nearby?kind=hosp&${q}`),api(`/med/nearby?kind=pharm&${q}`)]);
+  if(h.status!=='fulfilled'&&p.status!=='fulfilled')throw new Error('api');
+  m.hosp=h.status==='fulfilled'?(h.value.items||[]):[];m.pharm=p.status==='fulfilled'?(p.value.items||[]):[];m.at=Date.now();}
+ catch(e){m.err='err';}
+ finally{m.loading=false;paintMed();}}
+function medNaver(it){const h=HT();const q=new URLSearchParams({dlat:it.lat,dlng:it.lng,dname:it.name,appname:appname()});
+ if(st.med.pos){q.set('slat',st.med.pos.lat);q.set('slng',st.med.pos.lng);q.set('sname',h.you);}
+ openNaver(`안산 ${it.name}`,it.lat!=null?'nmap://route/public?'+q.toString():null);}
+const medPick=key=>{const i=+String(key).slice(1);return medAll()[i]||null;};
+async function loadMedDetail(){const it=st.med.sel;if(!it||!hasApi()||!it.id)return;const h=HT();
+ try{let d=st.med.detail[it.id];if(!d){d=await api(`/med/detail?kind=${it.kind}&id=${enc(it.id)}`);st.med.detail[it.id]=d;}
+  const hb=document.getElementById('mhrs');if(hb&&d.hours&&d.hours.some(x=>x&&x[0]!=null)){const today=new Date().getDay();
+   const order=[1,2,3,4,5,6,0];hb.innerHTML=order.map(dw=>{const x=d.hours[dw===0?6:dw-1];return `<span class="${dw===today?'td':''}">${DAYLONG[st.lang][dw]}</span><span class="${dw===today?'td':''}">${x&&x[0]!=null?hm(x[0])+' – '+hm(x[1]):'—'}</span>`;}).join('')+(d.hours[7]&&d.hours[7][0]!=null?`<span>${h.holiday}</span><span>${hm(d.hours[7][0])} – ${hm(d.hours[7][1])}</span>`:'');hb.parentElement.hidden=false;}
+  const db=document.getElementById('mdept');if(db&&d.depts&&d.depts.length){db.innerHTML=d.depts.slice(0,16).map(x=>`<span class="tag kr" style="background:var(--bg)">${esc(x)}</span>`).join('');db.parentElement.hidden=false;}
+  const er=document.getElementById('mer');if(er&&d.er&&it.kind!=='pharm')er.hidden=false;}
+ catch(e){}}
+
+SCR.hosp=()=>{const t=T(),h=HT();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu,{right:`<button class="ibtn" data-act="medretry" aria-label="${h.refresh}">${ic('refresh',20)}</button>`})}${ttl(t.hospT,`<span id="medsub">${esc(st.med.pos?(st.med.pos.src==='gps'?h.nearGps:h.nearHome(st.addr.road)):h.locating)}</span>`,{pin:true})}
+ <div class="sheet" style="gap:16px">
+  <div class="mtabs" id="medtabs" role="tablist">${MED_TABS.map((k,i)=>`<button class="mtab" role="tab" data-mtab="${k}" aria-selected="${st.med.tab===k}">${h.tabs[i]}<i></i></button>`).join('')}</div>
+  <a class="soft-accent row" href="tel:119">${dotI('alert','var(--accent)','#fff',32)}<span class="col"><span class="serif" style="font-size:15px">${t.emerg}</span><span class="tiny muted">${t.emergS}</span></span></a>
+  <div id="medlist" class="col" style="gap:18px"><div class="mskel"></div><div class="mskel"></div></div>
   <div class="spacer"></div>
- </div>${foot}</div>`;};
-SCR.hdetail=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">
+ </div></div>`;};
+SCR.hdetail=()=>{const t=T(),h=HT();const it=st.med.sel;if(!it)return SCR.hosp();const k=typeKey(it);const tel=String(it.tel||'').replace(/[^\d-]/g,'');const d=st.med.detail[it.id]||{};
+ return `<div class="scr ${isKo()?'ko':''}">
  <div class="nmap" data-map="hosp" style="height:250px;flex:none"><div class="live"></div><svg class="fallback" width="100%" height="100%" viewBox="0 0 390 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g stroke="#fff" stroke-linecap="round" fill="none"><path d="M-10 190 C 90 160,160 210,260 150 S 380 100,400 110" stroke-width="14"/><path d="M120 -10 L 170 260" stroke-width="10"/><path d="M-10 80 L 400 50" stroke-width="8"/><path d="M290 -10 L 250 260" stroke-width="6"/></g><g fill="#C9D8D9"><rect x="190" y="180" width="46" height="40" rx="6"/><rect x="20" y="110" width="60" height="44" rx="6"/><rect x="300" y="170" width="70" height="60" rx="6"/></g><path d="M195 135s16-15 16-27a16 16 0 0 0-32 0c0 12 16 27 16 27z" fill="#E45C4E"/><circle cx="195" cy="108" r="6" fill="#fff"/></svg>
   <button class="idot" data-act="back" aria-label="Back" style="position:absolute;z-index:3;left:24px;top:calc(48px + env(safe-area-inset-top,0px));width:44px;height:44px;background:#fff">${ic('back',20)}</button></div>
  <div class="sheet" style="border-top-right-radius:40px;border-top-left-radius:40px;margin-top:-36px;position:relative">
-  <div class="col" style="gap:4px"><span class="serif" style="font-size:22px;line-height:1.25">${t.univ}</span><span class="small muted kr">고려대학교 안산병원 · ${t.univS}</span></div>
-  <div>${[['clock',t.hours,t.checkHours],['spot',t.addr,'단원구 적금로 123'],['phone',t.tel,'1577-7516']].map(([i,k,v])=>`<div class="row" style="padding:11px 0;border-bottom:1px solid rgba(30,34,33,.12)">${ic(i,16,'#6E7472')}<span class="small muted">${k}</span><span class="grow b kr" style="text-align:right;font-size:13px;user-select:all">${v}</span></div>`).join('')}</div>
-  <div class="card col" style="gap:8px"><span class="row cap" style="gap:8px">${ic('speak',16,'#E45C4E')}${t.staff}</span><span class="h1 ko" style="font-size:16px;line-height:1.5">통역이 필요해요.<br>영어로 도와주실 수 있나요?</span><span class="tiny muted">${t.staffEn}</span></div>
+  <div class="col" style="gap:6px"><span class="h1 ko" style="font-size:22px;line-height:1.3">${esc(it.name)}</span><span class="row small muted" style="gap:6px;flex-wrap:wrap"><span>${h.types[k]}</span>${!isKo()?`<span class="kr">${HS.ko.types[k]}</span>`:''}<span>·</span><span>${distTxt(it.dist)}</span></span>
+   <span class="row" style="gap:6px;flex-wrap:wrap">${statusChip(it)}<span class="tag" id="mer" style="background:var(--accent-soft)" ${d.er&&it.kind!=='pharm'?'':'hidden'}>${h.er}</span>${langOk(it)?`<span class="tag" style="background:var(--accent-soft)">${h.langOk}</span>`:''}</span></div>
+  <div>${[['clock',h.today,it.start!=null?`${hm(it.start)} – ${hm(it.end)}`:h.noHours],['spot',t.addr,esc(it.addr||'')],['phone',t.tel,tel?`<a href="tel:${tel}" style="text-decoration:underline">${esc(it.tel)}</a>`:'—']].map(([i,kk,v])=>`<div class="row" style="padding:11px 0;border-bottom:1px solid rgba(30,34,33,.12);align-items:flex-start">${ic(i,16,'#6E7472')}<span class="small muted" style="flex:none">${kk}</span><span class="grow b kr" style="text-align:right;font-size:13px;user-select:all">${v}</span></div>`).join('')}</div>
+  <div class="col" style="gap:10px" hidden>${h2(h.hoursT)}<div class="hrs" id="mhrs"></div></div>
+  <div class="col" style="gap:10px" hidden>${h2(h.deptsT)}<div class="chips" id="mdept"></div></div>
+  ${isKo()?'':`<div class="card col" style="gap:8px"><span class="row cap" style="gap:8px">${ic('speak',16,'#E45C4E')}${t.staff}</span><span class="h1 ko" style="font-size:16px;line-height:1.5">${KO_LANG[st.lang]||'영어'} 통역이 필요해요.<br>도와주실 수 있나요?</span><span class="tiny muted">${h.staffMeaning}</span></div>`}
+  <span class="micro muted">${h.src}</span>
   <div class="spacer"></div>
-  <button class="btn dark" data-naver="고려대학교안산병원">${ic('map',18,'#fff')}${t.openNaver}${ic('ext',14,'#fff')}</button>
+  <div class="acts">${tel?`<a class="btn line" href="tel:${tel}">${ic('phone',18)}${h.call}</a>`:''}<button class="btn dark" data-mnav="sel">${ic('map',18,'#fff')}${h.naver}${ic('ext',14,'#fff')}</button></div>
  </div></div>`;};
 SCR.offices=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.offT,`<span>${t.offS}</span>`,{pin:true})}
  <div class="sheet" style="gap:18px">${miniMap('offices')}${t.offices.map(([a,k,d],i)=>`<button class="col" style="gap:8px;text-align:left" data-naver="${S.ko.offices[i][0]}"><span class="row" style="gap:10px"><span style="width:16px;height:1.5px;background:var(--ink)"></span><span class="serif grow ${isKo()?'kr':''}" style="font-size:16px">${a}</span></span><span class="ticket" style="width:100%"><span class="col grow" style="gap:4px"><span class="tiny muted kr">${k}</span><span class="small">${d}</span></span><span class="dash"></span><span class="idot" style="background:var(--accent)">${ic('map',16,'#fff',2)}</span></span></button>`).join('')}<div class="spacer"></div></div>${foot}</div>`;};
@@ -1006,7 +1115,7 @@ async function homeLL(){if(st.addr.lat)return {lat:st.addr.lat,lng:st.addr.lng};
 async function loadStops(){const box=document.getElementById('stops');if(!box)return;const t=T();
  try{const key=st.addr.full;if(!st.stops||st.stops.key!==key){const ll=await homeLL();if(!ll)throw new Error('coords');const j=await api(`/bus/stops?lat=${ll.lat}&lng=${ll.lng}`);if(st.addr.full!==key)return;st.stops={key,list:j.stops||[]};}
   if(!document.body.contains(box))return;
-  box.innerHTML=st.stops.list.length?`<span class="livetag">${t.live}</span>${st.stops.list.slice(0,3).map((x,i)=>`<button class="card row" style="text-align:left" data-stop="${i}">${dotI('bus','#fff','#1E2221',36)}<span class="col grow"><span class="serif" style="font-size:15px">${esc(x.name)}</span><span class="tiny muted">${x.no?esc(x.no)+' · ':''}${x.dist!=null?x.dist+' m':''}</span></span>${ic('arrow',16,'#6E7472')}</button>`).join('')}`:`<span class="small muted">${t.noStops}</span>`;tagFx(box);}
+  box.innerHTML=st.stops.list.length?`<span class="livetag">${t.live}</span>${st.stops.list.slice(0,3).map((x,i)=>`<button class="card row fixh" style="text-align:left" data-stop="${i}">${dotI('bus','#fff','#1E2221',36)}<span class="col grow"><span class="serif" style="font-size:15px">${esc(x.name)}</span><span class="tiny muted">${x.no?esc(x.no)+' · ':''}${x.dist!=null?x.dist+' m':''}</span></span>${ic('arrow',16,'#6E7472')}</button>`).join('')}`:`<span class="small muted">${t.noStops}</span>`;tagFx(box);}
  catch(e){/* keep the sample card */}}
 const crowdTxt=(t,b)=>b.seats!=null&&b.seats>=0?t.seats(b.seats):b.crowd?t.crowd[Math.min(2,b.crowd-1)]:'';
 async function loadArr(){const box=document.getElementById('arrs');if(!box||!st.stop)return;const t=T();const again=()=>{clearTimeout(arrTimer);arrTimer=setTimeout(()=>{if(cur()==='b4')loadArr()},30000)};
@@ -1188,6 +1297,7 @@ function render(){clearInterval(bgTimer);clearTimeout(scanTimer);clearTimeout(ar
  if(n==='b2'){const f=document.getElementById('destf');f&&f.addEventListener('submit',e=>{e.preventDefault();const v=document.getElementById('dest').value.trim().slice(0,80);if(v)routeTo(v,/(로|길|동|구)\s*\d/.test(v)?(/안산/.test(v)?v:'경기도 안산시 '+v):null);});}
  if(n==='news'&&(hasApi()||hasSb()))loadNews();
  if(hasApi()){if(n==='b1')loadStops();if(n==='b4')loadArr();}
+ if(n==='hosp')loadMed();if(n==='hdetail')loadMedDetail();
  mountMaps();
  if(n==='w2'){['ph','ph2'].forEach(id=>{const i=document.getElementById(id);i&&i.addEventListener('change',()=>{const f=i.files&&i.files[0];if(f)readPhoto(f);});});
   document.getElementById('shut').addEventListener('click',e=>{if(camStream){e.preventDefault();capture();}});startCam();}
@@ -1209,7 +1319,10 @@ function bindIntro(start=true){const A=document.getElementById('bgA'),B=document
  rail.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){rail.scrollLeft+=e.deltaY;e.preventDefault();}},{passive:false});
 }
 let dragMoved=false;
-app.addEventListener('click',e=>{const el=e.target.closest('[data-sel],[data-go],[data-act],[data-naver],[data-ans],[data-cand],[data-day],[data-stop],[data-news],[data-route],#goBtn,#remind,#ntf');if(!el)return;
+app.addEventListener('click',e=>{const el=e.target.closest('[data-sel],[data-go],[data-act],[data-naver],[data-ans],[data-cand],[data-day],[data-stop],[data-news],[data-route],[data-mtab],[data-med],[data-mnav],#goBtn,#remind,#ntf');if(!el)return;
+ if(el.dataset.mtab){st.med.tab=el.dataset.mtab;paintMed();return;}
+ if(el.dataset.med){const it=medPick(el.dataset.med);if(it){st.med.sel=it;go('hdetail');}return;}
+ if(el.dataset.mnav){const it=el.dataset.mnav==='sel'?st.med.sel:medPick(el.dataset.mnav);if(it)medNaver(it);return;}
  if(el.dataset.sel){if(dragMoved)return;const keep=document.getElementById('rail').scrollLeft;const A0=document.getElementById('bgA');const orangeOn=A0&&A0.style.opacity!=='0';st.sel=el.dataset.sel;clearInterval(bgTimer);app.innerHTML=SCR.intro().replace('class="scr intro"','class="scr intro" style="animation:none"');
   const A=document.getElementById('bgA'),B=document.getElementById('bgB');A.style.transition=B.style.transition='none';A.style.opacity=orangeOn?1:0;B.style.opacity=orangeOn?0:1;void A.offsetWidth;A.style.transition=B.style.transition='';
   bindIntro(orangeOn);document.getElementById('rail').scrollLeft=keep;return;}
@@ -1234,6 +1347,7 @@ app.addEventListener('click',e=>{const el=e.target.closest('[data-sel],[data-go]
  else if(a==='install'){if(installEvt){installEvt.prompt();installEvt.userChoice.finally(()=>{installEvt=null;render();});}}
  else if(a==='instx'){try{localStorage.setItem('al_inst','1')}catch(e){}render();}
  else if(a==='retry'){st.stack.pop();st.photo=null;render();}
+ else if(a==='medretry'){loadMed(true);}
  else if(a==='pick'){st.stack.splice(-2,2);go('w5');}else if(a==='intro'){st.stack=['intro'];render();}
  else if(a==='startsurv'){st.qi=0;st.answers=[];go('sq');}
  else if(a==='qprev'){if(st.qi>0){st.qi--;render()}else back();}
