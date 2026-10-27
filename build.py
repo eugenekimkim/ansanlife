@@ -39,8 +39,9 @@ def main() -> None:
     inline = "--inline" in sys.argv
     key = os.environ.get("NAVER_KEY", "").strip()
     analyze = (os.environ.get("API_URL") or os.environ.get("ANALYZE_URL") or "").strip().rstrip("/")
-    if analyze and not analyze.startswith("https://"):
-        sys.exit("API_URL 은 https:// 로 시작해야 합니다")
+    local = analyze.startswith(("http://localhost", "http://127.0.0.1"))  # 내 컴퓨터에서 wrangler dev 로 시험할 때
+    if analyze and not (analyze.startswith("https://") or local):
+        sys.exit("API_URL 은 https:// 로 시작해야 합니다 (내 컴퓨터 시험용 http://localhost 는 허용)")
     html = TEMPLATE.read_text(encoding="utf-8")
 
     orange = ROOT / "assets" / "intro-orange.jpg"
