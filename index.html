@@ -206,6 +206,8 @@ a{color:inherit;text-decoration:none}
 .ko .toc .lab{font-family:var(--serif-ko);font-weight:700;font-size:16px}
 .toc .lab small{font-family:var(--ko);font-weight:400;font-size:11px;color:var(--muted)}
 .toc .n{font-family:var(--serif);font-weight:700}
+.toc button.off{cursor:default;opacity:.45}
+.toc button.off .adnote{color:var(--muted)}
 .toc .adnote{flex-basis:100%;font-family:var(--sans);font-style:normal;font-weight:600;font-size:11px;color:var(--accent);letter-spacing:0}
 .quote{display:flex;gap:14px}
 .quote::before{content:"";width:1.5px;background:var(--ink);flex:none}
@@ -675,7 +677,10 @@ mn:{cont:'Үргэлжлүүлэх',contSub:'다음 단계로',menu:'Цэс',wel
 const st={lang:null,sel:null,stack:['intro'],bgOrange:true,photo:null,remind:false,notify:true,qi:0,answers:[],query:'',always:null};
 try{st.always=localStorage.getItem('al_naver')}catch(e){}
 st.adFreeUntil=0;try{st.adFreeUntil=+localStorage.getItem('al_adfree')||0}catch(e){}
-const adFree=()=>Date.now()<st.adFreeUntil;
+/* 설문: 보상(광고 제거·기프트카드) 지급 방식이 정해질 때까지 꺼 둠. 켜려면 true */
+const SURVEY_ON=false;
+const SOON={ko:'준비 중',en:'Coming soon',vi:'Sắp ra mắt',zh:'即将推出',ru:'Скоро',uz:'Tez orada',mn:'Тун удахгүй'};
+const adFree=()=>SURVEY_ON&&Date.now()<st.adFreeUntil;
 const hhmm=ms=>{const t=new Date(ms).toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit'});if(new Date(ms).toDateString()===new Date().toDateString())return t;return S[st.lang||'en'].tomorrow(t);};
 function grantAdFree(){st.adFreeUntil=Date.now()+864e5;try{localStorage.setItem('al_adfree',String(st.adFreeUntil))}catch(e){}}
 const adFreeRow=()=>`<div class="row" style="border:1px dashed rgba(30,34,33,.25);border-radius:18px;padding:12px 14px">${dotI('check','var(--deep)','#fff',30)}<span class="col"><span class="b" style="font-size:13px">${T().adFreeOn(hhmm(st.adFreeUntil))}</span><span class="tiny muted">${T().adFreeS}</span></span></div>`;
@@ -684,7 +689,7 @@ const LOCALE={en:'en-US',vi:'vi-VN',ko:'ko-KR',zh:'zh-CN',ru:'ru-RU',uz:'uz-Latn
 const loc=()=>LOCALE[st.lang]||'en-US';
 const isKo=()=>st.lang==='ko';
 const cur=()=>st.stack[st.stack.length-1];
-function go(n){st.stack.push(n);render();}
+function go(n){if(!SURVEY_ON&&/^(surv|sq|sdone)$/.test(n))return;st.stack.push(n);render();}
 function back(){if(st.stack.length>1)st.stack.pop();render();}
 function home(){st.stack=['home'];render();}
 const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -821,7 +826,7 @@ SCR.intro=()=>{const t=st.lang?S[st.lang]:null;const sel=st.sel?COUNTRIES.find(c
 SCR.home=()=>{const t=T();const icons=['trash','bus','office','med','mega','survey'];const to=['w1','b1','offices','hosp','news','surv'];const ko=S.ko.items;
  return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu,{menu:true,right:langPill()})}
  ${ttl(t.homeT,`<span>${new Date().toLocaleDateString(loc(),{weekday:'long',month:'long',day:'numeric'})}</span>`,{eye:t.welcome})}
- <div class="sheet"><nav class="toc">${t.items.map((x,i)=>`<button data-go="${to[i]}">${dotI(icons[i],'#2F3B3A','#fff',28)}<span class="lab" style="flex-wrap:wrap;row-gap:2px">${x}${isKo()?'':`<small>${ko[i]}</small>`}${i===5?`<em class="adnote">${adFree()?t.adFreeOn(hhmm(st.adFreeUntil)):t.survNote}</em>`:''}</span><span class="n">0${i+1}</span></button>`).join('')}</nav>
+ <div class="sheet"><nav class="toc">${t.items.map((x,i)=>`<button ${i===5&&!SURVEY_ON?`disabled aria-disabled="true" class="off"`:`data-go="${to[i]}"`}>${dotI(icons[i],'#2F3B3A','#fff',28)}<span class="lab" style="flex-wrap:wrap;row-gap:2px">${x}${isKo()?'':`<small>${ko[i]}</small>`}${i===5?`<em class="adnote">${!SURVEY_ON?(SOON[st.lang]||SOON.en)+(isKo()?'':' · 준비 중'):adFree()?t.adFreeOn(hhmm(st.adFreeUntil)):t.survNote}</em>`:''}</span><span class="n">0${i+1}</span></button>`).join('')}</nav>
  <div style="margin-top:8px">${adSlot()}</div>
  ${installCard()}
  <div class="quote"><div class="col" style="gap:6px"><span class="serif" style="font-size:16px">${t.tipT}</span><span class="small muted" style="line-height:1.55">${t.tipB}</span></div></div>
@@ -1173,15 +1178,17 @@ const sampleAd=()=>{const t=T();return `<div class="card row"><div class="col gr
 const directAd=a=>{const t=T();const img=a.image_url&&/^https:\/\//.test(a.image_url)?`<img src="${esc(a.image_url)}" alt="" style="width:64px;height:64px;border-radius:14px;object-fit:cover;flex:none">`:`<span style="width:64px;height:64px;border-radius:14px;background:#FBE7D6;display:grid;place-items:center;flex:none">${ic('gift',22,'#9A6A44')}</span>`;
  const inner=`<div class="col grow" style="gap:3px"><span class="row cap" style="gap:6px"><span class="dot" style="background:var(--accent);width:6px;height:6px"></span>${t.adLbl}</span><span class="serif" style="font-size:15px">${esc(a.title)}</span>${a.body?`<span class="small muted">${esc(a.body)}</span>`:''}</div>${img}`;
  return a.url&&/^https:\/\//.test(a.url)?`<a class="card row" href="${esc(a.url)}" target="_blank" rel="noopener sponsored">${inner}</a>`:`<div class="card row">${inner}</div>`};
-function adSlot(){if(adFree())return adFreeRow();if(!hasSb())return sampleAd();const a=st.ad[st.lang];
+const adsenseBox=()=>`<div id="adslot" class="card" style="padding:8px"><ins class="adsbygoogle" style="display:block" data-ad-client="${ADS_CLIENT}" data-ad-slot="${ADS_SLOT}" data-ad-format="auto" data-full-width-responsive="true"></ins></div>`;
+/* 광고 순서: Supabase 직접 광고 → 애드센스 → (둘 다 없으면) 예시 광고 */
+function adSlot(){if(adFree())return adFreeRow();if(!hasSb())return hasAdsense()?adsenseBox():sampleAd();const a=st.ad[st.lang];
  if(a===undefined)return '<div id="adslot"></div>';if(a)return directAd(a);
- return hasAdsense()?`<div id="adslot" class="card" style="padding:8px"><ins class="adsbygoogle" style="display:block" data-ad-client="${ADS_CLIENT}" data-ad-slot="${ADS_SLOT}" data-ad-format="auto" data-full-width-responsive="true"></ins></div>`:'';}
+ return hasAdsense()?adsenseBox():'';}
 const pickAd=list=>{const tot=list.reduce((n,a)=>n+(a.weight||1),0);let r=Math.random()*tot;for(const a of list){r-=a.weight||1;if(r<=0)return a}return list[0]||null};
 let adsenseLoaded=false;
 function mountAdsense(){if(!document.querySelector('ins.adsbygoogle:not([data-adsbygoogle-status])'))return;
  if(!adsenseLoaded){adsenseLoaded=true;const sc=document.createElement('script');sc.async=true;sc.crossOrigin='anonymous';sc.src=`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS_CLIENT}`;document.head.appendChild(sc);}
  try{(window.adsbygoogle=window.adsbygoogle||[]).push({})}catch(e){}}
-async function loadAd(){if(!hasSb()||adFree())return;const lang=st.lang;
+async function loadAd(){if(adFree())return;if(!hasSb()){if(hasAdsense())mountAdsense();return;}const lang=st.lang;
  if(st.ad[lang]===undefined){try{const list=await sb(`ads?select=id,title,body,url,image_url,weight&langs=cs.%7B${lang}%7D`);st.ad[lang]=pickAd(list||[]);}catch(e){st.ad[lang]=null;}
   const box=document.getElementById('adslot');if(box&&st.lang===lang){box.outerHTML=adSlot();tagFx(app);}}
  mountAdsense();}
