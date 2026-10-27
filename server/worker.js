@@ -20,7 +20,8 @@
  *   MODEL              선택 · 기본 claude-haiku-5-5 (사진 분석·공지 번역)
  *   VISION_MODEL       선택 · 사진 분석만 다른 모델로 (예: claude-sonnet-5-5, 더 정확하지만 약 20배 비쌈)
  *   TR_KV              선택 · KV 바인딩. 있으면 번역을 전 세계 공유로 30일 보관
- *   DATA_GO_KR_KEY     버스 기능 · 공공데이터포털 인증키(Decoding 키). 없으면 /bus/* 는 503
+ *   DATA_GO_KR_KEY     공공데이터포털 인증키. 병원·약국(/med/*) — 없으면 503
+ *   BUS_KEY            (선택) 경기도 버스 API 를 다른 계정 키로 신청했을 때. 없으면 DATA_GO_KR_KEY 를 씀
  *   NOTICES_URL        공지 기능 · Supabase notices REST 주소(또는 data/notices.json). 없으면 /notices 는 503
  *   NOTICES_KEY        공지 기능 · Supabase anon(공개) 키. NOTICES_URL 이 Supabase 일 때
  *
@@ -156,9 +157,10 @@ function findKey(o, key, depth = 0) {
   for (const v of Object.values(o)) { const r = findKey(v, key, depth + 1); if (r !== undefined) return r; }
   return undefined;
 }
+const busKey = env => env.BUS_KEY || env.DATA_GO_KR_KEY;
 async function gbis(path, params, env) {
   const q = new URLSearchParams({ ...params, format: 'json' });
-  const r = await fetch(`${GBIS}/${path}?serviceKey=${encodeURIComponent(env.DATA_GO_KR_KEY)}&${q}`, { cf: { cacheTtl: 15 } });
+  const r = await fetch(`${GBIS}/${path}?serviceKey=${encodeURIComponent(busKey(env))}&${q}`, { cf: { cacheTtl: 15 } });
   if (!r.ok) throw new Error('upstream');
   const j = await r.json();
   const code = Number(findKey(j, 'resultCode'));
@@ -193,7 +195,7 @@ export function mapStops(j) {
   })).filter(s => s.id).sort((a, b) => (a.dist ?? 1e9) - (b.dist ?? 1e9)).slice(0, 8);
 }
 async function busRoute(url, env, h) {
-  if (!env.DATA_GO_KR_KEY) return json({ error: 'config' }, 503, h);
+  if (!busKey(env)) return json({ error: 'config' }, 503, h);
   try {
     if (url.pathname === '/bus/arrivals') {
       const id = url.searchParams.get('stationId') || '';
@@ -211,7 +213,7 @@ async function busRoute(url, env, h) {
 /* ---------- 병원 · 약국 (국립중앙의료원, 공공데이터포털) ----------
    같은 DATA_GO_KR_KEY 로 "국립중앙의료원_전국 병·의원 찾기 서비스", "국립중앙의료원_전국 약국 정보 조회 서비스"
    두 가지를 활용신청해야 합니다. 위치 조회는 거리순으로 오늘의 진료시간(startTime/endTime, HHMM)과 좌표를 줍니다.
-   병·의원 위치·상세 조회 필드명은 2026-10-27 실제 키로 확인함(dutyEryn: 1 운영 / 2 없음). 약국은 같은 구조로 가정. */
+   병·의원·약국 위치 조회와 병·의원 상세 조회 필드명은 2026-10-27 실제 키로 확인함(dutyEryn: 1 운영 / 2 없음). */
 const NMC = 'https://apis.data.go.kr/B552657';
 const MED = {
   hosp: { near: 'HsptlAsembySearchService/getHsptlMdcncLcinfoInqire', detail: 'HsptlAsembySearchService/getHsptlBassInfoInqire' },

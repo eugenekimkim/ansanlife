@@ -6,6 +6,7 @@
 | --- | --- | --- |
 | `POST /analyze` (또는 `/`) | 사진 → 배출 분류 (Claude API 이미지 입력) | `ANTHROPIC_API_KEY` |
 | `GET /bus/stops?lat=&lng=` | 주변 정류장 최대 8곳 (경기도 정류소 조회 v2) | `DATA_GO_KR_KEY` |
+| `BUS_KEY` | 버스 기능 (secret, 선택) | 경기도 버스 API 를 다른 공공데이터포털 계정으로 신청했을 때만. 없으면 `DATA_GO_KR_KEY` 사용 |
 | `GET /bus/arrivals?stationId=` | 정류장 도착 정보 (경기도 버스도착정보 v2) | `DATA_GO_KR_KEY` |
 | `GET /med/nearby?kind=hosp\|pharm&lat=&lng=` | 주변 병·의원 / 약국 40곳, 거리순 + 오늘 진료시간 (국립중앙의료원) | `DATA_GO_KR_KEY` |
 | `GET /med/detail?kind=hosp\|pharm&id=HPID` | 요일별 진료시간, 진료과목, 응급실 여부 | `DATA_GO_KR_KEY` |
@@ -31,7 +32,8 @@
 cd server
 npx wrangler login
 npx wrangler secret put ANTHROPIC_API_KEY      # Claude API 키
-npx wrangler secret put DATA_GO_KR_KEY         # 공공데이터포털 인증키 (Decoding 키)
+npx wrangler secret put DATA_GO_KR_KEY         # 공공데이터포털 인증키 (Decoding 키) — 병원·약국
+npx wrangler secret put BUS_KEY                # (선택) 버스 API 를 다른 계정 키로 신청한 경우만
 # wrangler.toml 의 ALLOWED_ORIGIN, NOTICES_URL 을 앱 주소에 맞게 바꾼 뒤
 npx wrangler deploy
 ```
@@ -97,7 +99,7 @@ GET /notices?lang=vi
 - 모델 정하기: 실제 쓰레기 사진 50장 정도로 Haiku 와 Sonnet 을 비교해 `VISION_MODEL` 결정
 
 - 버스: 실제 키로 `/bus/stops`, `/bus/arrivals` 를 한 번씩 불러 필드가 맞는지 확인
-- 병원·약국: 병·의원 API 는 2026-10-27 실제 키로 확인 완료(`_type=json` 이어도 XML 응답 → `parseXmlItems` 로 처리, 필드명 일치, 일요일·공휴일 진료가 없으면 `dutyTime7*`/`8*` 가 빠짐). 약국 API 는 신청 후 같은 방법으로 확인: `/med/nearby?kind=hosp&lat=37.3163&lng=126.8226` 과 `kind=pharm`, 결과의 `id` 로 `/med/detail` 을 불러 필드(`dutyTime1s…8c`, `dgidIdName`, `dutyEryn`)가 맞는지 확인 (`mapMed`, `mapMedDetail`)
+- 병원·약국: 병·의원 API 는 2026-10-27 실제 키로 확인 완료(`_type=json` 이어도 XML 응답 → `parseXmlItems` 로 처리, 필드명 일치, 일요일·공휴일 진료가 없으면 `dutyTime7*`/`8*` 가 빠짐). 약국 위치 조회, 경기도 정류소·도착정보 v2(JSON)도 같은 날 확인 완료. 다시 확인할 때: `/med/nearby?kind=hosp&lat=37.3163&lng=126.8226` 과 `kind=pharm`, 결과의 `id` 로 `/med/detail` 을 불러 필드(`dutyTime1s…8c`, `dgidIdName`, `dutyEryn`)가 맞는지 확인 (`mapMed`, `mapMedDetail`)
 
 - `RULES` 의 분류 설명과 예시는 일반적인 분리배출 기준으로 적은 것입니다. 안산시 자원순환과(031-481-2259)에 확인한 뒤 고치세요. 분류를 바꾸면 앱의 `DEST` 도 함께 고쳐야 합니다.
 - 사진 수집·전송에 대한 동의 문구(모국어)를 개인정보 검토 때 함께 확인하세요.
