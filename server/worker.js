@@ -211,7 +211,7 @@ async function busRoute(url, env, h) {
 /* ---------- 병원 · 약국 (국립중앙의료원, 공공데이터포털) ----------
    같은 DATA_GO_KR_KEY 로 "국립중앙의료원_전국 병·의원 찾기 서비스", "국립중앙의료원_전국 약국 정보 조회 서비스"
    두 가지를 활용신청해야 합니다. 위치 조회는 거리순으로 오늘의 진료시간(startTime/endTime, HHMM)과 좌표를 줍니다.
-   상세 조회의 필드명(dutyTime1s…8c, dgidIdName, dutyEryn)은 활용가이드 기준이며, 실제 키로 첫 호출 때 한 번 확인하세요. */
+   병·의원 위치·상세 조회 필드명은 2026-10-27 실제 키로 확인함(dutyEryn: 1 운영 / 2 없음). 약국은 같은 구조로 가정. */
 const NMC = 'https://apis.data.go.kr/B552657';
 const MED = {
   hosp: { near: 'HsptlAsembySearchService/getHsptlMdcncLcinfoInqire', detail: 'HsptlAsembySearchService/getHsptlBassInfoInqire' },
@@ -221,11 +221,36 @@ async function nmc(path, params, env, ttl) {
   const q = new URLSearchParams({ ...params, _type: 'json' });
   const r = await fetch(`${NMC}/${path}?serviceKey=${encodeURIComponent(env.DATA_GO_KR_KEY)}&${q}`, { headers: { accept: 'application/json' }, cf: { cacheTtl: ttl, cacheEverything: true } });
   if (!r.ok) throw new Error('upstream');
-  const j = await r.json().catch(() => null);
-  if (!j) throw new Error('upstream');
-  const code = String(findKey(j, 'resultCode') ?? '00');
+  const text = await r.text();
+  // 국립중앙의료원 API 는 _type=json 을 줘도 XML 로 응답함(2026-10-27 실제 키로 확인). 둘 다 처리
+  if (text.trimStart().startsWith('{')) {
+    const j = JSON.parse(text);
+    const code = String(findKey(j, 'resultCode') ?? '00');
+    if (code !== '00' && code !== '0') throw new Error('upstream ' + code);
+    return asList(findKey(j, 'item'));
+  }
+  return parseXmlItems(text);
+}
+const XML_ENT = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
+const unxml = s => s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
+  .replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos);/gi, (m, e) => e[0] === '#'
+    ? String.fromCodePoint(e[1].toLowerCase() === 'x' ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10))
+    : XML_ENT[e.toLowerCase()]).trim();
+export function parseXmlItems(xml) {
+  const code = (xml.match(/<resultCode>\s*([^<]*?)\s*<\/resultCode>/) || [])[1];
+  if (code == null) {
+    // 인증키 오류 등은 <OpenAPI_ServiceResponse> 형태로 옴
+    const err = (xml.match(/<returnReasonCode>\s*([^<]*?)\s*<\/returnReasonCode>/) || [])[1];
+    throw new Error('upstream ' + (err || 'format'));
+  }
   if (code !== '00' && code !== '0') throw new Error('upstream ' + code);
-  return asList(findKey(j, 'item'));
+  const items = [];
+  for (const [, body] of xml.matchAll(/<item>([\s\S]*?)<\/item>/g)) {
+    const o = {};
+    for (const [, k, v] of body.matchAll(/<([A-Za-z0-9_]+)>([\s\S]*?)<\/\1>/g)) o[k] = unxml(v);
+    items.push(o);
+  }
+  return items;
 }
 const hhmm = v => { const n = num(v); return n != null && n >= 0 && n <= 4800 ? n : null; };
 export function mapMed(items, kind) {

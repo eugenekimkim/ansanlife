@@ -97,7 +97,7 @@ GET /notices?lang=vi
 - 모델 정하기: 실제 쓰레기 사진 50장 정도로 Haiku 와 Sonnet 을 비교해 `VISION_MODEL` 결정
 
 - 버스: 실제 키로 `/bus/stops`, `/bus/arrivals` 를 한 번씩 불러 필드가 맞는지 확인
-- 병원·약국: `/med/nearby?kind=hosp&lat=37.3163&lng=126.8226` 과 `kind=pharm`, 결과의 `id` 로 `/med/detail` 을 불러 필드(`dutyTime1s…8c`, `dgidIdName`, `dutyEryn`)가 맞는지 확인 (`mapMed`, `mapMedDetail`)
+- 병원·약국: 병·의원 API 는 2026-10-27 실제 키로 확인 완료(`_type=json` 이어도 XML 응답 → `parseXmlItems` 로 처리, 필드명 일치, 일요일·공휴일 진료가 없으면 `dutyTime7*`/`8*` 가 빠짐). 약국 API 는 신청 후 같은 방법으로 확인: `/med/nearby?kind=hosp&lat=37.3163&lng=126.8226` 과 `kind=pharm`, 결과의 `id` 로 `/med/detail` 을 불러 필드(`dutyTime1s…8c`, `dgidIdName`, `dutyEryn`)가 맞는지 확인 (`mapMed`, `mapMedDetail`)
 
 - `RULES` 의 분류 설명과 예시는 일반적인 분리배출 기준으로 적은 것입니다. 안산시 자원순환과(031-481-2259)에 확인한 뒤 고치세요. 분류를 바꾸면 앱의 `DEST` 도 함께 고쳐야 합니다.
 - 사진 수집·전송에 대한 동의 문구(모국어)를 개인정보 검토 때 함께 확인하세요.
