@@ -5,6 +5,7 @@ src/app.template.html 을 읽어 실행 가능한 HTML 을 만듭니다.
 
   python3 build.py                 # index.html 생성 (이미지는 assets/ 파일 참조)
   NAVER_KEY=xxxx python3 build.py  # 네이버 지도 Client ID(ncpKeyId)를 넣어 빌드
+  GMAPS_KEY=AIza... python3 build.py  # 구글 지도 키 (네이버 키가 없거나 인증 실패일 때 사용)
   API_URL=https://... python3 build.py   # API 서버(사진 분석·버스·공지 번역) 주소를 넣어 빌드 (server/README.md)
   SUPABASE_URL=... SUPABASE_ANON_KEY=... python3 build.py   # 공지·광고·설문 저장 (supabase/README.md)
   ADSENSE_CLIENT=ca-pub-... ADSENSE_SLOT=... python3 build.py  # 직접 광고가 없을 때 애드센스
@@ -51,6 +52,8 @@ def main() -> None:
 
     # 키가 비어 있으면 앱은 그림 지도로 대신 보여줍니다.
     html = html.replace("const NAVER_KEY='__NAVER_KEY__';", f"const NAVER_KEY='{key}';")
+    gkey = os.environ.get("GMAPS_KEY", "").strip()
+    html = html.replace("const GMAPS_KEY='__GMAPS_KEY__';", f"const GMAPS_KEY='{gkey}';")
     # 비어 있으면 사진 분석·버스·공지는 예시 데이터로 보여줍니다.
     html = html.replace("'__API_URL__'", f"'{analyze}'")
     # Supabase 공개(anon) 키·애드센스는 원래 공개되는 값이라 빌드에 넣어도 됩니다 (비밀 키는 절대 넣지 마세요)
@@ -80,7 +83,7 @@ def main() -> None:
         adm = (ROOT / "src" / "admin.template.html").read_text(encoding="utf-8")
         adm = adm.replace("'__SUPABASE_URL__'", f"'{sb_url}'").replace("'__SUPABASE_ANON_KEY__'", f"'{sb_key}'")
         (ROOT / "admin.html").write_text(adm, encoding="utf-8")
-    print(f"built {out.relative_to(ROOT)}  (naver map: {'on' if key else 'off'}, api: {analyze or 'off'}, supabase: {'on' if sb_url and sb_key else 'off'})")
+    print(f"built {out.relative_to(ROOT)}  (naver map: {'on' if key else 'off'}, google map: {'on' if gkey else 'off'}, api: {analyze or 'off'}, supabase: {'on' if sb_url and sb_key else 'off'})")
 
 
 if __name__ == "__main__":

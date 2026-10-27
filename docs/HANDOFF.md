@@ -67,7 +67,7 @@ Figma 색상 변수 컬렉션 "Ansan Life" (color/accent, deep, sage, background
 | 앱 설치(PWA) · 오프라인 | 동작 | 2026-10-26 추가. manifest + service worker, 안드로이드 설치 카드 / 아이폰 안내, 오프라인 시 마지막 화면 |
 | 병원·약국 | 동작 · 서버 필요 | 2026-10-27 추가. GPS(HTTPS, 거부 시 집 주소) → `/med/nearby` 국립중앙의료원 병·의원 + 약국 거리순 → ALL / Open Now(오늘 진료시간으로 계산) / Pharmacy / English OK(`data/lang_hospitals.json`, KHIDI 데이터 변환) 탭. 상세는 `/med/detail` 요일별 진료시간·진료과목·응급실, 전화·네이버지도 길찾기, 접수처에 보여줄 한국어 통역 요청 문구. 서버 없으면 안내 + 네이버 '안산 병원' 검색. 119 바로 걸기 |
 | 네이버지도 열기 | 동작 | 앱(nmap://search) / 웹(새 창), 미설치 안내, 선택 기억 |
-| 실제 지도 | 키 필요 | Maps JS v3 + Geocoding, 키 없으면 그림 지도 |
+| 실제 지도 | 키 필요 | 네이버 Maps JS v3 우선, 없으면 구글 Maps JavaScript API(`GMAPS_KEY`, 2026-10-27 추가), 둘 다 없으면 그림 지도. 병원·약국 목록에 내 위치 + 주변 병원(빨강)·약국(초록) 점 지도, 점을 누르면 상세 |
 | 설문 + 24시간 광고 제거 | 동작 | 2026-10-27부터 응답을 Supabase `survey_responses` 에 저장(실패 시 기기에 모았다 재전송). 광고 제거 상태는 기기에만 |
 | 광고 | 동작 · Supabase 필요 | 2026-10-27 결정: 직접 영업 + 빈 자리는 네트워크. Supabase `ads`(언어별·기간·비율) → 없으면 애드센스 → 없으면 비움. Supabase 없으면 예시 광고 |
 

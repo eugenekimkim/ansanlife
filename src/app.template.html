@@ -28,7 +28,8 @@ a{color:inherit;text-decoration:none}
 #aside{max-width:300px;display:flex;flex-direction:column;gap:14px;color:var(--deep)}
 #aside h1{font-family:var(--serif-ko);font-size:40px;margin:0;line-height:1.1}
 #aside p{margin:0;font-size:14px;line-height:1.6;color:#41534F}
-#aside .tag{font-size:11px;letter-spacing:3px;font-weight:700;text-transform:uppercase}
+#aside .betatag{font-family:var(--sans);font-size:11px;letter-spacing:3px;font-weight:700;text-transform:uppercase}
+#aside .lead{margin-top:10px} /* 제목과 24px (flex gap 14 + 10) */
 @media (max-width:820px){#aside{display:none}}
 @media (max-width:500px){
   body{background:var(--bg)}
@@ -292,6 +293,11 @@ a{color:inherit;text-decoration:none}
 .nmap .fallback{position:absolute;inset:0;width:100%;height:100%}
 .nmap .maptag{position:absolute;left:12px;bottom:10px;z-index:2;font-size:10px;font-weight:700;color:#4E6B70;background:rgba(255,255,255,.8);border-radius:8px;padding:2px 7px}
 .nmap.ready .maptag{display:none}
+.mdot{width:14px;height:14px;border-radius:50%;background:var(--accent);border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3);transform:translate(-50%,-50%);cursor:pointer}
+.mdot.ph{background:var(--deep)}
+.mlegend{display:flex;gap:12px;align-items:center;margin-top:-6px}
+.mlegend i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:5px;vertical-align:1px}
+.mlegend i.ph{background:var(--deep)}
 .npin{transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;gap:2px}
 .npin b{display:block;width:26px;height:26px;border-radius:13px 13px 13px 0;transform:rotate(-45deg);background:var(--accent);box-shadow:0 4px 10px rgba(0,0,0,.25)}
 .npin b::after{content:"";position:absolute;left:8px;top:8px;width:10px;height:10px;border-radius:50%;background:#fff}
@@ -299,35 +305,18 @@ a{color:inherit;text-decoration:none}
 .npin span{font:700 11px/1.2 var(--sans);background:#fff;color:var(--ink);border-radius:8px;padding:3px 7px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.15);margin-top:4px}
 .npin.home b{background:var(--deep)}
 
-/* modal */
-#modal[hidden]{display:none}
-#modal{position:fixed;inset:0;background:rgba(19,32,33,.55);display:grid;place-items:center;z-index:100;padding:24px}
-#modal .box{background:#fff;border-radius:28px;max-width:380px;width:100%;padding:28px;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
-#modal h2{font-family:var(--serif-ko);margin:0;font-size:22px}
-#modal p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
-.qr{display:flex;gap:12px;align-items:center;background:var(--bg);border-radius:16px;padding:12px 14px;font-size:12px;color:var(--muted)}
-.qr code{font-size:11px;color:var(--ink);word-break:break-all}
 </style>
 
 <div id="stage">
   <div id="aside">
-    <span class="tag">Prototype · Mobile web</span>
+    <span class="betatag">ANSAN LIFE. BETA</span>
     <h1>안산살이</h1>
-    <p>안산에 사는 외국인 주민을 위한 다국어 생활 안내 서비스 시안입니다. 분리배출, 버스, 병원, 관공서, 공지, 설문을 한곳에서 보여줍니다.</p>
-    <p class="small">예시 데이터가 포함되어 있습니다. 실제 서비스에서는 공공 API와 연결됩니다.</p>
+    <p class="lead" id="asideLead">안산살이는 휴대폰 화면에 맞춰 만들어졌어요. 지금은 모바일 크기로 보여드릴게요.</p>
   </div>
   <div id="phone"><div id="app" aria-live="polite"></div></div>
 </div>
 
-<div id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mtitle">
-  <div class="box">
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#E45C4E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 18h4"/></svg>
-    <h2 id="mtitle">모바일에서 보시는 것을 권장합니다.</h2>
-    <p>안산살이는 휴대폰 화면에 맞춰 만들어졌어요. 지금은 모바일 크기로 보여드릴게요.<br><span class="it">Best viewed on your phone.</span></p>
-    <div class="qr"><span>휴대폰에서 이 페이지 링크를 열어보세요.</span></div>
-    <button class="btn dark" id="mclose" type="button">확인 · OK</button>
-  </div>
-</div>
+
 
 <script>
 (()=>{
@@ -727,19 +716,53 @@ async function api(path,opt={},ms=12000){const ctl=new AbortController();const t
  try{const r=await fetch(API_URL+path,{...opt,signal:ctl.signal});if(!r.ok)throw new Error('http '+r.status);return await r.json();}finally{clearTimeout(to)}}
 const MAPS={
  hosp:()=>{const m=st.med&&st.med.sel;if(!m||m.lat==null)return null;const p=[{lat:m.lat,lng:m.lng,label:esc(m.name)}];if(st.med.pos)p.unshift({lat:st.med.pos.lat,lng:st.med.pos.lng,label:esc(HT().you),home:true});return {zoom:16,pts:p};},
+ medlist:()=>{const m=st.med;if(!m||!m.pos||!m.hosp)return null;const all=medAll();const list=medList().slice(0,20);
+  return {zoom:15,pts:[{lat:m.pos.lat,lng:m.pos.lng,label:esc(HT().you),home:true},...list.filter(x=>x.lat!=null).map(x=>({lat:x.lat,lng:x.lng,dot:true,pharm:x.kind==='pharm',title:x.name,med:'a'+all.indexOf(x)}))]};},
  near:{zoom:15,pts:[{addr:'경기도 안산시 단원구 원포공원1로 59',label:'Home',home:true},{addr:'경기도 안산시 단원구 중앙대로 620',label:'초지역 Choji'}]},
  offices:{zoom:14,pts:[{addr:'경기도 안산시 단원구 원포공원1로 59',label:'Home',home:true},{addr:'경기도 안산시 단원구 화랑로 387',label:'안산시청'}]}};
-const miniMap=k=>`<div class="nmap mini" data-map="${k}"><div class="live"></div><svg class="fallback" viewBox="0 0 342 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g stroke="#fff" stroke-linecap="round" fill="none"><path d="M-10 120 C 80 100,150 140,230 95 S 330 60,350 70" stroke-width="12"/><path d="M110 -10 L 150 180" stroke-width="8"/><path d="M-10 50 L 350 30" stroke-width="6"/><path d="M260 -10 L 230 180" stroke-width="5"/></g><path d="M171 92s12-11 12-20a12 12 0 0 0-24 0c0 9 12 20 12 20z" fill="#E45C4E"/><circle cx="171" cy="72" r="4.5" fill="#fff"/></svg><span class="maptag">MAP · NAVER API</span></div>`;
-let naverP=null;const geoCache={};
-function loadNaver(){if(!NAVER_KEY||NAVER_KEY.startsWith('__'))return Promise.resolve(null);if(naverP)return naverP;
+const miniMap=k=>`<div class="nmap mini" data-map="${k}"><div class="live"></div><svg class="fallback" viewBox="0 0 342 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g stroke="#fff" stroke-linecap="round" fill="none"><path d="M-10 120 C 80 100,150 140,230 95 S 330 60,350 70" stroke-width="12"/><path d="M110 -10 L 150 180" stroke-width="8"/><path d="M-10 50 L 350 30" stroke-width="6"/><path d="M260 -10 L 230 180" stroke-width="5"/></g><path d="M171 92s12-11 12-20a12 12 0 0 0-24 0c0 9 12 20 12 20z" fill="#E45C4E"/><circle cx="171" cy="72" r="4.5" fill="#fff"/></svg><span class="maptag">MAP</span></div>`;
+/* 지도: 네이버 지도 키가 있으면 네이버, 없거나 인증 실패면 구글 지도(GMAPS_KEY), 둘 다 없으면 그림 지도 */
+const GMAPS_KEY='__GMAPS_KEY__';
+const okKey=k=>!!k&&!k.startsWith('__');
+const hasMapKey=()=>okKey(NAVER_KEY)||okKey(GMAPS_KEY);
+const pinHtml=p=>p.dot?`<div class="mdot ${p.pharm?'ph':''}" title="${esc(p.title||'')}"></div>`:`<div class="npin ${p.home?'home':''}"><b></b><span>${p.label}</span></div>`;
+let naverP=null,googleP=null;const geoCache={};
+function loadNaver(){if(!okKey(NAVER_KEY))return Promise.resolve(null);if(naverP)return naverP;
  naverP=new Promise(res=>{window.navermap_authFailure=()=>res(null);const s=document.createElement('script');s.src=`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${enc(NAVER_KEY)}&submodules=geocoder`;s.onload=()=>res(window.naver&&window.naver.maps?window.naver:null);s.onerror=()=>res(null);document.head.appendChild(s);});return naverP;}
-function geocode(N,addr){if(geoCache[addr])return geoCache[addr];geoCache[addr]=new Promise(res=>{try{N.maps.Service.geocode({query:addr},(status,r)=>{const a=status===N.maps.Service.Status.OK&&r.v2&&r.v2.addresses&&r.v2.addresses[0];res(a?new N.maps.LatLng(+a.y,+a.x):null);});}catch(e){res(null)}});return geoCache[addr];}
-async function mountMaps(){const els=[...app.querySelectorAll('.nmap[data-map]')];if(!els.length)return;const N=await loadNaver();if(!N)return;
- for(const el of els){if(!el.isConnected)continue;const sp0=MAPS[el.dataset.map];const spec=typeof sp0==='function'?sp0():sp0;if(!spec)continue;const ll=(await Promise.all(spec.pts.map(p=>p.lat!=null?new N.maps.LatLng(p.lat,p.lng):p.home&&st.addr.lat?new N.maps.LatLng(st.addr.lat,st.addr.lng):geocode(N,p.home?st.addr.full:p.addr))));const pts=spec.pts.map((p,i)=>({...p,ll:ll[i]})).filter(p=>p.ll);if(!pts.length||!el.isConnected)continue;
-  const map=new N.maps.Map(el.querySelector('.live'),{center:pts[pts.length-1].ll,zoom:spec.zoom,scaleControl:false,mapDataControl:false,logoControlOptions:{position:N.maps.Position.BOTTOM_RIGHT}});
-  pts.forEach(p=>new N.maps.Marker({position:p.ll,map,icon:{content:`<div class="npin ${p.home?'home':''}"><b></b><span>${p.label}</span></div>`,anchor:new N.maps.Point(0,0)}}));
-  if(pts.length>1){const b=new N.maps.LatLngBounds(pts[0].ll,pts[0].ll);pts.forEach(p=>b.extend(p.ll));map.fitBounds(b,{top:50,right:40,bottom:30,left:40});}
-  el.classList.add('ready');}}
+const GLANG={ko:'ko',en:'en',vi:'vi',zh:'zh-CN',ru:'ru',uz:'uz',mn:'mn'};
+function loadGoogle(){if(!okKey(GMAPS_KEY))return Promise.resolve(null);if(googleP)return googleP;
+ googleP=new Promise(res=>{let done=false;const fin=v=>{if(!done){done=true;res(v)}};
+  // 키 제한(리퍼러)·결제 문제로 인증이 실패하면 구글이 이 함수를 부름 → 그림 지도로 되돌림
+  window.gm_authFailure=()=>{googleP=Promise.resolve(null);document.querySelectorAll('.nmap.ready').forEach(el=>el.classList.remove('ready'));fin(null);};
+  window.__gmReady=()=>fin(window.google&&google.maps?google:null);
+  const s=document.createElement('script');s.async=true;s.src=`https://maps.googleapis.com/maps/api/js?key=${enc(GMAPS_KEY)}&callback=__gmReady&loading=async&v=weekly&region=KR&language=${GLANG[st.lang]||'en'}`;s.onerror=()=>fin(null);document.head.appendChild(s);setTimeout(()=>fin(null),12000);});
+ return googleP;}
+const GSTYLE=[{featureType:'poi',elementType:'labels.icon',stylers:[{visibility:'off'}]},{featureType:'poi.business',stylers:[{visibility:'off'}]},{featureType:'landscape',elementType:'geometry',stylers:[{color:'#EEF0EC'}]},{featureType:'water',elementType:'geometry',stylers:[{color:'#C9DADD'}]},{featureType:'road',elementType:'geometry',stylers:[{color:'#FFFFFF'}]},{featureType:'road',elementType:'labels.text.fill',stylers:[{color:'#6E7472'}]},{featureType:'poi.park',elementType:'geometry',stylers:[{color:'#DCE6DD'}]},{featureType:'transit.line',elementType:'geometry',stylers:[{color:'#B9C6C7'}]}];
+let GPin=null;
+function gPinClass(G){if(GPin)return GPin;GPin=class extends G.maps.OverlayView{constructor(pos,p){super();this.pos=pos;this.d=document.createElement('div');this.d.style.cssText='position:absolute;width:0;height:0';this.d.innerHTML=pinHtml(p);if(p.med){this.d.firstChild.setAttribute('role','button');this.d.addEventListener('click',e=>{e.stopPropagation();openMed(p.med);});}}
+  onAdd(){this.getPanes().overlayMouseTarget.appendChild(this.d);}draw(){const q=this.getProjection().fromLatLngToDivPixel(this.pos);if(q){this.d.style.left=q.x+'px';this.d.style.top=q.y+'px';}}onRemove(){this.d.remove();}};return GPin;}
+const PROV={
+ naver:N=>({ll:(a,b)=>new N.maps.LatLng(a,b),
+  geocode:addr=>geoCache[addr]||(geoCache[addr]=new Promise(res=>{try{N.maps.Service.geocode({query:addr},(status,r)=>{const a=status===N.maps.Service.Status.OK&&r.v2&&r.v2.addresses&&r.v2.addresses[0];res(a?new N.maps.LatLng(+a.y,+a.x):null);});}catch(e){res(null)}})),
+  draw(el,spec,pts){let map=el._map;if(!map){map=el._map=new N.maps.Map(el.querySelector('.live'),{center:pts[pts.length-1].ll,zoom:spec.zoom,scaleControl:false,mapDataControl:false,logoControlOptions:{position:N.maps.Position.BOTTOM_RIGHT}});}
+   (el._pins||[]).forEach(m=>m.setMap(null));
+   el._pins=pts.map(p=>{const mk=new N.maps.Marker({position:p.ll,map,icon:{content:pinHtml(p),anchor:new N.maps.Point(0,0)}});if(p.med)N.maps.Event.addListener(mk,'click',()=>openMed(p.med));return mk;});
+   if(pts.length>1){const b=new N.maps.LatLngBounds(pts[0].ll,pts[0].ll);pts.forEach(p=>b.extend(p.ll));map.fitBounds(b,{top:50,right:40,bottom:30,left:40});}else map.setCenter(pts[0].ll);}}),
+ google:G=>({ll:(a,b)=>new G.maps.LatLng(a,b),
+  geocode:addr=>geoCache[addr]||(geoCache[addr]=new Promise(res=>{try{new G.maps.Geocoder().geocode({address:addr,region:'KR'},(r,s)=>res(s==='OK'&&r[0]?r[0].geometry.location:null));}catch(e){res(null)}})),
+  draw(el,spec,pts){let map=el._map;if(!map){map=el._map=new G.maps.Map(el.querySelector('.live'),{center:pts[pts.length-1].ll,zoom:spec.zoom,disableDefaultUI:true,clickableIcons:false,gestureHandling:'cooperative',keyboardShortcuts:false,styles:GSTYLE,backgroundColor:'#DCE6E7'});}
+   (el._pins||[]).forEach(m=>m.setMap(null));const P=gPinClass(G);
+   el._pins=pts.map(p=>{const o=new P(p.ll,p);o.setMap(map);return o;});
+   if(pts.length>1){const b=new G.maps.LatLngBounds();pts.forEach(p=>b.extend(p.ll));map.fitBounds(b,{top:50,right:40,bottom:30,left:40});const z=G.maps.event.addListenerOnce(map,'idle',()=>{if(map.getZoom()>17)map.setZoom(17);});}else{map.setCenter(pts[0].ll);map.setZoom(spec.zoom);}}})};
+function geocode(N,addr){return PROV.naver(N).geocode(addr);}
+let provP=null;
+function mapProv(){return provP||(provP=(async()=>{const N=await loadNaver();if(N)return PROV.naver(N);const G=await loadGoogle();return G?PROV.google(G):null;})());}
+async function mountMaps(only){const els=only?[only]:[...app.querySelectorAll('.nmap[data-map]')];if(!els.length)return;const P=await mapProv();if(!P)return;
+ for(const el of els){if(!el.isConnected)continue;const sp0=MAPS[el.dataset.map];const spec=typeof sp0==='function'?sp0():sp0;if(!spec)continue;
+  const ll=await Promise.all(spec.pts.map(p=>p.lat!=null?P.ll(p.lat,p.lng):p.home&&st.addr.lat?P.ll(st.addr.lat,st.addr.lng):P.geocode(p.home?st.addr.full:p.addr)));
+  const pts=spec.pts.map((p,i)=>({...p,ll:ll[i]})).filter(p=>p.ll);if(!pts.length||!el.isConnected)continue;
+  try{P.draw(el,spec,pts);el.classList.add('ready');}catch(e){}}}
+function openMed(key){const it=medPick(key);if(it){st.med.sel=it;go('hdetail');}}
 
 /* ---------- common pieces ---------- */
 const nav=(label,{menu=false,right=''}={})=>`<div class="nav">${menu?`<button class="ibtn" data-act="intro" aria-label="Language">${ic('menu',20)}</button>`:`<button class="ibtn" data-act="back" aria-label="Back">${ic('back',22)}</button>`}<span class="lbl">${label}</span><span class="rule"></span>${right}</div>`;
@@ -982,7 +1005,7 @@ function paintMed(){const box=document.getElementById('medlist');if(!box)return;
   box.innerHTML=note+(m.tab==='lang'?`<span class="row tiny muted" style="gap:6px;align-items:flex-start"><span class="dot" style="background:var(--accent);width:6px;height:6px;margin-top:5px"></span>${h.langNote}</span>`:'')+
    (list.length?list.slice(0,40).map(it=>medRow(it,medAll().indexOf(it)>=0?'a'+medAll().indexOf(it):'')).join(''):`<p class="small muted">${m.tab==='open'?h.noneOpen:m.tab==='lang'?h.noneLang:h.none}</p>`)+
    `<span class="micro muted">${h.src}</span>`;}
- tagFx(box);if(tabs)tagFx(tabs);}
+ tagFx(box);if(tabs)tagFx(tabs);const mm=app.querySelector('.nmap[data-map="medlist"]');if(mm&&m.hosp)mountMaps(mm);}
 async function getPos(){if(window.isSecureContext&&navigator.geolocation){try{const p=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:false,timeout:9000,maximumAge:300000}));return {lat:p.coords.latitude,lng:p.coords.longitude,src:'gps'};}catch(e){}}
  const ll=await homeLL();return ll?{...ll,src:'home'}:null;}
 async function loadLangSet(){if(st.med.langSet)return;try{const r=await fetch('data/lang_hospitals.json',{cache:'no-cache'});const j=await r.json();st.med.langSet=(j.hospitals||[]).filter(x=>(x.langs||[]).includes('en')).map(x=>({n:normName(x.name)}));}catch(e){st.med.langSet=[];}}
@@ -1012,6 +1035,7 @@ async function loadMedDetail(){const it=st.med.sel;if(!it||!hasApi()||!it.id)ret
 SCR.hosp=()=>{const t=T(),h=HT();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu,{right:`<button class="ibtn" data-act="medretry" aria-label="${h.refresh}">${ic('refresh',20)}</button>`})}${ttl(t.hospT,`<span id="medsub">${esc(st.med.pos?(st.med.pos.src==='gps'?h.nearGps:h.nearHome(st.addr.road)):h.locating)}</span>`,{pin:true})}
  <div class="sheet" style="gap:16px">
   <div class="mtabs" id="medtabs" role="tablist">${MED_TABS.map((k,i)=>`<button class="mtab" role="tab" data-mtab="${k}" aria-selected="${st.med.tab===k}">${h.tabs[i]}<i></i></button>`).join('')}</div>
+  ${hasApi()&&hasMapKey()?`${miniMap('medlist')}<div class="mlegend tiny muted"><span><i></i>${h.types.h} · ${h.types.c}</span><span><i class="ph"></i>${h.types.pharm}</span></div>`:''}
   <a class="soft-accent row" href="tel:119">${dotI('alert','var(--accent)','#fff',32)}<span class="col"><span class="serif" style="font-size:15px">${t.emerg}</span><span class="tiny muted">${t.emergS}</span></span></a>
   <div id="medlist" class="col" style="gap:18px"><div class="mskel"></div><div class="mskel"></div></div>
   <div class="spacer"></div>
@@ -1099,7 +1123,7 @@ async function routeTo(name,addr){const N=await loadNaver();
 
 /* live bus: nearby stops + arrivals (server/worker.js → 경기도 버스 API) */
 st.stops=null;st.stop=null;st.arr=null;let arrTimer=null;
-async function homeLL(){if(st.addr.lat)return {lat:st.addr.lat,lng:st.addr.lng};const N=await loadNaver();if(!N)return null;const ll=await geocode(N,st.addr.full);return ll?{lat:typeof ll.lat==="function"?ll.lat():ll.y,lng:typeof ll.lng==="function"?ll.lng():ll.x}:null;}
+async function homeLL(){if(st.addr.lat)return {lat:st.addr.lat,lng:st.addr.lng};const P=await mapProv();if(!P)return null;const ll=await P.geocode(st.addr.full);return ll?{lat:typeof ll.lat==="function"?ll.lat():ll.y,lng:typeof ll.lng==="function"?ll.lng():ll.x}:null;}
 async function loadStops(){const box=document.getElementById('stops');if(!box)return;const t=T();
  try{const key=st.addr.full;if(!st.stops||st.stops.key!==key){const ll=await homeLL();if(!ll)throw new Error('coords');const j=await api(`/bus/stops?lat=${ll.lat}&lng=${ll.lng}`);if(st.addr.full!==key)return;st.stops={key,list:j.stops||[]};}
   if(!document.body.contains(box))return;
@@ -1354,14 +1378,19 @@ document.addEventListener('scroll',release,{passive:true,capture:true});
 document.addEventListener('pointermove',e=>{if(pressed&&e.pointerType!=='mouse'&&!pressed.contains(document.elementFromPoint(e.clientX,e.clientY)))release();},{passive:true});
 document.addEventListener('touchstart',()=>{},{passive:true}); /* enables :active on iOS */
 
-/* ---------- desktop fit + modal ---------- */
+/* ---------- desktop fit + 안내 문구 ---------- */
 function fit(){const ph=document.getElementById('phone');if(innerWidth<=500){ph.style.transform='';return}const s=Math.min(1,(innerHeight-48)/864);ph.style.transform=`scale(${s})`;ph.style.margin=`${-(844*(1-s))/2}px ${-(390*(1-s))/2}px`;}
 addEventListener('resize',fit);fit();
-const modal=document.getElementById('modal');
-let seen=false;try{seen=sessionStorage.getItem('al_modal')==='1'}catch(e){}
-if(innerWidth>500&&!seen){modal.hidden=false;document.getElementById('mclose').focus();}
-document.getElementById('mclose').addEventListener('click',()=>{modal.hidden=true;try{sessionStorage.setItem('al_modal','1')}catch(e){}});
-modal.addEventListener('click',e=>{if(e.target===modal)document.getElementById('mclose').click()});
+/* 데스크톱 안내 문구: 접속한 브라우저 언어로 */
+const ASIDE={ko:'안산살이는 휴대폰 화면에 맞춰 만들어졌어요. 지금은 모바일 크기로 보여드릴게요.',
+ en:'Ansan Life is made for phone screens. For now, we’ll show it at mobile size.',
+ vi:'Ansan Life được thiết kế cho màn hình điện thoại. Bây giờ chúng tôi sẽ hiển thị ở kích thước di động.',
+ zh:'安山生活是为手机屏幕设计的。现在先以手机尺寸为您显示。',
+ ru:'«Жизнь в Ансане» создана для экрана телефона. Пока покажем её в мобильном размере.',
+ uz:'Ansan Life telefon ekrani uchun yaratilgan. Hozircha uni mobil o‘lchamda ko‘rsatamiz.',
+ mn:'Ansan Life нь утасны дэлгэцэнд зориулагдсан. Одоохондоо гар утасны хэмжээгээр харуулъя.'};
+(()=>{const el=document.getElementById('asideLead');if(!el)return;const prefs=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||'en']).map(x=>String(x).toLowerCase().split('-')[0]);
+ const l=prefs.find(x=>ASIDE[x])||'en';el.textContent=ASIDE[l];el.lang=l;})();
 render();
 })();
 </script>
