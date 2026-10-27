@@ -77,6 +77,10 @@ def main() -> None:
                               '<link rel="apple-touch-icon" href="assets/icon-180.png">\n'
                               '<meta name="apple-mobile-web-app-capable" content="yes">\n'
                               '<meta name="apple-mobile-web-app-title" content="안산살이">\n')
+    ads_client = os.environ.get("ADSENSE_CLIENT", "").strip()
+    if ads_client.startswith("ca-pub-"):
+        # 애드센스 사이트 소유권 확인용 메타 태그
+        pwa += f'<meta name="google-adsense-account" content="{ads_client}">\n'
     out.write_text(HEAD.replace("__PWA__", pwa) + html + TAIL, encoding="utf-8")
     # 관리 페이지 (공지 등록). Supabase 공개 키만 들어감
     if not inline:

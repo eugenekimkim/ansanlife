@@ -722,7 +722,7 @@ const API_URL=''.replace(/\/+$/,'');
 const hasApi=()=>!!API_URL&&!API_URL.startsWith('__');
 const hasAnalyzer=hasApi;
 /* Supabase (supabase/schema.sql): 공지·광고·설문 응답. 공개(anon) 키만 씁니다. 비어 있으면 예시 데이터 */
-const SB_URL=''.replace(/\/+$/,''),SB_KEY='';
+const SB_URL='https://mriuywhiaaslmcdrfhfh.supabase.co'.replace(/\/+$/,''),SB_KEY='sb_publishable_a4KmdsVZm1nrH-FvxA3RrQ_RfZxHyIr';
 const hasSb=()=>!!SB_URL&&!SB_URL.startsWith('__')&&!!SB_KEY&&!SB_KEY.startsWith('__');
 async function sb(path,opt={},ms=10000){const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),ms);
  try{const r=await fetch(`${SB_URL}/rest/v1/${path}`,{...opt,headers:{apikey:SB_KEY,authorization:`Bearer ${SB_KEY}`,'content-type':'application/json',...(opt.headers||{})},signal:ctl.signal});if(!r.ok)throw new Error('sb '+r.status);return r.status===201||r.status===204?null:await r.json();}finally{clearTimeout(to)}}
