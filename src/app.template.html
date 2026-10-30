@@ -1,7 +1,7 @@
 <title>안산살이 Ansan Life</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@700&family=Playfair+Display:ital,wght@0,700;1,400&family=Quicksand:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@700&family=Playfair+Display:ital,wght@0,700;1,400&family=Quicksand:wght@400;500;600;700&family=Noto+Sans:wght@400;600;700&display=swap">
 <style>
 /* Layout: one phone-sized app; on desktop it sits in a framed device on a sage backdrop */
 :root{
@@ -28,7 +28,8 @@ a{color:inherit;text-decoration:none}
 #aside{max-width:300px;display:flex;flex-direction:column;gap:14px;color:var(--deep)}
 #aside h1{font-family:var(--serif-ko);font-size:40px;margin:0;line-height:1.1}
 #aside p{margin:0;font-size:14px;line-height:1.6;color:#41534F}
-#aside .tag{font-size:11px;letter-spacing:3px;font-weight:700;text-transform:uppercase}
+#aside .betatag{font-family:var(--sans);font-size:11px;letter-spacing:3px;font-weight:700;text-transform:uppercase}
+#aside .lead{margin-top:10px} /* 제목과 24px (flex gap 14 + 10) */
 @media (max-width:820px){#aside{display:none}}
 @media (max-width:500px){
   body{background:var(--bg)}
@@ -46,14 +47,45 @@ a{color:inherit;text-decoration:none}
 .nav .lbl{font-weight:500;font-size:14px}
 .ibtn{width:40px;height:40px;display:grid;place-items:center;border-radius:20px;margin:-8px}
 .pill{display:flex;align-items:center;gap:6px;background:#fff;border-radius:16px;padding:4px 10px 4px 4px;font-size:12px;font-weight:700}
+.pflag{width:20px;height:20px;border-radius:50%;overflow:hidden;flex:none;display:block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.pflag svg{width:100%;height:100%}
 .ttl{padding:20px 28px 22px;display:flex;flex-direction:column;gap:4px;flex:none}
 .eyebrow{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--muted)}
 .h1{font-family:var(--serif);font-weight:700;font-size:31px;line-height:1.2;margin:0;text-wrap:balance;letter-spacing:-.3px}
 .ko .h1,.h1.ko{font-family:var(--serif-ko)}
 .sub{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .kr{font-family:var(--ko)}
-.sheet{flex:1 0 auto;background:var(--sheet);border-top-left-radius:48px;padding:26px 24px 22px;display:flex;flex-direction:column;gap:14px}
-.foot{flex:none;background:var(--sage);color:#fff;font-size:12px;text-align:right;padding:12px 28px calc(12px + env(safe-area-inset-bottom,0px))}
+.sheet{flex:1 0 auto;background:var(--sheet);border-top-left-radius:48px;padding:26px 24px calc(28px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
+/* Naver-map card rows keep one height whatever the language */
+.card.row.fixh{height:76px;flex:none;overflow:hidden}
+.card.row.fixh .col{overflow:hidden}
+.card.row.fixh .serif,.card.row.fixh .tiny{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.card.row.fixh .lines{flex-wrap:nowrap;overflow:hidden}
+/* hospitals & pharmacies */
+.mtabs{display:flex;gap:18px;overflow-x:auto;scrollbar-width:none;flex:none;margin:0 -24px;padding:0 24px}
+.mtabs::-webkit-scrollbar{display:none}
+.mtab{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:14px;color:var(--muted);white-space:nowrap;padding:4px 0}
+.mtab i{display:block;height:2px;width:0;background:var(--accent);border-radius:1px;transition:width .2s}
+.mtab[aria-selected="true"]{color:var(--ink);font-weight:600}
+.mtab[aria-selected="true"] i{width:18px}
+.mtab sup{font-size:10px;color:var(--muted);font-weight:500;margin-left:2px}
+.mrow{display:flex;flex-direction:column;gap:8px;text-align:left;width:100%}
+.mrow .nm{display:flex;align-items:center;gap:10px;width:100%;text-align:left}
+.mrow .nm::before{content:"";width:16px;height:1.5px;background:var(--ink);flex:none}
+.mrow .nm b{font-family:var(--serif-ko);font-size:16px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow .ticket{width:100%;padding:12px 12px 12px 16px}
+.mstat{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600}
+.mstat .dot{width:7px;height:7px}
+.mstat.open{color:#1F7A55}.mstat.open .dot{background:#2FA36B}
+.mstat.closed{color:var(--muted)}.mstat.closed .dot{background:#B9C2BE}
+.macts{display:flex;gap:8px;flex:none}
+.macts .idot{width:40px;height:40px}
+.mskel{height:118px;border-radius:20px;background:linear-gradient(90deg,var(--bg) 0,#ECEBE7 50%,var(--bg) 100%);background-size:200% 100%;animation:sk 1.2s linear infinite}
+@keyframes sk{to{background-position:-200% 0}}
+.hrs{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:13px}
+.hrs .td{font-weight:700;color:var(--ink)}
+.hrs span:nth-child(odd){color:var(--muted)}
+.hrs span:nth-child(even){text-align:right;font-variant-numeric:tabular-nums}
 .spacer{flex:1}
 .h2{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:700;font-size:17px}
 .h2 .k{font-family:var(--ko);font-weight:400;font-size:11px;color:var(--muted)}
@@ -162,6 +194,8 @@ a{color:inherit;text-decoration:none}
 .ko .toc .lab{font-family:var(--serif-ko);font-weight:700;font-size:16px}
 .toc .lab small{font-family:var(--ko);font-weight:400;font-size:11px;color:var(--muted)}
 .toc .n{font-family:var(--serif);font-weight:700}
+.toc button.off{cursor:default;opacity:.45}
+.toc button.off .adnote{color:var(--muted)}
 .toc .adnote{flex-basis:100%;font-family:var(--sans);font-style:normal;font-weight:600;font-size:11px;color:var(--accent);letter-spacing:0}
 .quote{display:flex;gap:14px}
 .quote::before{content:"";width:1.5px;background:var(--ink);flex:none}
@@ -191,6 +225,27 @@ a{color:inherit;text-decoration:none}
 .shutter i{width:62px;height:62px;border-radius:50%;background:#fff;display:block}
 .scanline{position:absolute;left:0;right:0;height:70px;background:linear-gradient(to bottom,rgba(228,92,78,0),rgba(228,92,78,.35) 92%,var(--accent));animation:scan 1.6s ease-in-out infinite alternate}
 @keyframes scan{from{top:0}to{top:calc(100% - 70px)}}
+.vf video{position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px);object-fit:cover;border-radius:12px;opacity:0;transition:opacity .3s;background:#0F1716}
+.vf.live video{opacity:1}
+.vf.live .demo{display:none}
+.cam.live #camnote{display:none}
+.toast{position:absolute;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--deep);color:#fff;border-radius:16px;padding:10px 16px;font-size:13px;font-weight:600;z-index:40;white-space:nowrap;animation:fade .2s;box-shadow:0 8px 20px rgba(20,35,36,.25)}
+#lmsg{line-height:1.5;color:var(--muted)}
+#lmsg.err{color:#B4372B}
+.dtog{width:38px;height:34px;border-radius:12px;background:var(--bg);font-size:12px;font-weight:700;color:var(--muted)}
+.dtog[aria-pressed="true"]{background:var(--deep);color:#fff}
+.rulegrid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.tfield{display:flex;flex-direction:column;gap:4px;flex:1}
+.tfield input{height:46px;border-radius:16px;border:0;background:var(--bg);padding:0 14px;font:inherit;font-size:15px;color:var(--ink)}
+.livetag{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--accent)}
+.livetag::before{content:"";width:6px;height:6px;border-radius:3px;background:var(--accent);animation:blink 1.4s infinite}
+.nitem{display:flex;gap:14px;text-align:left;width:100%}
+.nitem::before{content:"";width:1.5px;background:var(--ink);flex:none}
+.skel{height:56px;border-radius:18px;background:linear-gradient(90deg,var(--bg),#ECEBE7,var(--bg));background-size:200% 100%;animation:sk 1.2s infinite}
+@keyframes sk{to{background-position:-200% 0}}
+/* Cyrillic / CJK: Quicksand & Playfair have no glyphs → system + Noto */
+.l-ru,.l-mn{--sans:"Noto Sans","Noto Sans KR",system-ui,sans-serif}
+.l-zh{--serif:"Noto Serif SC","Songti SC","Noto Serif KR",serif;--sans:"Noto Sans SC","Noto Sans KR",system-ui,sans-serif}
 .bottomsheet{position:absolute;left:0;right:0;bottom:0;background:#fff;color:var(--ink);border-top-left-radius:48px;padding:26px 28px calc(30px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
 .ld i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-left:4px;animation:blink 1s infinite}
 .ld i:nth-child(2){animation-delay:.2s}.ld i:nth-child(3){animation-delay:.4s}
@@ -240,6 +295,11 @@ a{color:inherit;text-decoration:none}
 .nmap .fallback{position:absolute;inset:0;width:100%;height:100%}
 .nmap .maptag{position:absolute;left:12px;bottom:10px;z-index:2;font-size:10px;font-weight:700;color:#4E6B70;background:rgba(255,255,255,.8);border-radius:8px;padding:2px 7px}
 .nmap.ready .maptag{display:none}
+.mdot{width:14px;height:14px;border-radius:50%;background:var(--accent);border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3);transform:translate(-50%,-50%);cursor:pointer}
+.mdot.ph{background:var(--deep)}
+.mlegend{display:flex;gap:12px;align-items:center;margin-top:-6px}
+.mlegend i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:5px;vertical-align:1px}
+.mlegend i.ph{background:var(--deep)}
 .npin{transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;gap:2px}
 .npin b{display:block;width:26px;height:26px;border-radius:13px 13px 13px 0;transform:rotate(-45deg);background:var(--accent);box-shadow:0 4px 10px rgba(0,0,0,.25)}
 .npin b::after{content:"";position:absolute;left:8px;top:8px;width:10px;height:10px;border-radius:50%;background:#fff}
@@ -247,35 +307,18 @@ a{color:inherit;text-decoration:none}
 .npin span{font:700 11px/1.2 var(--sans);background:#fff;color:var(--ink);border-radius:8px;padding:3px 7px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.15);margin-top:4px}
 .npin.home b{background:var(--deep)}
 
-/* modal */
-#modal[hidden]{display:none}
-#modal{position:fixed;inset:0;background:rgba(19,32,33,.55);display:grid;place-items:center;z-index:100;padding:24px}
-#modal .box{background:#fff;border-radius:28px;max-width:380px;width:100%;padding:28px;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
-#modal h2{font-family:var(--serif-ko);margin:0;font-size:22px}
-#modal p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
-.qr{display:flex;gap:12px;align-items:center;background:var(--bg);border-radius:16px;padding:12px 14px;font-size:12px;color:var(--muted)}
-.qr code{font-size:11px;color:var(--ink);word-break:break-all}
 </style>
 
 <div id="stage">
   <div id="aside">
-    <span class="tag">Prototype · Mobile web</span>
+    <span class="betatag">ANSAN LIFE. BETA</span>
     <h1>안산살이</h1>
-    <p>안산에 사는 외국인 주민을 위한 다국어 생활 안내 서비스 시안입니다. 분리배출, 버스, 병원, 관공서, 공지, 설문을 한곳에서 보여줍니다.</p>
-    <p class="small">예시 데이터가 포함되어 있습니다. 실제 서비스에서는 공공 API와 연결됩니다.</p>
+    <p class="lead" id="asideLead">안산살이는 휴대폰 화면에 맞춰 만들어졌어요. 지금은 모바일 크기로 보여드릴게요.</p>
   </div>
   <div id="phone"><div id="app" aria-live="polite"></div></div>
 </div>
 
-<div id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mtitle">
-  <div class="box">
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#E45C4E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 18h4"/></svg>
-    <h2 id="mtitle">모바일에서 보시는 것을 권장합니다.</h2>
-    <p>안산살이는 휴대폰 화면에 맞춰 만들어졌어요. 지금은 모바일 크기로 보여드릴게요.<br><span class="it">Best viewed on your phone.</span></p>
-    <div class="qr"><span>휴대폰에서 이 페이지 링크를 열어보세요.</span></div>
-    <button class="btn dark" id="mclose" type="button">확인 · OK</button>
-  </div>
-</div>
+
 
 <script>
 (()=>{
@@ -308,14 +351,14 @@ const COUNTRIES=[
  {c:'kr',name:'대한민국',ko:'한국어',lang:'ko'},
  {c:'en',name:'English',ko:'영어 · 기타 국가',lang:'en'},
  {c:'vn',name:'Việt Nam',ko:'베트남어',lang:'vi'},
- {c:'cn',name:'中国',ko:'중국어',lang:null,soon:'敬请期待',cls:'zh'},
- {c:'ru',name:'Россия',ko:'러시아어',lang:null,soon:'Скоро',cls:'cy'},
- {c:'uz',name:'O‘zbekiston',ko:'우즈베크어',lang:null,soon:'Tez orada'},
- {c:'mn',name:'Монгол',ko:'몽골어',lang:null,soon:'Удахгүй',cls:'cy'}];
+ {c:'cn',name:'中国',ko:'중국어',lang:'zh',cls:'zh'},
+ {c:'ru',name:'Россия',ko:'러시아어',lang:'ru',cls:'cy'},
+ {c:'uz',name:'O‘zbekiston',ko:'우즈베크어',lang:'uz'},
+ {c:'mn',name:'Монгол',ko:'몽골어',lang:'mn',cls:'cy'}];
 
 /* ---------- strings ---------- */
-const DAYS={en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],vi:['CN','T2','T3','T4','T5','T6','T7'],ko:['일','월','화','수','목','금','토']};
-const DAYLONG={en:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],vi:['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'],ko:['일요일','월요일','화요일','수요일','목요일','금요일','토요일']};
+const DAYS={en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],vi:['CN','T2','T3','T4','T5','T6','T7'],ko:['일','월','화','수','목','금','토'],zh:['日','一','二','三','四','五','六'],ru:['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],uz:[`Ya`,`Du`,`Se`,`Ch`,`Pa`,`Ju`,`Sh`],mn:['Ня','Да','Мя','Лх','Пү','Ба','Бя']};
+const DAYLONG={en:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],vi:['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'],ko:['일요일','월요일','화요일','수요일','목요일','금요일','토요일'],zh:['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],ru:['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],uz:[`Yakshanba`,`Dushanba`,`Seshanba`,`Chorshanba`,`Payshanba`,`Juma`,`Shanba`],mn:['Ням','Даваа','Мягмар','Лхагва','Пүрэв','Баасан','Бямба']};
 const S={
 en:{cont:'Continue',contSub:'다음 단계로',menu:'Menu',welcome:'Welcome to Ansan',homeT:'Life in Ansan',
  items:['Waste sorting','Bus & transit','Public offices','Hospitals','News & events','Surveys'],
@@ -348,9 +391,12 @@ en:{cont:'Continue',contSub:'다음 단계로',menu:'Menu',welcome:'Welcome to A
  sq:[['How do you usually get to work?','출근할 때 주로 어떻게 가나요?',[['van','Company shuttle','회사 통근버스'],['bus','City bus','시내버스'],['walk','Walk or bicycle','걷기 · 자전거'],['dots','Other','기타']]],['How long is your commute?','출근 시간은 얼마나 걸리나요?',[['clock','Under 20 min','20분 미만'],['clock','20–40 min','20–40분'],['clock','40–60 min','40–60분'],['clock','Over an hour','1시간 이상']]],['What is hardest about the bus?','버스 이용에서 가장 어려운 점은?',[['speak','Language','언어'],['clock','Waiting time','대기 시간'],['map','Finding the stop','정류장 찾기'],['dots','Other','기타']]]],
  choose1:'Choose one',nextB:'Next',finish:'Finish',thanks:'Thank you!',thanksS:'Your answers help Ansan plan better for everyone.',yourReward:'YOUR REWARD',giftcard:'Mobile gift card (sample)',sentTo:'SENT TO',backHome:'Back to home',moreSurveys:'See more surveys',
  locT:'Where do you live?',locS:'Used for waste days and nearby places.',useGps:'Use my current location',gpsWorking:'Finding your location…',gpsDenied:'Location isn’t available here. Type your address instead.',gpsNoKey:'Location found. A Naver Maps key is needed to turn it into an address — type it below for now.',addrPh:'e.g. 원포공원1로 59',save:'Save',onlyAnsan:'Only addresses in Ansan are supported for now.',locSaved:'Address saved',
- anaFail:'We couldn’t analyze this photo.',tryAgain:'Try again',demoNote:'Example result · live photo analysis isn’t available in this view',resultLbl:'Result',batNote:'Battery collection box · any day',bulkyNote:'Apply first · pickup Mon & Thu',unknownNote:'Not sure — check the item list',
+ anaFail:'We couldn’t analyze this photo.',tryAgain:'Try again',demoNote:'Example result · live photo analysis isn’t available in this view',resultLbl:'Result',batNote:'Battery collection box · any day',bulkyNote:'Apply first · pickup Mon & Thu',unknownNote:'Not sure — check the item list',keep:'Keep current',locCur:'CURRENT',gpsFail:'We couldn’t get your location. Type your address instead.',camOff:'The camera isn’t available here · choose a photo instead',maybe:'Is it one of these?',
  survNote:'Ad-free for a day when you take part',adFreeShort:'24h ad-free',adFreeOn:u=>`Ad-free until ${u}`,adFreeS:'Thanks for taking a survey',adFreeTomorrow:u=>`No ads until ${u}`,
- lang:'EN'},
+ myRules:'My building’s days',myRulesS:'Set this if your building has its own rules',rulesT:'Collection days',rulesS:'Tap the days each type can go out',timeFrom:'From',timeTo:'Until',cityDefault:'Use Ansan city default',rulesSaved:'Collection days saved',myBldg:'MY BUILDING',cityNote:'Based on Ansan city public data · your building may differ',
+ live:'LIVE',busErr:'Couldn’t load live times · showing a sample',noStops:'No bus stops found nearby',arrSoon:'Arriving soon',stopsAway:n=>`${n} stops away`,seats:n=>`${n} seats`,ended:'Service ended',pickStop:'Nearby stops',yourStop:'Your stop',stopN:n=>`Stop ${n}`,event:'EVENT',tomorrow:t=>`${t} tomorrow`,
+ origView:'View original (Korean)',transView:'View translation',autoTr:'Auto-translated · may contain errors',readMore:'Read more',addHome:'Add to home screen',addHomeS:'Open it like an app, even offline',iosHome:'Tap Share, then “Add to Home Screen”',offline:'You’re offline · showing saved info',photoConsent:'Photos are used only to identify the item and are not stored.',locConsent:'Your location is used only to find your address (via Naver Maps) and is not saved on our server.',
+ destPh:'Search a place or address',routeNote:'Directions open in Naver Map with bus and subway times.',adLbl:'SPONSORED',lang:'EN'},
 vi:{cont:'Tiếp tục',contSub:'다음 단계로',menu:'Menu',welcome:'Chào mừng đến Ansan',homeT:'Cuộc sống ở Ansan',
  items:['Phân loại rác','Xe buýt','Cơ quan','Bệnh viện','Tin tức & sự kiện','Khảo sát'],
  sponsored:'QUẢNG CÁO · MẪU',adT:'Chuyển tiền về nhà phí thấp',adS:'Quảng cáo mẫu · chuyển tiền, viễn thông, cửa hàng',tipT:'Mẹo hôm nay',tipB:'Không bỏ rác thực phẩm vào túi rác thường. Chắt nước và bỏ vào túi màu cam.',
@@ -382,7 +428,12 @@ vi:{cont:'Tiếp tục',contSub:'다음 단계로',menu:'Menu',welcome:'Chào m�
  sq:[['Bạn thường đi làm bằng gì?','출근할 때 주로 어떻게 가나요?',[['van','Xe đưa đón công ty','회사 통근버스'],['bus','Xe buýt','시내버스'],['walk','Đi bộ, xe đạp','걷기 · 자전거'],['dots','Khác','기타']]],['Đi làm mất bao lâu?','출근 시간은 얼마나 걸리나요?',[['clock','Dưới 20 phút','20분 미만'],['clock','20–40 phút','20–40분'],['clock','40–60 phút','40–60분'],['clock','Hơn 1 tiếng','1시간 이상']]],['Điều gì khó nhất khi đi xe buýt?','버스 이용에서 가장 어려운 점은?',[['speak','Ngôn ngữ','언어'],['clock','Chờ lâu','대기 시간'],['map','Tìm trạm','정류장 찾기'],['dots','Khác','기타']]]],
  choose1:'Chọn một',nextB:'Tiếp',finish:'Hoàn tất',thanks:'Cảm ơn bạn!',thanksS:'Câu trả lời của bạn giúp Ansan tốt hơn cho mọi người.',yourReward:'QUÀ CỦA BẠN',giftcard:'Thẻ quà tặng (mẫu)',sentTo:'GỬI ĐẾN',backHome:'Về trang chủ',moreSurveys:'Xem khảo sát khác',
  survNote:'Tham gia: không quảng cáo trong 1 ngày',adFreeShort:'24h không QC',adFreeOn:u=>`Không quảng cáo đến ${u}`,adFreeS:'Cảm ơn bạn đã tham gia khảo sát',adFreeTomorrow:u=>`Không quảng cáo đến ${u}`,
- lang:'VI'},
+ locT:'Bạn sống ở đâu?',locS:'Dùng cho lịch đổ rác và địa điểm gần bạn.',useGps:'Dùng vị trí hiện tại',gpsWorking:'Đang tìm vị trí…',gpsDenied:'Không dùng được vị trí ở đây. Hãy nhập địa chỉ.',gpsNoKey:'Đã tìm thấy vị trí. Cần khóa Naver Maps để đổi sang địa chỉ — tạm thời hãy nhập bên dưới.',addrPh:'vd: 원포공원1로 59',save:'Lưu',onlyAnsan:'Hiện chỉ hỗ trợ địa chỉ ở Ansan.',locSaved:'Đã lưu địa chỉ',keep:'Giữ nguyên',locCur:'HIỆN TẠI',gpsFail:'Không lấy được vị trí. Hãy nhập địa chỉ.',
+ anaFail:'Không phân tích được ảnh này.',tryAgain:'Chụp lại',demoNote:'Kết quả mẫu · phiên bản này chưa phân tích ảnh thật',resultLbl:'Kết quả',batNote:'Thùng thu pin · ngày nào cũng được',bulkyNote:'Đăng ký trước · thu gom Thứ Hai & Thứ Năm',unknownNote:'Chưa chắc chắn — hãy xem danh sách đồ vật',camOff:'Không dùng được camera ở đây · hãy chọn ảnh',maybe:'Có phải một trong số này?',
+ myRules:'Lịch của tòa nhà tôi',myRulesS:'Cài đặt nếu tòa nhà có quy định riêng',rulesT:'Ngày thu gom',rulesS:'Chạm vào ngày có thể bỏ từng loại rác',timeFrom:'Từ',timeTo:'Đến',cityDefault:'Dùng mặc định của TP Ansan',rulesSaved:'Đã lưu lịch thu gom',myBldg:'TÒA NHÀ CỦA TÔI',cityNote:'Theo dữ liệu công của TP Ansan · tòa nhà của bạn có thể khác',
+ live:'TRỰC TIẾP',busErr:'Không tải được giờ xe thực tế · đang hiện mẫu',noStops:'Không tìm thấy trạm gần đây',arrSoon:'Sắp đến',stopsAway:n=>`còn ${n} trạm`,seats:n=>`${n} ghế trống`,ended:'Hết chuyến',pickStop:'Trạm gần đây',yourStop:'Trạm xuống',stopN:n=>`Trạm ${n}`,event:'SỰ KIỆN',tomorrow:t=>`${t} ngày mai`,
+ origView:'Xem bản gốc (tiếng Hàn)',transView:'Xem bản dịch',autoTr:'Dịch tự động · có thể có lỗi',readMore:'Xem thêm',addHome:'Thêm vào màn hình chính',addHomeS:'Mở như ứng dụng, kể cả khi không có mạng',iosHome:'Nhấn Chia sẻ, rồi “Thêm vào MH chính”',offline:'Đang ngoại tuyến · hiện thông tin đã lưu',photoConsent:'Ảnh chỉ dùng để nhận diện đồ vật và không được lưu.',locConsent:'Vị trí chỉ dùng để tìm địa chỉ (qua Naver Maps) và không được lưu trên máy chủ của chúng tôi.',
+ destPh:'Tìm địa điểm hoặc địa chỉ',routeNote:'Chỉ đường mở trong Naver Map, có giờ xe buýt và tàu điện.',adLbl:'QUẢNG CÁO',lang:'VI'},
 ko:{cont:'다음',contSub:'안산살이 시작하기',menu:'메뉴',welcome:'Welcome to Ansan',homeT:'안산 생활 안내',
  items:['분리배출','버스·교통','관공서','병원·약국','공지·행사','설문 참여'],
  sponsored:'광고 · 예시',adT:'해외송금 수수료 아끼기',adS:'예시 광고 · 송금, 통신, 지역 상점',tipT:'오늘의 생활 팁',tipB:'음식물 쓰레기는 일반 종량제 봉투에 넣지 말고, 물기를 빼서 주황색 음식물 봉투에 버려요.',
@@ -414,65 +465,327 @@ ko:{cont:'다음',contSub:'안산살이 시작하기',menu:'메뉴',welcome:'Wel
  sq:[['출근할 때 주로 어떻게 가나요?','How do you usually get to work?',[['van','회사 통근버스','Company shuttle'],['bus','시내버스','City bus'],['walk','걷기 · 자전거','Walk or bicycle'],['dots','기타','Other']]],['출근 시간은 얼마나 걸리나요?','How long is your commute?',[['clock','20분 미만','Under 20 min'],['clock','20–40분','20–40 min'],['clock','40–60분','40–60 min'],['clock','1시간 이상','Over an hour']]],['버스 이용에서 가장 어려운 점은?','What is hardest about the bus?',[['speak','언어','Language'],['clock','대기 시간','Waiting time'],['map','정류장 찾기','Finding the stop'],['dots','기타','Other']]]],
  choose1:'하나를 골라주세요',nextB:'다음',finish:'완료',thanks:'감사합니다!',thanksS:'소중한 의견은 모두를 위한 안산을 만드는 데 쓰여요.',yourReward:'보상',giftcard:'모바일 상품권 (예시)',sentTo:'보낼 곳',backHome:'홈으로',moreSurveys:'다른 설문 보기',
  survNote:'참여 시 하루 동안 광고 제거',adFreeShort:'24시간 광고 제거',adFreeOn:u=>`${u}까지 광고 없이 이용 중`,adFreeS:'설문에 참여해 주셔서 감사해요',adFreeTomorrow:u=>`${u}까지 광고가 보이지 않아요`,
- lang:'KO'}};
+ locT:'어디에 사세요?',locS:'배출 요일과 주변 장소 안내에 쓰여요.',useGps:'현재 위치 사용',gpsWorking:'위치를 찾고 있어요…',gpsDenied:'여기서는 위치를 쓸 수 없어요. 주소를 입력해 주세요.',gpsNoKey:'위치는 찾았지만 주소로 바꾸려면 네이버 지도 키가 필요해요. 지금은 아래에 직접 입력해 주세요.',addrPh:'예: 원포공원1로 59',save:'저장',onlyAnsan:'지금은 안산시 주소만 지원해요.',locSaved:'주소를 저장했어요',keep:'그대로 두기',locCur:'현재 주소',gpsFail:'위치를 가져오지 못했어요. 주소를 입력해 주세요.',
+ anaFail:'사진을 분석하지 못했어요.',tryAgain:'다시 찍기',demoNote:'예시 결과 · 이 버전에서는 실제 사진 분석을 하지 않아요',resultLbl:'결과',batNote:'건전지 수거함 · 요일 상관없음',bulkyNote:'사전 신고 · 월·목 수거',unknownNote:'확실하지 않아요 — 품목 목록에서 확인하세요',camOff:'여기서는 카메라를 쓸 수 없어요 · 사진을 골라주세요',maybe:'혹시 이 중 하나인가요?',
+ myRules:'우리 단지 배출 요일',myRulesS:'단지 자체 규칙이 있으면 설정하세요',rulesT:'배출 요일 설정',rulesS:'종류별로 내놓을 수 있는 요일을 누르세요',timeFrom:'시작',timeTo:'종료',cityDefault:'안산시 기본값 사용',rulesSaved:'배출 요일을 저장했어요',myBldg:'우리 단지',cityNote:'안산시 생활쓰레기 배출 공공데이터 기준 · 단지별 규칙이 다를 수 있어요',
+ live:'실시간',busErr:'실시간 정보를 불러오지 못해 예시를 보여드려요',noStops:'주변에 정류장이 없어요',arrSoon:'곧 도착',stopsAway:n=>`${n}정류장 전`,seats:n=>`빈자리 ${n}`,ended:'운행 종료',pickStop:'주변 정류장',yourStop:'내릴 정류장',stopN:n=>`정류장 ${n}`,event:'행사',tomorrow:t=>`내일 ${t}`,
+ origView:'원문 보기',transView:'번역 보기',autoTr:'',readMore:'자세히 보기',addHome:'홈 화면에 추가',addHomeS:'앱처럼 열고 오프라인에서도 볼 수 있어요',iosHome:'공유 버튼 → "홈 화면에 추가"를 누르세요',offline:'오프라인 상태예요 · 저장된 정보를 보여드려요',photoConsent:'사진은 품목 판별에만 쓰이고 저장하지 않아요.',locConsent:'위치는 주소를 찾는 데만 쓰이고(네이버 지도) 저희 서버에 저장하지 않아요.',
+ destPh:'장소나 주소 검색',routeNote:'길찾기는 네이버지도에서 버스·지하철 시간과 함께 열려요.',adLbl:'광고',lang:'KO'},
+zh:{cont:'继续',contSub:'다음 단계로',menu:'菜单',welcome:'欢迎来到安山',homeT:'安山生活',
+ items:['垃圾分类','公交·交通','政府机关','医院','新闻·活动','问卷调查'],
+ sponsored:'广告 · 示例',adT:'汇款回家更省钱',adS:'示例广告 · 汇款、手机套餐、本地商店',tipT:'今日小贴士',tipB:'厨余垃圾不能放进普通垃圾袋。沥干水分后，装进橙色厨余垃圾袋。',
+ wasteT:'垃圾分类',change:'更改',tonight:'今晚',tonightNone:'今晚不收垃圾',canTonight:'今晚可以扔',weekT:'本周',rest:'不收',
+ gen:'一般',food:'厨余',rec:'回收',genL:'一般垃圾',foodL:'厨余垃圾',recL:'可回收物',bagW:'乳白色计量制垃圾袋',bagO:'橙色厨余垃圾袋',bagC:'透明塑料袋',bulky:'大件垃圾',bulkyS:'需先申请 · 周一、周四收',ask:'拍照提问',
+ camT:'拍下你要扔的东西',camH:'请把物品放进框内',photo:'拍照',barcode:'条形码',analyzing:'分析中',st1:'正在识别物品',st2:'正在查询安山规定',st3:'正在查找正确扔法',
+ thisIs:'这是',pet:'透明PET瓶',goesIn:'扔到',petDest:'回收 · PET瓶',bag:'袋子',clear:'透明',tonightYes:'今晚可以扔',tonightNo:'下次收集日',
+ before:'扔之前',petSteps:['倒空','撕掉标签','压扁并拧紧瓶盖','放进透明PET瓶回收处'],notRight:'不对吗？',pickAgain:'自己选择物品',remind:'20:00提醒我',reminded:'已设置20:00提醒',
+ lookT:'查找物品',lookPh:'搜索物品…（例如：电池）',confused:'容易搞错',noteBat:'电池和荧光灯要放进楼里或居民中心的专用回收箱。',
+ items8:[['蛋壳','계란 껍데기','gen'],['鸡骨·鱼骨','닭뼈 · 생선뼈','gen'],['洋葱·蒜皮','양파 · 마늘 껍질','gen'],['茶包','티백','gen'],['果皮','과일 껍질','food'],['干净的白色泡沫塑料','깨끗한 스티로폼','rec'],['废电池','폐건전지','bat'],['碎玻璃','깨진 유리','glass']],
+ dest:{gen:'一般',food:'厨余',rec:'回收',bat:'电池回收箱',glass:'一般 · 包好再扔'},
+ bulkyT:'大件垃圾',pickDays:'收集日',monThu:'周一和周四',askQ:'咨询',how:'怎么办理',
+ bulkySteps:[['网上申请','ansan.go.kr/waste 或居民中心'],['选择物品并付费','费用按种类和大小而定'],['写上编号','把申请编号贴在物品上'],['拿出去放','收集日前放到楼的垃圾投放点']],
+ freeT:'冰箱、洗衣机：免费上门回收',applyOnline:'网上申请',
+ busT:'公交·交通',whereTo:'去哪里？',home:'家',saved:'收藏',toWork:'去上班 · 半月工业园区',nearby:'附近',choji:'草芝站',busStop:'附近的公交站',busStopS:'实时到站 · 示例',
+ quick:['交通卡·票价','乘车指南','路线选择'],sortBy:['最快','少换乘','少步行'],best:'推荐',min:'分钟',transfers:n=>`换乘${n}次`,sampleNote:'示例时间 · 正式服务使用实时公交数据',
+ routeT:'路线',leaveBy:'公交到站前约5分钟出发',
+ rsteps:[['walk','步行到公交站','约4分钟','걸어서 정류장까지'],['bus','上车','在前门刷卡','앞문 승차 · 카드 태그'],['spot','在目的站下车','先按红色下车铃','하차벨 누르기 · 뒷문 하차'],['tap','下车时刷卡','免费换乘需要刷卡','내릴 때도 카드 태그'],['walk','步行到公司','约5分钟','회사까지 도보']],
+ openNaver:'用Naver地图打开',guideApp:'在本应用内导航',
+ chooseT:'用什么打开',naverApp:'Naver地图应用',naverAppS:'打开应用。最适合步行导航和实时到站。',rec2:'推荐',naverWeb:'网页版Naver地图',naverWebS:'在新窗口打开，无需安装应用。',always:'以后都这样打开',langTip:'Naver地图支持你的语言',langTipS:'在Naver地图设置中切换为English、中文或日本語。',
+ notInst:'没有安装Naver地图？',notInstS:'安装一次，下次就能直接在应用中打开。也可以继续用网页版。',install:'安装Naver地图',onWeb:'改用网页版打开',
+ stopT:'公交站',updated:'刚刚更新',notify:'提前2站提醒我',crowd:['拥挤度：低','拥挤度：中','拥挤度：高'],next:'下一班',nightNote:'夜间（21:00–07:00）60分钟内可换乘',lastBus:'今日已停运',
+ onboard:'乘车中',stopsLeft:'站后下车',getOffAt:'在目的站下车 · 约6分钟',whenOff:'下车时',offSteps:['按红色下车铃','从后门下车','下车时刷卡'],showDriver:'给司机看',
+ faresT:'交通卡·票价',needCard:'你需要',tmoney:'T-money或交通卡',tmoneyS:'在便利店购买，用现金充值',fares:'票价',adult:'成人·刷卡',cityBus:'京畿市内公交',subway:'地铁 · 基本票价',cashNote:'付现金更贵。地铁坐得远会加收距离费。',freeTr:'免费换乘',trRules:[['30','分钟','白天'],['60','分钟','21:00–07:00'],['4','次','每次出行最多']],tapWarn:'下车时一定要刷卡',asOf:'票价为2025年10月标准 · 请留意更新',
+ hospT:'医院',near:'你附近',emerg:'紧急情况？拨打119',emergS:'电话中可提供翻译',more:'将陆续添加更多地点',univ:'高丽大学安山医院',univS:'大学医院 · 急诊',hours:'营业时间',addr:'地址',tel:'电话',checkHours:'就诊前请先确认',staff:'请出示给工作人员',staffEn:'I need an interpreter. Can you help me in English?',
+ offT:'政府机关',offS:'点击地点，在Naver地图中打开',offices:[['安山市政府','안산시청','市政服务 · 证明文件'],['外国人居民支援中心','안산시 외국인주민지원본부','咨询 · 多语言帮助'],['出入境管理事务所 安山办事处','출입국·외국인청 안산출장소','签证 · 外国人登录 · 需预约']],
+ newsT:'新闻·活动',official:'官方 · 安山市',sample:'示例',newsItems:[['面向居民的免费韩语课','示例通知 · 译自韩语'],['工人周末健康检查','示例活动 · 地点和时间将显示在这里']],
+ survT:'问卷调查',survS:'说出你的想法，领取奖励',newB:'新',survF:'在安山上班的通勤方式',survFS:'你怎么上班？帮助市政府规划更好的路线。',time:'用时',qs:'题数',reward:'奖励',start:'开始答题',anon:'匿名填写。我们绝不会公开你的姓名或签证信息。',
+ sq:[['你平时怎么去上班？','출근할 때 주로 어떻게 가나요?',[['van','公司班车','회사 통근버스'],['bus','市内公交','시내버스'],['walk','步行或骑自行车','걷기 · 자전거'],['dots','其他','기타']]],['你上班路上要多久？','출근 시간은 얼마나 걸리나요?',[['clock','20分钟以内','20분 미만'],['clock','20–40分钟','20–40분'],['clock','40–60分钟','40–60분'],['clock','1小时以上','1시간 이상']]],['坐公交最难的是什么？','버스 이용에서 가장 어려운 점은?',[['speak','语言','언어'],['clock','等车时间','대기 시간'],['map','找公交站','정류장 찾기'],['dots','其他','기타']]]],
+ choose1:'请选择一项',nextB:'下一步',finish:'完成',thanks:'谢谢你！',thanksS:'你的回答能帮助安山为大家做更好的规划。',yourReward:'你的奖励',giftcard:'手机礼品卡（示例）',sentTo:'发送至',backHome:'返回首页',moreSurveys:'查看更多问卷',
+ locT:'你住在哪里？',locS:'用于查询垃圾收集日和附近地点。',useGps:'使用我的当前位置',gpsWorking:'正在查找你的位置…',gpsDenied:'这里无法使用定位，请输入地址。',gpsNoKey:'已找到位置。需要Naver地图密钥才能转换成地址，请先在下方输入。',addrPh:'例如：원포공원1로 59',save:'保存',onlyAnsan:'目前只支持安山市的地址。',locSaved:'地址已保存',
+ anaFail:'无法分析这张照片。',tryAgain:'重试',demoNote:'示例结果 · 此页面无法进行实时照片分析',resultLbl:'结果',batNote:'电池回收箱 · 每天都可以',bulkyNote:'需先申请 · 周一、周四收',unknownNote:'不确定，请查看物品列表',keep:'保持不变',locCur:'当前',gpsFail:'无法获取你的位置，请输入地址。',camOff:'这里无法使用相机 · 请选择照片',maybe:'是下面这些吗？',
+ survNote:'参与即可一天无广告',adFreeShort:'24小时无广告',adFreeOn:u=>`${u}前无广告`,adFreeS:'感谢你参与问卷',adFreeTomorrow:u=>`${u}前不显示广告`,
+ myRules:'我家楼的收集日',myRulesS:'如果你的楼有自己的规定，请在这里设置',rulesT:'收集日',rulesS:'点击每种垃圾可以扔的日子',timeFrom:'从',timeTo:'到',cityDefault:'使用安山市默认设置',rulesSaved:'收集日已保存',myBldg:'我家楼',cityNote:'依据安山市公共数据 · 你的楼可能有所不同',
+ live:'实时',busErr:'无法加载实时信息 · 显示示例',noStops:'附近没有找到公交站',arrSoon:'即将到站',stopsAway:n=>`还有${n}站`,seats:n=>`${n}个空座`,ended:'已停运',pickStop:'附近的公交站',yourStop:'你的车站',stopN:n=>`车站 ${n}`,event:'活动',tomorrow:t=>`明天 ${t}`,
+ origView:'查看原文（韩语）',transView:'查看翻译',autoTr:'自动翻译 · 可能有误',readMore:'查看详情',addHome:'添加到主屏幕',addHomeS:'像应用一样打开，离线也能用',iosHome:'点击“分享”，再点“添加到主屏幕”',offline:'当前离线 · 显示已保存的信息',photoConsent:'照片仅用于识别物品，不会被保存。',locConsent:'你的位置仅用于（通过Naver地图）查找地址，不会保存在我们的服务器上。',
+ destPh:'搜索地点或地址',routeNote:'路线将在Naver地图中打开，可查看公交和地铁时间。',adLbl:'广告',lang:'ZH'},
+ru:{
+cont:'Продолжить',contSub:'다음 단계로',menu:'Меню',welcome:'Добро пожаловать в Ансан',homeT:'Жизнь в Ансане',
+items:['Сортировка мусора','Автобусы и транспорт','Госучреждения','Больницы','Новости и события','Опросы'],
+sponsored:'РЕКЛАМА · ПРИМЕР',adT:'Переводы домой дешевле',adS:'Пример рекламы · переводы, мобильная связь, местные магазины',
+tipT:'Совет дня',tipB:'Пищевые отходы нельзя класть в обычный мешок. Слейте воду и используйте оранжевый мешок для пищевых отходов.',
+wasteT:'Сортировка мусора',change:'Изменить',tonight:'СЕГОДНЯ ВЕЧЕРОМ',tonightNone:'Сегодня вечером вывоза нет',canTonight:'Сегодня вечером можно выносить',
+weekT:'На этой неделе',rest:'Нет',gen:'Общий',food:'Пищевые',rec:'Вторсырьё',
+genL:'Общий мусор',foodL:'Пищевые отходы',recL:'Вторсырьё',
+bagW:'Молочно-белый платный мешок',bagO:'Оранжевый мешок для пищевых отходов',bagC:'Прозрачный пакет',
+bulky:'Крупногабарит',bulkyS:'Сначала заявка · вывоз в пн и чт',ask:'Спросить по фото',
+camT:'Сфотографируйте то, что хотите выбросить',camH:'Поместите предмет в рамку',photo:'Фото',barcode:'Штрихкод',
+analyzing:'Анализ',st1:'Распознаём предмет',st2:'Проверяем правила Ансана',st3:'Ищем правильный способ',
+thisIs:'Это',pet:'Прозрачная ПЭТ-бутылка',goesIn:'КУДА',petDest:'Вторсырьё · ПЭТ',bag:'МЕШОК',clear:'Прозрачный',
+tonightYes:'Можно вынести сегодня вечером',tonightNo:'Следующий вывоз',before:'Перед тем как выбросить',
+petSteps:['Опустошите её','Снимите этикетку','Сомните и закройте крышку','Положите в сбор прозрачных ПЭТ-бутылок'],
+notRight:'Не то?',pickAgain:'Выбрать предмет',remind:'Напомнить в 20:00',reminded:'Напоминание на 20:00',
+lookT:'Найти предмет',lookPh:'Поиск… (напр. батарейка)',confused:'Часто путают',
+noteBat:'Батарейки и люминесцентные лампы сдают в отдельные контейнеры в вашем доме или в общественном центре.',
+items8:[['Яичная скорлупа','계란 껍데기','gen'],['Кости курицы и рыбы','닭뼈 · 생선뼈','gen'],['Шелуха лука и чеснока','양파 · 마늘 껍질','gen'],['Чайные пакетики','티백','gen'],['Кожура фруктов','과일 껍질','food'],['Чистый белый пенопласт','깨끗한 스티로폼','rec'],['Батарейки','폐건전지','bat'],['Битое стекло','깨진 유리','glass']],
+dest:{gen:'Общий',food:'Пищевые',rec:'Вторсырьё',bat:'Контейнер для батареек',glass:'Общий · заверните'},
+bulkyT:'Крупногабарит',pickDays:'ДНИ ВЫВОЗА',monThu:'Понедельник и четверг',askQ:'СПРОСИТЬ',how:'Как это работает',
+bulkySteps:[['Подайте заявку онлайн','ansan.go.kr/waste или в общественном центре'],['Выберите вещи и оплатите','Цена зависит от вида и размера'],['Напишите номер','Прикрепите номер заявки к вещи'],['Вынесите','На место сбора у вашего дома до дня вывоза']],
+freeT:'Холодильники и стиральные машины: вывоз бесплатно',applyOnline:'Заявка онлайн',
+busT:'Автобусы и транспорт',whereTo:'Куда едем?',home:'Дом',saved:'Сохранённые',toWork:'На работу · промзона Банвол',
+nearby:'Рядом',choji:'Станция Чоджи',busStop:'Остановка рядом с вами',busStopS:'Прибытие онлайн · пример',
+quick:['Карта и тарифы','В автобусе','Варианты маршрута'],sortBy:['Быстрее','Меньше пересадок','Меньше пешком'],
+best:'ЛУЧШИЙ',min:'мин',transfers:n=>`Пересадок: ${n}`,sampleNote:'Примерное время · в приложении будут реальные данные автобусов',
+routeT:'Маршрут',leaveBy:'Выходите примерно за 5 мин до прихода автобуса',
+rsteps:[['walk','Дойдите до остановки','Около 4 мин','걸어서 정류장까지'],['bus','Сядьте в автобус','Приложите карту у передней двери','앞문 승차 · 카드 태그'],['spot','Выйдите на своей остановке','Сначала нажмите красную кнопку','하차벨 누르기 · 뒷문 하차'],['tap','Приложите карту при выходе','Нужно для бесплатной пересадки','내릴 때도 카드 태그'],['walk','Дойдите до работы','Около 5 мин','회사까지 도보']],
+openNaver:'Открыть в Naver Map',guideApp:'Вести в этом приложении',chooseT:'Открыть в',
+naverApp:'Приложение Naver Map',naverAppS:'Откроется приложение. Лучше для пеших маршрутов и прибытия онлайн.',rec2:'РЕКОМЕНДУЕМ',
+naverWeb:'Naver Map в браузере',naverWebS:'Откроется в новом окне — приложение не нужно.',always:'Всегда открывать так',
+langTip:'Naver Map говорит на вашем языке',langTipS:'Включите English, 中文 или 日本語 в настройках Naver Map.',
+notInst:'Naver Map не установлен?',notInstS:'Установите один раз — и в следующий раз места откроются прямо в приложении. Или продолжайте в браузере.',
+install:'Установить Naver Map',onWeb:'Открыть в браузере',
+stopT:'Остановка',updated:'Только что обновлено',notify:'Сообщить за 2 остановки',
+crowd:['мало людей','средне','много людей'],next:'след.',nightNote:'Ночью: пересадка в течение 60 мин (21:00–07:00)',
+lastBus:'На сегодня всё',onboard:'В автобусе',stopsLeft:'остановок осталось',getOffAt:'Выход на вашей остановке · около 6 мин',
+whenOff:'Когда выходите',offSteps:['Нажмите красную кнопку','Выходите через заднюю дверь','Приложите карту при выходе'],
+showDriver:'Показать водителю',faresT:'Карта и тарифы',needCard:'ВАМ НУЖНА',tmoney:'T-money или транспортная карта',
+tmoneyS:'Купить и пополнить наличными в магазинах у дома',fares:'Тарифы',adult:'взрослый, по карте',cityBus:'Городской автобус Кёнгидо',
+subway:'Метро · базовый тариф',cashNote:'Наличными дороже. Длинные поездки на метро стоят дороже.',freeTr:'Бесплатные пересадки',
+trRules:[['30','мин','днём'],['60','мин','21:00–07:00'],['4','раза','макс. за поездку']],
+tapWarn:'Всегда прикладывайте карту при выходе',asOf:'Тарифы на окт. 2025 · проверяйте изменения',
+hospT:'Больницы',near:'Рядом с вами',emerg:'Срочно? Звоните 119',emergS:'На линии есть переводчик',more:'Скоро добавим больше мест',
+univ:'Больница Университета Корё в Ансане',univS:'Университетская больница · скорая помощь',hours:'Часы работы',addr:'Адрес',tel:'Телефон',
+checkHours:'Уточните перед визитом',staff:'ПОКАЖИТЕ ПЕРСОНАЛУ',staffEn:'I need an interpreter. Can you help me in English?',
+offT:'Госучреждения',offS:'Нажмите на место, чтобы открыть в Naver Map',
+offices:[['Мэрия Ансана','안산시청','Городские услуги · справки'],['Центр поддержки иностранных жителей','안산시 외국인주민지원본부','Консультации · помощь на разных языках'],['Миграционная служба, Ансан','출입국·외국인청 안산출장소','Виза · регистрация иностранца · по записи']],
+newsT:'Новости и события',official:'ОФИЦИАЛЬНО · ГОРОД АНСАН',sample:'Пример',
+newsItems:[['Бесплатные курсы корейского для жителей','Пример объявления · перевод с корейского'],['Медосмотр для работников в выходные','Пример события · здесь будут место и время']],
+survT:'Опросы',survS:'Поделитесь мнением и получите награду',newB:'НОВОЕ',survF:'Дорога на работу в Ансане',
+survFS:'Как вы добираетесь на работу? Помогите городу улучшить маршруты.',time:'ВРЕМЯ',qs:'ВОПРОСЫ',reward:'НАГРАДА',
+start:'Начать опрос',anon:'Анонимно. Мы не передаём ваше имя и данные визы.',
+sq:[['Как вы обычно добираетесь на работу?','출근할 때 주로 어떻게 가나요?',[['van','Автобус от компании','회사 통근버스'],['bus','Городской автобус','시내버스'],['walk','Пешком или на велосипеде','걷기 · 자전거'],['dots','Другое','기타']]],['Сколько времени занимает дорога?','출근 시간은 얼마나 걸리나요?',[['clock','Меньше 20 мин','20분 미만'],['clock','20–40 мин','20–40분'],['clock','40–60 мин','40–60분'],['clock','Больше часа','1시간 이상']]],['Что сложнее всего в автобусе?','버스 이용에서 가장 어려운 점은?',[['speak','Язык','언어'],['clock','Время ожидания','대기 시간'],['map','Найти остановку','정류장 찾기'],['dots','Другое','기타']]]],
+choose1:'Выберите один',nextB:'Далее',finish:'Готово',thanks:'Спасибо!',thanksS:'Ваши ответы помогают Ансану стать лучше для всех.',
+yourReward:'ВАША НАГРАДА',giftcard:'Мобильный подарочный сертификат (пример)',sentTo:'ОТПРАВЛЕНО НА',backHome:'На главную',moreSurveys:'Другие опросы',
+locT:'Где вы живёте?',locS:'Нужно для дней вывоза мусора и мест рядом.',useGps:'Моё текущее местоположение',gpsWorking:'Определяем местоположение…',
+gpsDenied:'Местоположение здесь недоступно. Введите адрес вручную.',
+gpsNoKey:'Местоположение найдено. Чтобы получить адрес, нужен ключ Naver Maps — пока введите его ниже.',
+addrPh:'напр. 원포공원1로 59',save:'Сохранить',onlyAnsan:'Пока поддерживаются только адреса в Ансане.',locSaved:'Адрес сохранён',
+anaFail:'Не удалось проанализировать фото.',tryAgain:'Попробовать снова',demoNote:'Пример результата · анализ фото здесь недоступен',
+resultLbl:'Результат',batNote:'Контейнер для батареек · в любой день',bulkyNote:'Сначала заявка · вывоз в пн и чт',unknownNote:'Не уверены — посмотрите список предметов',
+keep:'Оставить как есть',locCur:'ТЕКУЩИЙ',gpsFail:'Не удалось определить местоположение. Введите адрес вручную.',
+camOff:'Камера здесь недоступна · выберите фото',maybe:'Это что-то из этого?',
+survNote:'День без рекламы за участие',adFreeShort:'24 ч без рекламы',adFreeOn:u=>`Без рекламы до ${u}`,adFreeS:'Спасибо за участие в опросе',
+adFreeTomorrow:u=>`Без рекламы до ${u}`,myRules:'Дни моего дома',myRulesS:'Укажите, если в вашем доме свои правила',
+rulesT:'Дни вывоза',rulesS:'Отметьте дни для каждого вида мусора',timeFrom:'С',timeTo:'До',cityDefault:'Как в городе Ансан',
+rulesSaved:'Дни вывоза сохранены',myBldg:'МОЙ ДОМ',cityNote:'По открытым данным города Ансан · в вашем доме может быть иначе',
+live:'ОНЛАЙН',busErr:'Не удалось загрузить время · показан пример',noStops:'Рядом остановок не найдено',arrSoon:'Скоро прибудет',
+stopsAway:n=>`Остановок: ${n}`,seats:n=>`Мест: ${n}`,ended:'Рейсы закончились',pickStop:'Остановки рядом',yourStop:'Ваша остановка',
+stopN:n=>`Остановка ${n}`,event:'СОБЫТИЕ',tomorrow:t=>`Завтра в ${t}`,origView:'Оригинал (корейский)',transView:'Показать перевод',
+autoTr:'Автоперевод · возможны ошибки',readMore:'Подробнее',addHome:'На главный экран',addHomeS:'Открывайте как приложение, даже без интернета',
+iosHome:'Нажмите «Поделиться», затем «На экран „Домой“»',offline:'Нет интернета · показаны сохранённые данные',
+photoConsent:'Фото используются только для определения предмета и не сохраняются.',
+locConsent:'Местоположение используется только для поиска адреса (через Naver Maps) и не сохраняется на нашем сервере.',
+destPh:'Найдите место или адрес',routeNote:'Маршрут откроется в Naver Map с временем автобусов и метро.',adLbl:'РЕКЛАМА',lang:'RU'
+},
+uz:{cont:`Davom etish`,contSub:'다음 단계로',menu:`Menyu`,welcome:`Ansanga xush kelibsiz`,homeT:`Ansanda hayot`,
+ items:[`Chiqindini saralash`,`Avtobus va transport`,`Davlat idoralari`,`Shifoxonalar`,`Yangiliklar va tadbirlar`,`So‘rovnomalar`],
+ sponsored:`REKLAMA · NAMUNA`,adT:`Uyga arzonroq pul yuboring`,adS:`Namuna reklama · pul o‘tkazish, mobil tariflar, mahalliy do‘konlar`,tipT:`Bugungi maslahat`,tipB:`Oziq-ovqat chiqindisi oddiy qopga solinmaydi. Suvini to‘kib, to‘q sariq oziq-ovqat chiqindisi qopidan foydalaning.`,
+ wasteT:`Chiqindini saralash`,change:`O‘zgartirish`,tonight:`BUGUN KECHQURUN`,tonightNone:`Bugun kechqurun yig‘ilmaydi`,canTonight:`Bugun kechqurun chiqarsangiz bo‘ladi`,weekT:`Shu hafta`,rest:`Yo‘q`,
+ gen:`Umumiy`,food:`Oziq-ovqat`,rec:`Qayta ishlash`,genL:`Umumiy chiqindi`,foodL:`Oziq-ovqat chiqindisi`,recL:`Qayta ishlanadigan`,bagW:`Sutrang oq pullik chiqindi qopi`,bagO:`To‘q sariq oziq-ovqat chiqindisi qopi`,bagC:`Shaffof plastik qop`,bulky:`Katta buyumlar`,bulkyS:`Avval ariza bering · Du va Pa olib ketiladi`,ask:`Rasm bilan so‘rash`,
+ camT:`Tashlamoqchi bo‘lgan narsani rasmga oling`,camH:`Buyumni ramka ichiga joylang`,photo:`Rasm`,barcode:`Shtrix-kod`,analyzing:`Tahlil qilinmoqda`,st1:`Buyum aniqlanmoqda`,st2:`Ansan qoidalari tekshirilmoqda`,st3:`To‘g‘ri usul topilmoqda`,
+ thisIs:`Bu`,pet:`Shaffof PET shisha`,goesIn:`QAYERGA`,petDest:`Qayta ishlash · PET`,bag:`QOP`,clear:`Shaffof`,tonightYes:`Bugun kechqurun chiqarsangiz bo‘ladi`,tonightNo:`Keyingi yig‘ish kechasi`,
+ before:`Tashlashdan oldin`,petSteps:[`Ichini bo‘shating`,`Yorlig‘ini olib tashlang`,`Ezib, qopqog‘ini yoping`,`Shaffof PET yig‘ish joyiga soling`],notRight:`Noto‘g‘rimi?`,pickAgain:`Buyumni tanlang`,remind:`20:00 da eslatish`,reminded:`Eslatma 20:00 ga qo‘yildi`,
+ lookT:`Buyumni topish`,lookPh:`Buyum qidirish… (masalan, batareya)`,confused:`Ko‘p adashtiriladi`,noteBat:`Batareya va lyuminessent lampalar binongiz yoki mahalla markazidagi alohida qutilarga tashlanadi.`,
+ items8:[[`Tuxum po‘chog‘i`,'계란 껍데기','gen'],[`Tovuq va baliq suyaklari`,'닭뼈 · 생선뼈','gen'],[`Piyoz va sarimsoq po‘sti`,'양파 · 마늘 껍질','gen'],[`Choy paketlari`,'티백','gen'],[`Meva po‘stlari`,'과일 껍질','food'],[`Toza oq penoplast`,'깨끗한 스티로폼','rec'],[`Batareyalar`,'폐건전지','bat'],[`Singan shisha`,'깨진 유리','glass']],
+ dest:{gen:`Umumiy`,food:`Oziq-ovqat`,rec:`Qayta ishlash`,bat:`Batareya qutisi`,glass:`Umumiy · o‘rab tashlang`},
+ bulkyT:`Katta buyumlar`,pickDays:`OLIB KETISH KUNLARI`,monThu:`Dushanba va payshanba`,askQ:`SO‘RASH`,how:`Qanday ishlaydi`,
+ bulkySteps:[[`Onlayn ariza bering`,`ansan.go.kr/waste yoki mahalla markazida`],[`Buyumni tanlab, to‘lang`,`Narx turi va hajmiga bog‘liq`],[`Raqamni yozing`,`Ariza raqamini buyumga yopishtiring`],[`Tashqariga chiqaring`,`Olib ketish kunidan oldin binongiz yig‘ish joyiga`]],
+ freeT:`Muzlatgich va kir mashinasi: bepul olib ketiladi`,applyOnline:`Onlayn ariza`,
+ busT:`Avtobus va transport`,whereTo:`Qayerga?`,home:`Uy`,saved:`Saqlangan`,toWork:`Ishga · Banwol sanoat majmuasi`,nearby:`Yaqin atrofda`,choji:`Choji bekati`,busStop:`Yaqin avtobus bekati`,busStopS:`Jonli kelish vaqti · namuna`,
+ quick:[`Karta va narxlar`,`Avtobusda yo‘riqnoma`,`Yo‘nalishlar`],sortBy:[`Eng tez`,`Kam almashish`,`Kam piyoda`],best:`ENG YAXSHI`,min:`daq`,transfers:n=>`${n} ta almashish`,sampleNote:`Namuna vaqtlar · haqiqiy xizmatda jonli avtobus ma'lumotlari ishlatiladi`,
+ routeT:`Yo‘nalish`,leaveBy:`Avtobus kelishidan taxminan 5 daqiqa oldin chiqing`,
+ rsteps:[['walk',`Bekatgacha piyoda boring`,`Taxminan 4 daqiqa`,'걸어서 정류장까지'],['bus',`Avtobusga chiqing`,`Old eshikda kartangizni tegizing`,'앞문 승차 · 카드 태그'],['spot',`Bekatingizda tushing`,`Avval qizil tugmani bosing`,'하차벨 누르기 · 뒷문 하차'],['tap',`Tushayotganda kartani tegizing`,`Bepul almashish uchun kerak`,'내릴 때도 카드 태그'],['walk',`Ishgacha piyoda boring`,`Taxminan 5 daqiqa`,'회사까지 도보']],
+ openNaver:`Naver Map da ochish`,guideApp:`Shu ilovada yo‘l ko‘rsatish`,
+ chooseT:`Qayerda ochilsin`,naverApp:`Naver Map ilovasi`,naverAppS:`Ilovani ochadi. Piyoda yo‘l va jonli kelish vaqti uchun eng qulay.`,rec2:`TAVSIYA ETILADI`,naverWeb:`Naver Map veb-saytda`,naverWebS:`Yangi oynada ochiladi — ilova shart emas.`,always:`Doim shunday ochilsin`,langTip:`Naver Map sizning tilingizda`,langTipS:`Naver Map sozlamalarida English, 中文 yoki 日本語 ni tanlang.`,
+ notInst:`Naver Map o‘rnatilmaganmi?`,notInstS:`Bir marta o‘rnating, keyingi safar joylar to‘g‘ridan-to‘g‘ri ilovada ochiladi. Yoki veb-saytda davom eting.`,install:`Naver Map ni o‘rnatish`,onWeb:`Veb-saytda ochish`,
+ stopT:`Avtobus bekati`,updated:`Hozirgina yangilandi`,notify:`2 bekat oldin xabar berish`,crowd:[`odam: kam`,`odam: o‘rtacha`,`odam: ko‘p`],next:`keyingi`,nightNote:`Tunda: 60 daqiqa ichida almashish mumkin (21:00–07:00)`,lastBus:`Bugun tugadi`,
+ onboard:`Avtobusda`,stopsLeft:`bekat qoldi`,getOffAt:`Bekatingizda tushing · taxminan 6 daqiqa`,whenOff:`Tushayotganda`,offSteps:[`Qizil tugmani bosing`,`Orqa eshikdan chiqing`,`Chiqishda kartani tegizing`],showDriver:`Haydovchiga ko‘rsatish`,
+ faresT:`Karta va narxlar`,needCard:`SIZGA KERAK`,tmoney:`T-money yoki transport kartasi`,tmoneyS:`Do‘konlarda (convenience store) naqd pulga sotib olinadi va to‘ldiriladi`,fares:`Narxlar`,adult:`kattalar kartasi`,cityBus:`Gyeonggi shahar avtobusi`,subway:`Metro · asosiy narx`,cashNote:`Naqd pulda qimmatroq. Metroda uzoq yo‘lga masofa haqi qo‘shiladi.`,freeTr:`Bepul almashish`,trRules:[['30',`daq`,`kunduzi`],['60',`daq`,'21:00–07:00'],['4',`marta`,`bir safarda ko‘pi bilan`]],tapWarn:`Tushayotganda doim kartani tegizing`,asOf:`Narxlar 2025-yil oktabr holatiga · yangilanishlarni tekshiring`,
+ hospT:`Shifoxonalar`,near:`Yaqin atrofda`,emerg:`Shoshilinchmi? 119 ga qo‘ng‘iroq qiling`,emergS:`Telefonda tarjimon xizmati bor`,more:`Yana joylar qo‘shiladi`,univ:`Korea University Ansan shifoxonasi`,univS:`Universitet shifoxonasi · tez yordam`,hours:`Ish vaqti`,addr:`Manzil`,tel:`Telefon`,checkHours:`Borishdan oldin tekshiring`,staff:`XODIMGA KO‘RSATING`,staffEn:`I need an interpreter. Can you help me in English?`,
+ offT:`Davlat idoralari`,offS:`Naver Map da ochish uchun joyni bosing`,offices:[[`Ansan shahar hokimiyati`,'안산시청',`Shahar xizmatlari · ma'lumotnomalar`],[`Xorijiy rezidentlarni qo‘llab-quvvatlash markazi`,'안산시 외국인주민지원본부',`Maslahat · ko‘p tilli yordam`],[`Immigratsiya idorasi, Ansan`,'출입국·외국인청 안산출장소',`Viza · chet ellik ro‘yxati · oldindan yoziling`]],
+ newsT:`Yangiliklar va tadbirlar`,official:`RASMIY · ANSAN SHAHRI`,sample:`Namuna`,newsItems:[[`Aholi uchun bepul koreys tili kursi`,`Namuna e'lon · koreys tilidan tarjima`],[`Ishchilar uchun dam olish kunlari tibbiy ko‘rik`,`Namuna tadbir · joy va vaqt shu yerda ko‘rsatiladi`]],
+ survT:`So‘rovnomalar`,survS:`Fikringizni bildiring, sovg‘a oling`,newB:`YANGI`,survF:`Ansanda ishga borish`,survFS:`Ishga qanday borasiz? Shaharga yaxshiroq yo‘nalishlar rejalashtirishga yordam bering.`,time:`VAQT`,qs:`SAVOLLAR`,reward:`SOVG‘A`,start:`Boshlash`,anon:`Anonim. Ismingiz va viza ma'lumotlaringiz hech kimga berilmaydi.`,
+ sq:[[`Odatda ishga qanday borasiz?`,'출근할 때 주로 어떻게 가나요?',[['van',`Kompaniya avtobusi`,'회사 통근버스'],['bus',`Shahar avtobusi`,'시내버스'],['walk',`Piyoda yoki velosipedda`,'걷기 · 자전거'],['dots',`Boshqa`,'기타']]],[`Ishga borish qancha vaqt oladi?`,'출근 시간은 얼마나 걸리나요?',[['clock',`20 daqiqadan kam`,'20분 미만'],['clock',`20–40 daqiqa`,'20–40분'],['clock',`40–60 daqiqa`,'40–60분'],['clock',`Bir soatdan ko‘p`,'1시간 이상']]],[`Avtobusda eng qiyini nima?`,'버스 이용에서 가장 어려운 점은?',[['speak',`Til`,'언어'],['clock',`Kutish vaqti`,'대기 시간'],['map',`Bekatni topish`,'정류장 찾기'],['dots',`Boshqa`,'기타']]]],
+ choose1:`Bittasini tanlang`,nextB:`Keyingi`,finish:`Tugatish`,thanks:`Rahmat!`,thanksS:`Javoblaringiz Ansanga hamma uchun yaxshiroq reja tuzishga yordam beradi.`,yourReward:`SIZNING SOVG‘ANGIZ`,giftcard:`Mobil sovg‘a kartasi (namuna)`,sentTo:`YUBORILDI`,backHome:`Bosh sahifaga`,moreSurveys:`Boshqa so‘rovnomalar`,
+ locT:`Qayerda yashaysiz?`,locS:`Chiqindi kunlari va yaqin joylar uchun kerak.`,useGps:`Joriy joylashuvimni ishlatish`,gpsWorking:`Joylashuvingiz aniqlanmoqda…`,gpsDenied:`Bu yerda joylashuv mavjud emas. Manzilingizni yozing.`,gpsNoKey:`Joylashuv topildi. Uni manzilga aylantirish uchun Naver Maps kaliti kerak — hozircha pastga yozing.`,addrPh:`masalan, 원포공원1로 59`,save:`Saqlash`,onlyAnsan:`Hozircha faqat Ansan manzillari qo‘llab-quvvatlanadi.`,locSaved:`Manzil saqlandi`,
+ anaFail:`Bu rasmni tahlil qilib bo‘lmadi.`,tryAgain:`Qayta urinish`,demoNote:`Namuna natija · bu ko‘rinishda jonli rasm tahlili mavjud emas`,resultLbl:`Natija`,batNote:`Batareya qutisi · istalgan kun`,bulkyNote:`Avval ariza bering · Du va Pa olib ketiladi`,unknownNote:`Aniq emas — buyumlar ro‘yxatini tekshiring`,keep:`Joriyni qoldirish`,locCur:`JORIY`,gpsFail:`Joylashuvingizni aniqlab bo‘lmadi. Manzilingizni yozing.`,camOff:`Bu yerda kamera mavjud emas · rasm tanlang`,maybe:`Shulardan biri emasmi?`,
+ survNote:`Qatnashsangiz, bir kun reklamasiz`,adFreeShort:`24 soat reklamasiz`,adFreeOn:u=>`${u} gacha reklamasiz`,adFreeS:`So‘rovnomada qatnashganingiz uchun rahmat`,adFreeTomorrow:u=>`${u} gacha reklama yo‘q`,
+ myRules:`Binomning kunlari`,myRulesS:`Binongizda o‘z qoidalari bo‘lsa, shuni sozlang`,rulesT:`Yig‘ish kunlari`,rulesS:`Har bir tur chiqariladigan kunlarni bosing`,timeFrom:`Dan`,timeTo:`Gacha`,cityDefault:`Ansan shahri standartini ishlatish`,rulesSaved:`Yig‘ish kunlari saqlandi`,myBldg:`MENING BINOM`,cityNote:`Ansan shahri ochiq ma'lumotlari asosida · binongizda farq qilishi mumkin`,
+ live:`JONLI`,busErr:`Jonli vaqtni yuklab bo‘lmadi · namuna ko‘rsatilmoqda`,noStops:`Yaqin atrofda bekat topilmadi`,arrSoon:`Hozir keladi`,stopsAway:n=>`${n} bekat qoldi`,seats:n=>`${n} o‘rin`,ended:`Qatnov tugadi`,pickStop:`Yaqin bekatlar`,yourStop:`Sizning bekatingiz`,stopN:n=>`${n}-bekat`,event:`TADBIR`,tomorrow:t=>`Ertaga ${t}`,
+ origView:`Asl matn (koreyscha)`,transView:`Tarjimani ko‘rish`,autoTr:`Avtomatik tarjima · xato bo‘lishi mumkin`,readMore:`Batafsil`,addHome:`Bosh ekranga qo‘shish`,addHomeS:`Ilova kabi oching, internetsiz ham`,iosHome:`“Ulashish” ni, keyin “Bosh ekranga qo‘shish” ni bosing`,offline:`Internet yo‘q · saqlangan ma'lumot ko‘rsatilmoqda`,photoConsent:`Rasmlar faqat buyumni aniqlash uchun ishlatiladi va saqlanmaydi.`,locConsent:`Joylashuvingiz faqat manzilingizni topish uchun (Naver Maps orqali) ishlatiladi va serverimizda saqlanmaydi.`,
+ destPh:'Joy yoki manzilni qidiring',routeNote:'Yo‘nalish Naver Map ilovasida avtobus va metro vaqtlari bilan ochiladi.',adLbl:'REKLAMA',lang:'UZ'},
+mn:{cont:'Үргэлжлүүлэх',contSub:'다음 단계로',menu:'Цэс',welcome:'Ансанд тавтай морил',homeT:'Ансан дахь амьдрал',
+ items:['Хог ангилах','Автобус ба тээвэр','Төрийн байгууллага','Эмнэлэг','Мэдээ ба арга хэмжээ','Санал асуулга'],
+ sponsored:'ЗАР · ЖИШЭЭ',adT:'Гэр рүүгээ хямд мөнгө илгээх',adS:'Жишээ зар · мөнгөн гуйвуулга, утасны багц, ойрын дэлгүүр',tipT:'Өнөөдрийн зөвлөгөө',tipB:'Хүнсний хогийг энгийн уутанд хэзээ ч бүү хий. Усыг нь шүүгээд улбар шар хүнсний хогийн уутанд хийнэ үү.',
+ wasteT:'Хог ангилах',change:'Солих',tonight:'ӨНӨӨ ОРОЙ',tonightNone:'Өнөө орой хог ачихгүй',canTonight:'Өнөө орой гаргаж болно',weekT:'Энэ долоо хоног',rest:'Амралт',
+ gen:'Энгийн',food:'Хүнсний',rec:'Дахин боловсруулах',genL:'Энгийн хог',foodL:'Хүнсний хог',recL:'Дахин боловсруулах хог',bagW:'Сүүн цагаан төлбөртэй хогийн уут',bagO:'Улбар шар хүнсний хогийн уут',bagC:'Тунгалаг гялгар уут',bulky:'Том оврын хог',bulkyS:'Урьдчилан бүртгүүлэх · Да ба Пү ачна',ask:'Зургаар асуух',
+ camT:'Хаях юмныхаа зургийг дарна уу',camH:'Юмаа хүрээн дотор багтаана уу',photo:'Зураг',barcode:'Баркод',analyzing:'Шинжилж байна',st1:'Юмыг таньж байна',st2:'Ансаны дүрмийг шалгаж байна',st3:'Зөв аргыг хайж байна',
+ thisIs:'Энэ бол',pet:'Тунгалаг PET сав',goesIn:'ХАЯХ ГАЗАР',petDest:'Дахин боловсруулах · PET',bag:'УУТ',clear:'Тунгалаг',tonightYes:'Өнөө орой гаргаж болно',tonightNo:'Дараагийн ачих орой',
+ before:'Хаяхаасаа өмнө',petSteps:['Хоосолно','Шошгыг нь ховхолно','Дараад таглааг нь хаана','Тунгалаг PET савны цэгт хийнэ'],notRight:'Буруу байна уу?',pickAgain:'Юмаа сонгох',remind:'20:00-д сануулах',reminded:'20:00-д сануулга тавьлаа',
+ lookT:'Юм хайх',lookPh:'Хайх… (ж.нь: зай)',confused:'Ихэвчлэн андуурдаг',noteBat:'Зай болон гэрлийн чийдэнг байрныхаа эсвэл хорооны төвийн тусгай хайрцагт хийнэ.',
+ items8:[['Өндөгний хальс','계란 껍데기','gen'],['Тахиа, загасны яс','닭뼈 · 생선뼈','gen'],['Сонгино, сармисны хальс','양파 · 마늘 껍질','gen'],['Цайны уут','티백','gen'],['Жимсний хальс','과일 껍질','food'],['Цэвэр цагаан хөөсөнцөр','깨끗한 스티로폼','rec'],['Зай','폐건전지','bat'],['Хагарсан шил','깨진 유리','glass']],
+ dest:{gen:'Энгийн',food:'Хүнсний',rec:'Дахин боловсруулах',bat:'Зайны хайрцаг',glass:'Энгийн · ороож хаях'},
+ bulkyT:'Том оврын хог',pickDays:'АЧИХ ӨДРҮҮД',monThu:'Даваа ба Пүрэв',askQ:'АСУУХ',how:'Хэрхэн хийх вэ',
+ bulkySteps:[['Онлайнаар бүртгүүлэх','ansan.go.kr/waste эсвэл хорооны төвд'],['Юмаа сонгож төлөх','Төлбөр нь төрөл, хэмжээнээс хамаарна'],['Дугаараа бичих','Бүртгэлийн дугаарыг юман дээр наана'],['Гаргаж тавих','Ачих өдрөөс өмнө байрныхаа хог цуглуулах цэгт']],
+ freeT:'Хөргөгч, угаалгын машин: үнэгүй ачна',applyOnline:'Онлайнаар бүртгүүлэх',
+ busT:'Автобус ба тээвэр',whereTo:'Хаашаа явах вэ?',home:'Гэр',saved:'Хадгалсан',toWork:'Ажил руу · Банвол үйлдвэрийн цогцолбор',nearby:'Ойролцоо',choji:'Чожи буудал',busStop:'Ойрын автобусны буудал',busStopS:'Шууд ирэх цаг · жишээ',
+ quick:['Карт ба үнэ','Автобусанд','Чиглэл сонгох'],sortBy:['Хамгийн хурдан','Цөөн шилжилт','Бага алхах'],best:'ШИЛДЭГ',min:'мин',transfers:n=>`${n} шилжилт`,sampleNote:'Жишээ цаг · жинхэнэ үйлчилгээ шууд автобусны мэдээлэл ашиглана',
+ routeT:'Чиглэл',leaveBy:'Автобус ирэхээс 5 минутын өмнө гараарай',
+ rsteps:[['walk','Буудал хүртэл алхах','Ойролцоогоор 4 мин','걸어서 정류장까지'],['bus','Автобусанд суух','Урд хаалган дээр картаа уншуулна','앞문 승차 · 카드 태그'],['spot','Буудал дээрээ буух','Эхлээд улаан товчийг дарна','하차벨 누르기 · 뒷문 하차'],['tap','Буухдаа картаа уншуулах','Үнэгүй шилжихэд хэрэгтэй','내릴 때도 카드 태그'],['walk','Ажил хүртэл алхах','Ойролцоогоор 5 мин','회사까지 도보']],
+ openNaver:'Naver Map-д нээх',guideApp:'Энэ апп-аар чиглүүлэх',
+ chooseT:'Хаана нээх вэ',naverApp:'Naver Map апп',naverAppS:'Апп нээгдэнэ. Алхах чиглэл, шууд ирэх цагт хамгийн тохиромжтой.',rec2:'САНАЛ БОЛГОХ',naverWeb:'Вэб дэх Naver Map',naverWebS:'Шинэ цонхонд нээгдэнэ — апп хэрэггүй.',always:'Үргэлж ингэж нээх',langTip:'Naver Map таны хэлээр ярьдаг',langTipS:'Naver Map-ийн тохиргоонд English, 中文 эсвэл 日本語 болгож солино уу.',
+ notInst:'Naver Map суугаагүй юу?',notInstS:'Нэг удаа суулгавал дараа нь газрууд шууд апп-д нээгдэнэ. Эсвэл вэбээр үргэлжлүүлээрэй.',install:'Naver Map суулгах',onWeb:'Вэбээр нээх',
+ stopT:'Автобусны буудал',updated:'Дөнгөж шинэчлэгдсэн',notify:'2 буудлын өмнө сануулах',crowd:['хүн: цөөн','хүн: дунд','хүн: олон'],next:'дараах',nightNote:'Шөнө: 60 минутын дотор шилжиж болно (21:00–07:00)',lastBus:'Өнөөдөр дууссан',
+ onboard:'Автобусанд',stopsLeft:'буудал үлдсэн',getOffAt:'Буудал дээрээ буух · ойролцоогоор 6 мин',whenOff:'Буухдаа',offSteps:['Улаан товчийг дарна','Хойд хаалгаар буух','Гарахдаа картаа уншуулна'],showDriver:'Жолоочид үзүүлэх',
+ faresT:'Карт ба үнэ',needCard:'ТАНД ХЭРЭГТЭЙ',tmoney:'T-money эсвэл тээврийн карт',tmoneyS:'Дэлгүүрт (convenience store) бэлнээр худалдаж аваад цэнэглэнэ',fares:'Үнэ',adult:'том хүн, картаар',cityBus:'Кёнгидогийн хотын автобус',subway:'Метро · үндсэн үнэ',cashNote:'Бэлнээр үнэтэй. Метрогоор хол явбал зайн нэмэгдэл төлнө.',freeTr:'Үнэгүй шилжилт',trRules:[['30','мин','өдөр'],['60','мин','21:00–07:00'],['4','удаа','нэг аялалд дээд тал нь']],tapWarn:'Буухдаа заавал картаа уншуулаарай',asOf:'2025 оны 10-р сарын үнэ · шинэчлэлтийг шалгана уу',
+ hospT:'Эмнэлэг',near:'Таны ойролцоо',emerg:'Яаралтай юу? 119 руу залга',emergS:'Утсаар орчуулга авах боломжтой',more:'Илүү олон газар нэмэгдэнэ',univ:'Корё их сургуулийн Ансан эмнэлэг',univS:'Их сургуулийн эмнэлэг · Яаралтай тусламж',hours:'Цагийн хуваарь',addr:'Хаяг',tel:'Утас',checkHours:'Очихоосоо өмнө шалгаарай',staff:'АЖИЛТАНД ҮЗҮҮЛЭХ',staffEn:'I need an interpreter. Can you help me in English?',
+ offT:'Төрийн байгууллага',offS:'Газар дээр дарж Naver Map-д нээнэ үү',offices:[['Ансан хотын захиргаа','안산시청','Хотын үйлчилгээ · тодорхойлолт'],['Гадаад иргэдийг дэмжих төв','안산시 외국인주민지원본부','Зөвлөгөө · олон хэлний тусламж'],['Цагаачлалын алба, Ансан','출입국·외국인청 안산출장소','Виз · гадаад иргэний бүртгэл · урьдчилан цаг ав']],
+ newsT:'Мэдээ ба арга хэмжээ',official:'АЛБАН ЁСНЫ · АНСАН ХОТ',sample:'Жишээ',newsItems:[['Оршин суугчдад үнэгүй солонгос хэлний анги','Жишээ мэдэгдэл · солонгос хэлнээс орчуулсан'],['Ажилчдад амралтын өдрийн эрүүл мэндийн үзлэг','Жишээ арга хэмжээ · газар, цаг энд харагдана']],
+ survT:'Санал асуулга',survS:'Саналаа хэлж, шагнал аваарай',newB:'ШИНЭ',survF:'Ансанд ажилдаа явах нь',survFS:'Та ажилдаа яаж явдаг вэ? Хотод илүү сайн чиглэл төлөвлөхөд туслаарай.',time:'ХУГАЦАА',qs:'АСУУЛТ',reward:'ШАГНАЛ',start:'Эхлэх',anon:'Нэргүй. Таны нэр, визийн мэдээллийг бид хэзээ ч хуваалцахгүй.',
+ sq:[['Та ихэвчлэн ажилдаа яаж явдаг вэ?','출근할 때 주로 어떻게 가나요?',[['van','Компанийн автобус','회사 통근버스'],['bus','Хотын автобус','시내버스'],['walk','Алхах эсвэл дугуй','걷기 · 자전거'],['dots','Бусад','기타']]],['Ажилдаа явахад хэр удаан вэ?','출근 시간은 얼마나 걸리나요?',[['clock','20 минутаас бага','20분 미만'],['clock','20–40 мин','20–40분'],['clock','40–60 мин','40–60분'],['clock','1 цагаас илүү','1시간 이상']]],['Автобусанд юу хамгийн хэцүү вэ?','버스 이용에서 가장 어려운 점은?',[['speak','Хэл','언어'],['clock','Хүлээх хугацаа','대기 시간'],['map','Буудлаа олох','정류장 찾기'],['dots','Бусад','기타']]]],
+ choose1:'Нэгийг сонгоно уу',nextB:'Дараах',finish:'Дуусгах',thanks:'Баярлалаа!',thanksS:'Таны хариулт Ансанд бүх хүнд илүү сайн төлөвлөхөд тусална.',yourReward:'ТАНЫ ШАГНАЛ',giftcard:'Мобайл бэлгийн карт (жишээ)',sentTo:'ИЛГЭЭХ ГАЗАР',backHome:'Нүүр хуудас руу',moreSurveys:'Бусад санал асуулга',
+ locT:'Та хаана амьдардаг вэ?',locS:'Хог гаргах өдөр, ойрын газруудад ашиглана.',useGps:'Одоогийн байршлаа ашиглах',gpsWorking:'Байршлыг хайж байна…',gpsDenied:'Энд байршил ашиглах боломжгүй. Хаягаа бичнэ үү.',gpsNoKey:'Байршил олдлоо. Хаяг болгоход Naver Maps түлхүүр хэрэгтэй — одоохондоо доор бичнэ үү.',addrPh:'ж.нь: 원포공원1로 59',save:'Хадгалах',onlyAnsan:'Одоогоор зөвхөн Ансан хотын хаяг дэмжинэ.',locSaved:'Хаяг хадгалагдлаа',
+ anaFail:'Энэ зургийг шинжилж чадсангүй.',tryAgain:'Дахин оролдох',demoNote:'Жишээ үр дүн · энд зургийг шууд шинжлэх боломжгүй',resultLbl:'Үр дүн',batNote:'Зайны хайрцаг · аль ч өдөр',bulkyNote:'Урьдчилан бүртгүүлэх · Да ба Пү ачна',unknownNote:'Тодорхойгүй — жагсаалтаас шалгана уу',keep:'Хэвээр үлдээх',locCur:'ОДООГИЙН',gpsFail:'Байршлыг тань авч чадсангүй. Хаягаа бичнэ үү.',camOff:'Энд камер ашиглах боломжгүй · зураг сонгоно уу',maybe:'Эдгээрийн нэг үү?',
+ survNote:'Оролцвол нэг өдөр зар харагдахгүй',adFreeShort:'24 цаг заргүй',adFreeOn:u=>`${u} хүртэл заргүй`,adFreeS:'Санал асуулгад оролцсонд баярлалаа',adFreeTomorrow:u=>`${u} хүртэл зар харагдахгүй`,
+ myRules:'Манай байрны өдрүүд',myRulesS:'Байр тань өөрийн дүрэмтэй бол тохируулна уу',rulesT:'Хог ачих өдрүүд',rulesS:'Төрөл бүрийг гаргах өдрүүдийг дарна уу',timeFrom:'Эхлэх',timeTo:'Дуусах',cityDefault:'Ансан хотын үндсэн тохиргоо',rulesSaved:'Хог ачих өдрүүд хадгалагдлаа',myBldg:'МАНАЙ БАЙР',cityNote:'Ансан хотын нээлттэй мэдээлэлд үндэслэсэн · таны байр өөр байж болно',
+ live:'ШУУД',busErr:'Шууд цагийг ачаалж чадсангүй · жишээ харуулж байна',noStops:'Ойролцоо автобусны буудал олдсонгүй',arrSoon:'Удахгүй ирнэ',stopsAway:n=>`${n} буудлын цаана`,seats:n=>`${n} суудал`,ended:'Үйлчилгээ дууссан',pickStop:'Ойрын буудлууд',yourStop:'Таны буудал',stopN:n=>`Буудал ${n}`,event:'АРГА ХЭМЖЭЭ',tomorrow:t=>`Маргааш ${t}`,
+ origView:'Эх хувийг харах (солонгос)',transView:'Орчуулгыг харах',autoTr:'Автомат орчуулга · алдаатай байж болно',readMore:'Дэлгэрэнгүй',addHome:'Нүүр дэлгэцэнд нэмэх',addHomeS:'Апп шиг нээгээрэй, офлайн ч болно',iosHome:'Share дээр дараад “Add to Home Screen”-г сонгоно уу',offline:'Офлайн байна · хадгалсан мэдээллийг харуулж байна',photoConsent:'Зургийг зөвхөн юмыг таних зорилгоор ашиглах ба хадгалахгүй.',locConsent:'Таны байршлыг зөвхөн хаягийг тань олоход (Naver Maps-аар) ашиглах ба манай серверт хадгалахгүй.',
+ destPh:'Газар эсвэл хаяг хайх',routeNote:'Чиглэл Naver Map-д автобус, метроны цагтай нээгдэнэ.',adLbl:'СУРТАЛЧИЛГАА',lang:'MN'}};
 
 /* ---------- state ---------- */
 const st={lang:null,sel:null,stack:['intro'],bgOrange:true,photo:null,remind:false,notify:true,qi:0,answers:[],query:'',always:null};
 try{st.always=localStorage.getItem('al_naver')}catch(e){}
 st.adFreeUntil=0;try{st.adFreeUntil=+localStorage.getItem('al_adfree')||0}catch(e){}
-const adFree=()=>Date.now()<st.adFreeUntil;
-const hhmm=ms=>{const t=new Date(ms).toLocaleTimeString(st.lang==='vi'?'vi-VN':st.lang==='ko'?'ko-KR':'en-US',{hour:'2-digit',minute:'2-digit'});if(new Date(ms).toDateString()===new Date().toDateString())return t;return st.lang==='ko'?`내일 ${t}`:st.lang==='vi'?`${t} ngày mai`:`${t} tomorrow`;};
+/* 설문: 보상(광고 제거·기프트카드) 지급 방식이 정해질 때까지 꺼 둠. 켜려면 true */
+const SURVEY_ON=false;
+const SOON={ko:'준비 중',en:'Coming soon',vi:'Sắp ra mắt',zh:'即将推出',ru:'Скоро',uz:'Tez orada',mn:'Тун удахгүй'};
+const adFree=()=>SURVEY_ON&&Date.now()<st.adFreeUntil;
+const hhmm=ms=>{const t=new Date(ms).toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit'});if(new Date(ms).toDateString()===new Date().toDateString())return t;return S[st.lang||'en'].tomorrow(t);};
 function grantAdFree(){st.adFreeUntil=Date.now()+864e5;try{localStorage.setItem('al_adfree',String(st.adFreeUntil))}catch(e){}}
 const adFreeRow=()=>`<div class="row" style="border:1px dashed rgba(30,34,33,.25);border-radius:18px;padding:12px 14px">${dotI('check','var(--deep)','#fff',30)}<span class="col"><span class="b" style="font-size:13px">${T().adFreeOn(hhmm(st.adFreeUntil))}</span><span class="tiny muted">${T().adFreeS}</span></span></div>`;
 const T=()=>S[st.lang||'en'];
+const LOCALE={en:'en-US',vi:'vi-VN',ko:'ko-KR',zh:'zh-CN',ru:'ru-RU',uz:'uz-Latn-UZ',mn:'mn-MN'};
+const loc=()=>LOCALE[st.lang]||'en-US';
 const isKo=()=>st.lang==='ko';
 const cur=()=>st.stack[st.stack.length-1];
-function go(n){st.stack.push(n);render();}
+function go(n){if(!SURVEY_ON&&/^(surv|sq|sdone)$/.test(n))return;st.stack.push(n);render();}
 function back(){if(st.stack.length>1)st.stack.pop();render();}
 function home(){st.stack=['home'];render();}
+const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* ---------- home address (분리배출·교통·지도 기준) ---------- */
+const ADDR0={road:'원포공원1로 59',dong:'초지동',full:'경기도 안산시 단원구 원포공원1로 59'};
+st.addr=ADDR0;try{const a=JSON.parse(localStorage.getItem('al_addr')||'null');if(a&&a.road)st.addr=a}catch(e){}
+const addrLabel=()=>esc([st.addr.road,st.addr.dong].filter(Boolean).join(' · '));
+function saveAddr(a){st.addr=a;try{localStorage.setItem('al_addr',JSON.stringify(a))}catch(e){}}
+function toast(msg){const o=document.createElement('div');o.className='toast';o.setAttribute('role','status');o.textContent=msg;app.appendChild(o);setTimeout(()=>o.remove(),2200);}
 
 /* ---------- naver links ---------- */
 const appname=()=>{try{return location.href.split('#')[0]}catch(e){return 'ansanlife'}};
 const nApp=q=>`nmap://search?query=${enc(q)}&appname=${enc(appname())}`;
 const nWeb=q=>`https://map.naver.com/p/search/${enc(q)}`;
 const storeUrl=()=>/iPhone|iPad|iPod/i.test(navigator.userAgent)?'https://apps.apple.com/app/id311867728':'https://play.google.com/store/apps/details?id=com.nhn.android.nmap';
-let naverQ='';
-function openNaver(q){naverQ=q;if(st.always==='web'){window.open(nWeb(q),'_blank','noopener');return}if(st.always==='app'){tryApp(q);return}sheet('choose');}
+let naverQ='',naverAppUrl='';
+function openNaver(q,appUrl){naverQ=q;naverAppUrl=appUrl||nApp(q);if(st.always==='web'){window.open(nWeb(q),'_blank','noopener');return}if(st.always==='app'){tryApp(q);return}sheet('choose');}
 function watchApp(){let gone=false;const h=()=>{if(document.hidden)gone=true};document.addEventListener('visibilitychange',h);addEventListener('blur',h);setTimeout(()=>{document.removeEventListener('visibilitychange',h);removeEventListener('blur',h);if(!gone&&!document.hidden)sheet('notinst')},1800);}
-function tryApp(q){const a=document.createElement('a');a.href=nApp(q);a.rel='noopener';document.body.appendChild(a);a.click();a.remove();watchApp();}
+function tryApp(q){const a=document.createElement('a');a.href=naverAppUrl||nApp(q);a.rel='noopener';document.body.appendChild(a);a.click();a.remove();watchApp();}
 
 /* ---------- live map: NAVER Maps JS API v3 ----------
    1) NCP 콘솔 > Maps > Application 등록 (Dynamic Map + Geocoding 체크)
    2) Web 서비스 URL에 이 페이지를 올릴 도메인 등록
    3) 발급받은 Client ID를 아래 NAVER_KEY에 넣기. 비어 있으면 그림 지도로 보여요. */
 const NAVER_KEY='__NAVER_KEY__';
+/* API 서버 주소 (server/README.md): 사진 분석 · 버스 실시간 · 공지 번역. 비어 있으면 예시 데이터로 보여요. */
+const API_URL='__API_URL__'.replace(/\/+$/,'');
+const hasApi=()=>!!API_URL&&!API_URL.startsWith('__');
+const hasAnalyzer=hasApi;
+/* Supabase (supabase/schema.sql): 공지·광고·설문 응답. 공개(anon) 키만 씁니다. 비어 있으면 예시 데이터 */
+const SB_URL='__SUPABASE_URL__'.replace(/\/+$/,''),SB_KEY='__SUPABASE_ANON_KEY__';
+const hasSb=()=>!!SB_URL&&!SB_URL.startsWith('__')&&!!SB_KEY&&!SB_KEY.startsWith('__');
+async function sb(path,opt={},ms=10000){const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),ms);
+ try{const r=await fetch(`${SB_URL}/rest/v1/${path}`,{...opt,headers:{apikey:SB_KEY,authorization:`Bearer ${SB_KEY}`,'content-type':'application/json',...(opt.headers||{})},signal:ctl.signal});if(!r.ok)throw new Error('sb '+r.status);return r.status===201||r.status===204?null:await r.json();}finally{clearTimeout(to)}}
+/* 광고 네트워크(애드센스): 직접 광고가 없을 때만 */
+const ADS_CLIENT='__ADSENSE_CLIENT__',ADS_SLOT='__ADSENSE_SLOT__';
+const hasAdsense=()=>/^ca-pub-\d+$/.test(ADS_CLIENT)&&/^\d+$/.test(ADS_SLOT);
+async function api(path,opt={},ms=12000){const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),ms);
+ try{const r=await fetch(API_URL+path,{...opt,signal:ctl.signal});if(!r.ok)throw new Error('http '+r.status);return await r.json();}finally{clearTimeout(to)}}
 const MAPS={
- hosp:{zoom:16,pts:[{addr:'경기도 안산시 단원구 적금로 123',label:'고려대학교 안산병원'}]},
+ hosp:()=>{const m=st.med&&st.med.sel;if(!m||m.lat==null)return null;const p=[{lat:m.lat,lng:m.lng,label:esc(m.name)}];if(st.med.pos)p.unshift({lat:st.med.pos.lat,lng:st.med.pos.lng,label:esc(HT().you),home:true});return {zoom:16,pts:p};},
+ medlist:()=>{const m=st.med;if(!m||!m.pos||!m.hosp)return null;const all=medAll();const list=medList().slice(0,20);
+  return {zoom:15,pts:[{lat:m.pos.lat,lng:m.pos.lng,label:esc(HT().you),home:true},...list.filter(x=>x.lat!=null).map(x=>({lat:x.lat,lng:x.lng,dot:true,pharm:x.kind==='pharm',title:x.name,med:'a'+all.indexOf(x)}))]};},
  near:{zoom:15,pts:[{addr:'경기도 안산시 단원구 원포공원1로 59',label:'Home',home:true},{addr:'경기도 안산시 단원구 중앙대로 620',label:'초지역 Choji'}]},
  offices:{zoom:14,pts:[{addr:'경기도 안산시 단원구 원포공원1로 59',label:'Home',home:true},{addr:'경기도 안산시 단원구 화랑로 387',label:'안산시청'}]}};
-const miniMap=k=>`<div class="nmap mini" data-map="${k}"><div class="live"></div><svg class="fallback" viewBox="0 0 342 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g stroke="#fff" stroke-linecap="round" fill="none"><path d="M-10 120 C 80 100,150 140,230 95 S 330 60,350 70" stroke-width="12"/><path d="M110 -10 L 150 180" stroke-width="8"/><path d="M-10 50 L 350 30" stroke-width="6"/><path d="M260 -10 L 230 180" stroke-width="5"/></g><path d="M171 92s12-11 12-20a12 12 0 0 0-24 0c0 9 12 20 12 20z" fill="#E45C4E"/><circle cx="171" cy="72" r="4.5" fill="#fff"/></svg><span class="maptag">MAP · NAVER API</span></div>`;
-let naverP=null;const geoCache={};
-function loadNaver(){if(!NAVER_KEY||NAVER_KEY.startsWith('__'))return Promise.resolve(null);if(naverP)return naverP;
+const miniMap=k=>`<div class="nmap mini" data-map="${k}"><div class="live"></div><svg class="fallback" viewBox="0 0 342 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g stroke="#fff" stroke-linecap="round" fill="none"><path d="M-10 120 C 80 100,150 140,230 95 S 330 60,350 70" stroke-width="12"/><path d="M110 -10 L 150 180" stroke-width="8"/><path d="M-10 50 L 350 30" stroke-width="6"/><path d="M260 -10 L 230 180" stroke-width="5"/></g><path d="M171 92s12-11 12-20a12 12 0 0 0-24 0c0 9 12 20 12 20z" fill="#E45C4E"/><circle cx="171" cy="72" r="4.5" fill="#fff"/></svg><span class="maptag">MAP</span></div>`;
+/* 지도: 네이버 지도 키가 있으면 네이버, 없거나 인증 실패면 구글 지도(GMAPS_KEY), 둘 다 없으면 그림 지도 */
+const GMAPS_KEY='__GMAPS_KEY__';
+const okKey=k=>!!k&&!k.startsWith('__');
+const hasMapKey=()=>okKey(NAVER_KEY)||okKey(GMAPS_KEY);
+const pinHtml=p=>p.dot?`<div class="mdot ${p.pharm?'ph':''}" title="${esc(p.title||'')}"></div>`:`<div class="npin ${p.home?'home':''}"><b></b><span>${p.label}</span></div>`;
+let naverP=null,googleP=null;const geoCache={};
+function loadNaver(){if(!okKey(NAVER_KEY))return Promise.resolve(null);if(naverP)return naverP;
  naverP=new Promise(res=>{window.navermap_authFailure=()=>res(null);const s=document.createElement('script');s.src=`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${enc(NAVER_KEY)}&submodules=geocoder`;s.onload=()=>res(window.naver&&window.naver.maps?window.naver:null);s.onerror=()=>res(null);document.head.appendChild(s);});return naverP;}
-function geocode(N,addr){if(geoCache[addr])return geoCache[addr];geoCache[addr]=new Promise(res=>{try{N.maps.Service.geocode({query:addr},(status,r)=>{const a=status===N.maps.Service.Status.OK&&r.v2&&r.v2.addresses&&r.v2.addresses[0];res(a?new N.maps.LatLng(+a.y,+a.x):null);});}catch(e){res(null)}});return geoCache[addr];}
-async function mountMaps(){const els=[...app.querySelectorAll('.nmap[data-map]')];if(!els.length)return;const N=await loadNaver();if(!N)return;
- for(const el of els){if(!el.isConnected)continue;const spec=MAPS[el.dataset.map];const ll=(await Promise.all(spec.pts.map(p=>geocode(N,p.addr))));const pts=spec.pts.map((p,i)=>({...p,ll:ll[i]})).filter(p=>p.ll);if(!pts.length||!el.isConnected)continue;
-  const map=new N.maps.Map(el.querySelector('.live'),{center:pts[pts.length-1].ll,zoom:spec.zoom,scaleControl:false,mapDataControl:false,logoControlOptions:{position:N.maps.Position.BOTTOM_RIGHT}});
-  pts.forEach(p=>new N.maps.Marker({position:p.ll,map,icon:{content:`<div class="npin ${p.home?'home':''}"><b></b><span>${p.label}</span></div>`,anchor:new N.maps.Point(0,0)}}));
-  if(pts.length>1){const b=new N.maps.LatLngBounds(pts[0].ll,pts[0].ll);pts.forEach(p=>b.extend(p.ll));map.fitBounds(b,{top:50,right:40,bottom:30,left:40});}
-  el.classList.add('ready');}}
+const GLANG={ko:'ko',en:'en',vi:'vi',zh:'zh-CN',ru:'ru',uz:'uz',mn:'mn'};
+function loadGoogle(){if(!okKey(GMAPS_KEY))return Promise.resolve(null);if(googleP)return googleP;
+ googleP=new Promise(res=>{let done=false;const fin=v=>{if(!done){done=true;res(v)}};
+  // 키 제한(리퍼러)·결제 문제로 인증이 실패하면 구글이 이 함수를 부름 → 그림 지도로 되돌림
+  window.gm_authFailure=()=>{googleP=Promise.resolve(null);document.querySelectorAll('.nmap.ready').forEach(el=>el.classList.remove('ready'));fin(null);};
+  window.__gmReady=()=>fin(window.google&&google.maps?google:null);
+  const s=document.createElement('script');s.async=true;s.src=`https://maps.googleapis.com/maps/api/js?key=${enc(GMAPS_KEY)}&callback=__gmReady&loading=async&v=weekly&region=KR&language=${GLANG[st.lang]||'en'}`;s.onerror=()=>fin(null);document.head.appendChild(s);setTimeout(()=>fin(null),12000);});
+ return googleP;}
+const GSTYLE=[{featureType:'poi',elementType:'labels.icon',stylers:[{visibility:'off'}]},{featureType:'poi.business',stylers:[{visibility:'off'}]},{featureType:'landscape',elementType:'geometry',stylers:[{color:'#EEF0EC'}]},{featureType:'water',elementType:'geometry',stylers:[{color:'#C9DADD'}]},{featureType:'road',elementType:'geometry',stylers:[{color:'#FFFFFF'}]},{featureType:'road',elementType:'labels.text.fill',stylers:[{color:'#6E7472'}]},{featureType:'poi.park',elementType:'geometry',stylers:[{color:'#DCE6DD'}]},{featureType:'transit.line',elementType:'geometry',stylers:[{color:'#B9C6C7'}]}];
+let GPin=null;
+function gPinClass(G){if(GPin)return GPin;GPin=class extends G.maps.OverlayView{constructor(pos,p){super();this.pos=pos;this.d=document.createElement('div');this.d.style.cssText='position:absolute;width:0;height:0';this.d.innerHTML=pinHtml(p);if(p.med){this.d.firstChild.setAttribute('role','button');this.d.addEventListener('click',e=>{e.stopPropagation();openMed(p.med);});}}
+  onAdd(){this.getPanes().overlayMouseTarget.appendChild(this.d);}draw(){const q=this.getProjection().fromLatLngToDivPixel(this.pos);if(q){this.d.style.left=q.x+'px';this.d.style.top=q.y+'px';}}onRemove(){this.d.remove();}};return GPin;}
+const PROV={
+ naver:N=>({ll:(a,b)=>new N.maps.LatLng(a,b),
+  geocode:addr=>geoCache[addr]||(geoCache[addr]=new Promise(res=>{try{N.maps.Service.geocode({query:addr},(status,r)=>{const a=status===N.maps.Service.Status.OK&&r.v2&&r.v2.addresses&&r.v2.addresses[0];res(a?new N.maps.LatLng(+a.y,+a.x):null);});}catch(e){res(null)}})),
+  draw(el,spec,pts){let map=el._map;if(!map){map=el._map=new N.maps.Map(el.querySelector('.live'),{center:pts[pts.length-1].ll,zoom:spec.zoom,scaleControl:false,mapDataControl:false,logoControlOptions:{position:N.maps.Position.BOTTOM_RIGHT}});}
+   (el._pins||[]).forEach(m=>m.setMap(null));
+   el._pins=pts.map(p=>{const mk=new N.maps.Marker({position:p.ll,map,icon:{content:pinHtml(p),anchor:new N.maps.Point(0,0)}});if(p.med)N.maps.Event.addListener(mk,'click',()=>openMed(p.med));return mk;});
+   if(pts.length>1){const b=new N.maps.LatLngBounds(pts[0].ll,pts[0].ll);pts.forEach(p=>b.extend(p.ll));map.fitBounds(b,{top:50,right:40,bottom:30,left:40});}else map.setCenter(pts[0].ll);}}),
+ google:G=>({ll:(a,b)=>new G.maps.LatLng(a,b),
+  geocode:addr=>geoCache[addr]||(geoCache[addr]=new Promise(res=>{try{new G.maps.Geocoder().geocode({address:addr,region:'KR'},(r,s)=>res(s==='OK'&&r[0]?r[0].geometry.location:null));}catch(e){res(null)}})),
+  draw(el,spec,pts){let map=el._map;if(!map){map=el._map=new G.maps.Map(el.querySelector('.live'),{center:pts[pts.length-1].ll,zoom:spec.zoom,disableDefaultUI:true,clickableIcons:false,gestureHandling:'cooperative',keyboardShortcuts:false,styles:GSTYLE,backgroundColor:'#DCE6E7'});}
+   (el._pins||[]).forEach(m=>m.setMap(null));const P=gPinClass(G);
+   el._pins=pts.map(p=>{const o=new P(p.ll,p);o.setMap(map);return o;});
+   if(pts.length>1){const b=new G.maps.LatLngBounds();pts.forEach(p=>b.extend(p.ll));map.fitBounds(b,{top:50,right:40,bottom:30,left:40});const z=G.maps.event.addListenerOnce(map,'idle',()=>{if(map.getZoom()>17)map.setZoom(17);});}else{map.setCenter(pts[0].ll);map.setZoom(spec.zoom);}}})};
+function geocode(N,addr){return PROV.naver(N).geocode(addr);}
+let provP=null;
+function mapProv(){return provP||(provP=(async()=>{const N=await loadNaver();if(N)return PROV.naver(N);const G=await loadGoogle();return G?PROV.google(G):null;})());}
+async function mountMaps(only){const els=only?[only]:[...app.querySelectorAll('.nmap[data-map]')];if(!els.length)return;const P=await mapProv();if(!P)return;
+ for(const el of els){if(!el.isConnected)continue;const sp0=MAPS[el.dataset.map];const spec=typeof sp0==='function'?sp0():sp0;if(!spec)continue;
+  const ll=await Promise.all(spec.pts.map(p=>p.lat!=null?P.ll(p.lat,p.lng):p.home&&st.addr.lat?P.ll(st.addr.lat,st.addr.lng):P.geocode(p.home?st.addr.full:p.addr)));
+  const pts=spec.pts.map((p,i)=>({...p,ll:ll[i]})).filter(p=>p.ll);if(!pts.length||!el.isConnected)continue;
+  try{P.draw(el,spec,pts);el.classList.add('ready');}catch(e){}}}
+function openMed(key){const it=medPick(key);if(it){st.med.sel=it;go('hdetail');}}
 
 /* ---------- common pieces ---------- */
 const nav=(label,{menu=false,right=''}={})=>`<div class="nav">${menu?`<button class="ibtn" data-act="intro" aria-label="Language">${ic('menu',20)}</button>`:`<button class="ibtn" data-act="back" aria-label="Back">${ic('back',22)}</button>`}<span class="lbl">${label}</span><span class="rule"></span>${right}</div>`;
-const foot=`<div class="foot">ansan life · Gyeonggi-do, Ansan</div>`;
-const langPill=()=>{const c=COUNTRIES.find(x=>x.lang===st.lang);return `<button class="pill" data-act="intro" aria-label="Change language">${flag(c.c,18)}<span style="border-radius:50%"></span>${T().lang}</button>`;};
+const foot=''; /* 하단 세이지 띠는 없앴어요 */
+const langPill=()=>{const c=COUNTRIES.find(x=>x.lang===st.lang);return `<button class="pill" data-act="intro" aria-label="Change language"><span class="pflag">${flag(c.c,20)}</span>${T().lang}</button>`;};
 const ttl=(h,sub,{eye='',pin=false}={})=>`<div class="ttl">${eye?`<span class="eyebrow">${eye}</span>`:''}<h1 class="h1 ${isKo()?'ko':''}">${h}</h1>${sub?`<div class="sub">${pin?ic('spot',14,'#E45C4E'):''}${sub}</div>`:''}</div>`;
 const h2=(t,k='',r='')=>`<div class="h2"><span>${t}</span>${k&&!isKo()?`<span class="k">${k}</span>`:''}<span class="ln"></span>${r?`<span class="serif" style="font-size:13px">${r}</span>`:''}</div>`;
 const koSub=s=>isKo()||!s?'':`<span class="kr micro muted">${s}</span>`;
 
 /* ---------- waste schedule (Ansan city-wide public data) ---------- */
-const sched=d=>({g:d<=5,f:d<=5,r:[1,2,4,5].includes(d)});
-function nextNight(from){for(let i=1;i<=7;i++){const d=(from+i)%7;if(sched(d).r)return d}return from}
+const CITY={g:[0,1,2,3,4,5],f:[0,1,2,3,4,5],r:[1,2,4,5],from:'20:00',to:'06:00'};
+const validRules=r=>!!r&&['g','f','r'].every(k=>Array.isArray(r[k])&&r[k].every(d=>Number.isInteger(d)&&d>=0&&d<=6))&&[r.from,r.to].every(v=>/^\d{2}:\d{2}$/.test(v||''));
+st.rules=null;try{const r=JSON.parse(localStorage.getItem('al_rules')||'null');if(validRules(r))st.rules=r}catch(e){}
+const rules=()=>st.rules||CITY;
+const sched=d=>{const R=rules();return {g:R.g.includes(d),f:R.f.includes(d),r:R.r.includes(d)}};
+const span=()=>`${rules().from} – ${rules().to}`;
+function saveRules(r){st.rules=r;try{r?localStorage.setItem('al_rules',JSON.stringify(r)):localStorage.removeItem('al_rules')}catch(e){}}
+function nextNight(from,k='r'){for(let i=1;i<=7;i++){const d=(from+i)%7;if(sched(d)[k])return d}return from}
 
 /* ---------- screens ---------- */
 const SCR={};
@@ -500,9 +813,10 @@ SCR.intro=()=>{const t=st.lang?S[st.lang]:null;const sel=st.sel?COUNTRIES.find(c
 
 SCR.home=()=>{const t=T();const icons=['trash','bus','office','med','mega','survey'];const to=['w1','b1','offices','hosp','news','surv'];const ko=S.ko.items;
  return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu,{menu:true,right:langPill()})}
- ${ttl(t.homeT,`<span>${new Date().toLocaleDateString(st.lang==='vi'?'vi-VN':st.lang==='ko'?'ko-KR':'en-US',{weekday:'long',month:'long',day:'numeric'})}</span>`,{eye:t.welcome})}
- <div class="sheet"><nav class="toc">${t.items.map((x,i)=>`<button data-go="${to[i]}">${dotI(icons[i],'#2F3B3A','#fff',28)}<span class="lab" style="flex-wrap:wrap;row-gap:2px">${x}${isKo()?'':`<small>${ko[i]}</small>`}${i===5?`<em class="adnote">${adFree()?t.adFreeOn(hhmm(st.adFreeUntil)):t.survNote}</em>`:''}</span><span class="n">0${i+1}</span></button>`).join('')}</nav>
- ${adFree()?`<div style="margin-top:8px">${adFreeRow()}</div>`:`<div class="card row" style="margin-top:8px"><div class="col grow" style="gap:3px"><span class="row cap" style="gap:6px"><span class="dot" style="background:var(--accent);width:6px;height:6px"></span>${t.sponsored}</span><span class="serif" style="font-size:15px">${t.adT}</span><span class="small muted">${t.adS}</span></div><span style="width:64px;height:64px;border-radius:14px;background:#FBE7D6;display:grid;place-items:center;flex:none">${ic('gift',22,'#9A6A44')}</span></div>`}
+ ${ttl(t.homeT,`<span>${new Date().toLocaleDateString(loc(),{weekday:'long',month:'long',day:'numeric'})}</span>`,{eye:t.welcome})}
+ <div class="sheet"><nav class="toc">${t.items.map((x,i)=>`<button ${i===5&&!SURVEY_ON?`disabled aria-disabled="true" class="off"`:`data-go="${to[i]}"`}>${dotI(icons[i],'#2F3B3A','#fff',28)}<span class="lab" style="flex-wrap:wrap;row-gap:2px">${x}${isKo()?'':`<small>${ko[i]}</small>`}${i===5?`<em class="adnote">${!SURVEY_ON?(SOON[st.lang]||SOON.en)+(isKo()?'':' · 준비 중'):adFree()?t.adFreeOn(hhmm(st.adFreeUntil)):t.survNote}</em>`:''}</span><span class="n">0${i+1}</span></button>`).join('')}</nav>
+ <div style="margin-top:8px">${adSlot()}</div>
+ ${installCard()}
  <div class="quote"><div class="col" style="gap:6px"><span class="serif" style="font-size:16px">${t.tipT}</span><span class="small muted" style="line-height:1.55">${t.tipB}</span></div></div>
  </div>${foot}</div>`;};
 
@@ -511,56 +825,71 @@ SCR.w1=()=>{const t=T();const d=new Date().getDay();const s=sched(d);const any=s
  const types=[['gen',t.genL,'일반쓰레기',t.bagW,'#ECE6D8'],['food',t.foodL,'음식물쓰레기',t.bagO,'#EE8A3C'],['rec',t.recL,'재활용품',t.bagC,'#CFE3EA']];
  const bag=c=>`<svg width="18" height="21" viewBox="0 0 28 32" aria-hidden="true"><path d="M8 7c0-3 2.5-5 6-5s6 2 6 5" fill="none" stroke="${c}" stroke-width="2"/><path d="M3 8h22l-2 22H5z" fill="${c}"/></svg>`;
  return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu,{right:`<button class="ibtn" aria-label="Notifications">${ic('bell',20)}</button>`})}
- ${ttl(t.wasteT,`<span class="kr">원포공원1로 59 · 초지동</span><button class="b small" style="color:var(--ink)">${t.change}</button>`,{pin:true})}
+ ${ttl(t.wasteT,`<span class="kr">${addrLabel()}</span><button class="b small" style="color:var(--ink)" data-act="loc">${t.change}</button>`,{pin:true})}
  <div class="sheet">
   <div class="card" style="background:var(--deep);color:#fff;border-radius:22px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
    <div class="row" style="justify-content:space-between"><span class="row cap" style="color:rgba(255,255,255,.8);gap:6px">${ic('moon',14,'#fff')}${t.tonight} · ${DAYLONG[st.lang][d]}</span><span class="kr tiny" style="opacity:.7">${any?'오늘 밤 배출 가능':'오늘 밤 수거 없음'}</span></div>
-   <span class="serif" style="font-size:28px">${any?'20:00 – 06:00':t.tonightNone}</span>
+   <span class="serif" style="font-size:28px">${any?span():t.tonightNone}</span>
    <div class="chips">${[['g',t.gen,'#C9D2D0'],['f',t.food,'#EE8A3C'],['r',t.rec,'#4E8F87']].map(([k,n,c])=>`<span class="chip" style="background:rgba(255,255,255,.12);opacity:${s[k]?1:.45}"><span class="dot" style="background:${c}"></span>${n}${s[k]?ic('check',11,'#fff',2.4):ic('x',11,'#fff',2.4)}</span>`).join('')}</div>
   </div>
   ${h2(t.weekT,'이번 주 배출 요일')}
   <div class="week">${[0,1,2,3,4,5,6].map(i=>{const x=sched(i);const none=!x.g&&!x.r;return `<div class="day ${i===d?'today':''}"><span>${L[i]}</span><span class="dots">${none?`<span class="micro">${t.rest}</span>`:[['g','#3A4442'],['f','#EE8A3C'],['r','#4E8F87']].map(([k,c])=>`<i style="background:${x[k]?c:'#E6E8E6'}"></i>`).join('')}</span></div>`}).join('')}</div>
-  <div class="row tiny muted" style="gap:12px;flex-wrap:wrap"><span class="row" style="gap:5px"><span class="dot" style="background:#3A4442;width:7px;height:7px"></span>${t.gen}</span><span class="row" style="gap:5px"><span class="dot" style="background:#EE8A3C;width:7px;height:7px"></span>${t.food}</span><span class="row" style="gap:5px"><span class="dot" style="background:#4E8F87;width:7px;height:7px"></span>${t.rec}</span><span>· 20:00–06:00</span></div>
+  <div class="row tiny muted" style="gap:12px;flex-wrap:wrap"><span class="row" style="gap:5px"><span class="dot" style="background:#3A4442;width:7px;height:7px"></span>${t.gen}</span><span class="row" style="gap:5px"><span class="dot" style="background:#EE8A3C;width:7px;height:7px"></span>${t.food}</span><span class="row" style="gap:5px"><span class="dot" style="background:#4E8F87;width:7px;height:7px"></span>${t.rec}</span><span>· ${span()}</span></div>
+  <button class="row" data-go="rules" style="border:1px dashed rgba(30,34,33,.25);border-radius:18px;padding:10px 14px;text-align:left">${dotI('home',st.rules?'var(--deep)':'var(--bg)',st.rules?'#fff':'#22393A',32)}<span class="col grow"><span class="b" style="font-size:13px">${st.rules?`<span class="cap" style="color:var(--accent)">${t.myBldg}</span> `:''}${t.myRules}</span><span class="tiny muted">${t.myRulesS}</span></span>${ic('arrow',16,'#6E7472')}</button>
   <div>${types.map(([k,n,ko,b,c])=>`<button class="listrow" data-go="w5"><span class="bag">${bag(c)}</span><span class="col grow"><span class="row" style="gap:6px;align-items:baseline"><span class="serif" style="font-size:15px">${n}</span>${koSub(ko)}</span><span class="tiny muted">${b}</span></span>${ic('arrow',16,'#6E7472')}</button>`).join('')}
   <button class="listrow" data-go="w6"><span class="bag">${ic('sofa',18,'#22393A')}</span><span class="col grow"><span class="row" style="gap:6px;align-items:baseline"><span class="serif" style="font-size:15px">${t.bulky}</span>${koSub('대형폐기물')}</span><span class="tiny muted">${t.bulkyS}</span></span>${ic('arrow',16,'#6E7472')}</button></div>
   <div class="spacer"></div>
   <div class="acts"><button class="btn line sq" data-go="w5" aria-label="${t.lookT}">${ic('search',18)}</button><button class="btn dark" data-go="w2">${ic('camera',18,'#fff')}${t.ask}</button></div>
-  <span class="micro muted">안산시 생활쓰레기 배출 공공데이터 기준 · 단지별 규칙이 다를 수 있어요</span>
+  <span class="micro muted">${st.rules?`${t.myBldg} · ${t.myRules}`:t.cityNote}</span>
  </div>${foot}</div>`;};
 
 const bottleSVG=`<svg viewBox="0 0 110 230" width="110" height="230" aria-hidden="true" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)"><defs><linearGradient id="bg1" x1="0" x2="1"><stop offset="0" stop-color="#BFD8E0"/><stop offset=".5" stop-color="#EAF4F7"/><stop offset="1" stop-color="#A9C6CF"/></linearGradient></defs><rect x="40" y="0" width="30" height="20" rx="4" fill="#3E7FB6"/><path d="M42 20h26l6 30c18 10 26 22 26 40v124a12 12 0 0 1-12 12H22a12 12 0 0 1-12-12V90c0-18 8-30 26-40z" fill="url(#bg1)"/><rect x="10" y="110" width="90" height="46" fill="#5BA37A"/><path d="M26 133h58" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>`;
 const corners=c=>`<svg class="c" viewBox="0 0 270 320" preserveAspectRatio="none" aria-hidden="true"><g stroke="${c}" stroke-width="3" fill="none" stroke-linecap="round"><path d="M2 30V2h28M240 2h28v28M2 290v28h28M240 318h28v-28"/></g></svg>`;
 SCR.w2=()=>{const t=T();return `<div class="scr cam" style="overflow:hidden">
- <div class="vf">${st.photo?`<img src="${st.photo}" alt="">`:bottleSVG}${corners('#fff')}</div>
+ <div class="vf"><span class="demo">${st.photo?`<img src="${st.photo}" alt="">`:bottleSVG}</span><video id="cv" playsinline muted autoplay aria-label="${t.camT}"></video>${corners('#fff')}</div>
  <div class="camtop"><button class="ibtn glass" style="margin:0;width:44px;height:44px;border-radius:22px" data-act="back" aria-label="Close">${ic('x',20,'#fff')}</button><div class="col" style="align-items:center"><span class="serif" style="font-size:17px">${t.camT}</span>${koSub('버릴 물건을 찍어주세요')}</div><span class="idot glass" style="width:44px;height:44px">${ic('flash',20,'#fff')}</span></div>
  <div class="camhint glass"><span class="dot" style="background:var(--accent)"></span><span class="col"><span class="small b">${t.camH}</span>${koSub('물건을 네모 안에 맞춰주세요')}</span></div>
  <div class="camctl">
   <div class="modes"><span class="b col" style="align-items:center;gap:4px">${t.photo}<span class="dot" style="background:var(--accent);width:5px;height:5px"></span></span><span style="opacity:.6">${t.barcode}</span></div>
   <div class="row" style="justify-content:space-between">
    <label class="idot" style="width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.5);cursor:pointer" aria-label="Choose photo">${ic('img',20,'#fff')}<input id="ph" type="file" accept="image/*" hidden></label>
-   <label class="shutter" style="cursor:pointer" aria-label="Take photo"><i></i><input id="ph2" type="file" accept="image/*" capture="environment" hidden></label>
-   <button class="idot" style="width:48px;height:48px;background:rgba(255,255,255,.15)" data-go="w3" aria-label="Use sample">${ic('flip',20,'#fff')}</button>
+   <label class="shutter" id="shut" style="cursor:pointer" aria-label="Take photo"><i></i><input id="ph2" type="file" accept="image/*" capture="environment" hidden></label>
+   <button class="idot" style="width:48px;height:48px;background:rgba(255,255,255,.15)" data-act="sample" aria-label="Use sample">${ic('flip',20,'#fff')}</button>
   </div>
-  <span class="micro" style="text-align:center;opacity:.6">데모: 사진을 고르거나 오른쪽 버튼으로 예시 사진 사용</span>
+  ${hasApi()?`<span class="micro" style="text-align:center;opacity:.75">${t.photoConsent}</span>`:''}
+  <span class="micro" id="camnote" style="text-align:center;opacity:.6">${hasAnalyzer()?'':'데모: '}사진을 고르거나 오른쪽 버튼으로 예시 사진 사용</span>
  </div></div>`;};
-SCR.w3=()=>{const t=T();return `<div class="scr cam" style="overflow:hidden">
+SCR.w3=()=>{const t=T();const demo=!(st.photo&&hasAnalyzer());return `<div class="scr cam" style="overflow:hidden">
  <div class="vf" style="top:150px;height:300px;left:70px;right:70px">${st.photo?`<img src="${st.photo}" alt="">`:bottleSVG}<div class="scanline"></div>${corners('#E45C4E')}</div>
- <span class="chip" style="position:absolute;top:122px;left:196px;background:#fff;color:var(--ink);font-size:12px;padding:6px 12px 6px 8px;border-radius:14px"><span class="dot" style="background:var(--accent)"></span>${t.pet} <span class="muted">92%</span></span>
+ ${demo?`<span class="chip" style="position:absolute;top:122px;left:196px;background:#fff;color:var(--ink);font-size:12px;padding:6px 12px 6px 8px;border-radius:14px"><span class="dot" style="background:var(--accent)"></span>${t.pet} <span class="muted">92%</span></span>`:''}
  <div class="camtop"><button class="ibtn glass" style="margin:0;width:44px;height:44px;border-radius:22px" data-act="back" aria-label="Close">${ic('x',20,'#fff')}</button></div>
  <div class="bottomsheet"><div class="row"><span class="h1 ${isKo()?'ko':''}" style="font-size:24px">${t.analyzing}</span><span class="ld"><i></i><i></i><i></i></span></div>${koSub('분석 중이에요 · 잠시만 기다려주세요')}
-  <div class="col" style="gap:10px">${[[t.st1,'물건 인식','done'],[t.st2,'안산시 배출 기준 확인','doing'],[t.st3,'올바른 배출 방법 찾기','']].map(([a,b,s],i)=>`<div class="row" id="stp${i}"><span class="stat ${s}">${s==='done'?ic('check',12,'#fff',3):''}</span><span class="col"><span class="b" style="font-size:14px;${s?'':'color:var(--muted);font-weight:500'}">${a}</span>${koSub(b)}</span></div>`).join('')}</div>
+  <div class="col" style="gap:10px">${[[t.st1,'물건 인식','doing'],[t.st2,'안산시 배출 기준 확인',''],[t.st3,'올바른 배출 방법 찾기','']].map(([a,b,s],i)=>`<div class="row" id="stp${i}"><span class="stat ${s}"></span><span class="col"><span class="b" style="font-size:14px">${a}</span>${koSub(b)}</span></div>`).join('')}</div>
  </div></div>`;};
-SCR.w4=()=>{const t=T();const d=new Date().getDay();const ok=sched(d).r;const nd=nextNight(d);
- return `<div class="scr ${isKo()?'ko':''}">${nav(t.routeT===undefined?'':(isKo()?'결과':st.lang==='vi'?'Kết quả':'Result'),{right:`<button class="ibtn" data-act="home" aria-label="Close">${ic('x',20)}</button>`})}
- <div class="ttl" style="flex-direction:row;align-items:center;gap:16px"><div class="col grow"><span class="eyebrow">${t.thisIs}</span><h1 class="h1 ${isKo()?'ko':''}">${t.pet}</h1>${koSub('투명 페트병')}</div><span style="width:76px;height:76px;border-radius:18px;overflow:hidden;background:#DCE6E7;display:grid;place-items:center;flex:none">${st.photo?`<img src="${st.photo}" alt="" style="width:100%;height:100%;object-fit:cover">`:ic('img',20,'#4E6B70')}</span></div>
+
+/* result categories: where the item goes in Ansan */
+const DEST={pet:{icon:'recycle',c:'#4E8F87',k:'r'},rec:{icon:'recycle',c:'#4E8F87',k:'r'},gen:{icon:'trash',c:'#3A4442',k:'g'},food:{icon:'trash',c:'#EE8A3C',k:'f'},glass:{icon:'alert',c:'#3A4442',k:'g'},bat:{icon:'refresh',c:'#7A6AA8'},bulky:{icon:'sofa',c:'#22393A'},unknown:{icon:'search',c:'#6E7472'}};
+const destName=(L,d)=>({pet:L.petDest,rec:L.recL,gen:L.genL,food:L.foodL,glass:L.dest.glass,bat:L.dest.bat,bulky:L.bulky,unknown:L.lookT}[d]);
+const destBag=(L,d)=>({pet:L.bagC,rec:L.bagC,gen:L.bagW,food:L.bagO,glass:L.bagW}[d]||'');
+SCR.w4=()=>{const t=T();const r=st.result||{demo:true,dest:'pet',name:t.pet,name_ko:'투명 페트병',confidence:.92,candidates:[]};const D=DEST[r.dest]||DEST.unknown;
+ const d=new Date().getDay();const k=D.k;const ok=k&&sched(d)[k];const nd=k?nextNight(d,k):d;
+ const name=r.name||destName(t,r.dest);const nameKo=r.name_ko||'';
+ const when=k?`<div class="soft-accent row">${ic('moon',16,'#E45C4E')}<div class="col"><span class="b" style="font-size:14px">${ok?t.tonightYes:t.tonightNo}</span><span class="tiny muted">${DAYLONG[st.lang][ok?d:nd]} · ${span()}</span></div></div>`
+  :`<div class="soft-accent row">${ic(r.dest==='unknown'?'search':'clock',16,'#E45C4E')}<div class="col"><span class="b" style="font-size:14px">${r.dest==='bat'?t.batNote:r.dest==='bulky'?t.bulkyNote:t.unknownNote}</span></div></div>`;
+ const cands=(r.confidence<.6&&r.candidates&&r.candidates.length)?`${h2(t.maybe,'혹시 이 중 하나인가요?')}<div class="chips">${r.candidates.map((c,i)=>`<button class="chip" data-cand="${i}" style="background:var(--bg);font-size:12px;padding:6px 12px 6px 10px"><span class="dot" style="background:${(DEST[c.dest]||DEST.unknown).c};width:7px;height:7px"></span>${esc(c.name||destName(t,c.dest))}</button>`).join('')}</div>`:'';
+ return `<div class="scr ${isKo()?'ko':''}">${nav(t.resultLbl,{right:`<button class="ibtn" data-act="home" aria-label="Close">${ic('x',20)}</button>`})}
+ <div class="ttl" style="flex-direction:row;align-items:center;gap:16px"><div class="col grow"><span class="eyebrow">${t.thisIs}</span><h1 class="h1 ${isKo()?'ko':''}">${esc(name)}</h1>${isKo()?'':koSub(esc(nameKo))}</div><span style="width:76px;height:76px;border-radius:18px;overflow:hidden;background:#DCE6E7;display:grid;place-items:center;flex:none">${st.photo?`<img src="${st.photo}" alt="" style="width:100%;height:100%;object-fit:cover">`:ic('img',20,'#4E6B70')}</span></div>
  <div class="sheet">
-  <div class="ticket">${dotI('recycle','#4E8F87','#fff',40)}<div class="col grow"><span class="cap">${t.goesIn}</span><span class="serif" style="font-size:16px">${t.petDest}</span>${koSub('투명 페트병 별도 배출')}</div><span class="dash"></span><div class="col" style="align-items:center"><span class="cap">${t.bag}</span><span class="small b">${t.clear}</span></div></div>
-  <div class="soft-accent row">${ic('moon',16,'#E45C4E')}<div class="col"><span class="b" style="font-size:14px">${ok?t.tonightYes:t.tonightNo}</span><span class="tiny muted">${ok?DAYLONG[st.lang][d]:DAYLONG[st.lang][nd]} · 20:00 – 06:00</span></div></div>
-  ${h2(t.before)}
-  <div class="col" style="gap:10px">${t.petSteps.map((s,i)=>`<div class="row" style="align-items:flex-start"><span class="it ${i?'muted':'accent'}" style="font-size:15px;width:20px">0${i+1}</span><span class="col"><span class="b" style="font-size:14px">${s}</span>${koSub(S.ko.petSteps[i])}</span></div>`).join('')}</div>
+  <div class="ticket">${dotI(D.icon,D.c,'#fff',40)}<div class="col grow"><span class="cap">${t.goesIn}</span><span class="serif" style="font-size:16px">${destName(t,r.dest)}</span>${destBag(t,r.dest)?`<span class="tiny muted">${destBag(t,r.dest)}</span>`:''}${koSub(destName(S.ko,r.dest))}</div>${r.dest==='pet'?`<span class="dash"></span><div class="col" style="align-items:center"><span class="cap">${t.bag}</span><span class="small b">${t.clear}</span></div>`:''}</div>
+  ${when}
+  ${cands}
+  ${r.dest==='pet'?`${h2(t.before)}<div class="col" style="gap:10px">${t.petSteps.map((s,i)=>`<div class="row" style="align-items:flex-start"><span class="it ${i?'muted':'accent'}" style="font-size:15px;width:20px">0${i+1}</span><span class="col"><span class="b" style="font-size:14px">${s}</span>${koSub(S.ko.petSteps[i])}</span></div>`).join('')}</div>`:''}
+  ${r.dest==='bulky'?`<button class="btn line" data-go="w6">${ic('sofa',18)}${t.bulkyT}</button>`:''}
+  ${r.dest==='unknown'?`<button class="btn line" data-go="w5">${ic('search',18)}${t.lookT}</button>`:''}
   <div class="spacer"></div>
+  ${r.demo?`<span class="micro muted">${t.demoNote}</span>`:''}
   <div class="row small"><span class="muted">${t.notRight}</span><button class="b" data-go="w5">${t.pickAgain}</button></div>
-  <div class="acts"><button class="btn line sq" data-go="w2" aria-label="${t.ask}">${ic('camera',18)}</button><button class="btn dark" id="remind">${ic(st.remind?'check':'bell',18,'#fff')}${st.remind?t.reminded:t.remind}</button></div>
+  <div class="acts"><button class="btn line sq" data-go="w2" aria-label="${t.ask}">${ic('camera',18)}</button>${k?`<button class="btn dark" id="remind">${ic(st.remind?'check':'bell',18,'#fff')}${st.remind?t.reminded:t.remind}</button>`:`<button class="btn dark" data-act="home">${ic('home',18,'#fff')}${t.menu}</button>`}</div>
  </div>${foot}</div>`;};
 SCR.w5=()=>{const t=T();const col={gen:'#3A4442',food:'#EE8A3C',rec:'#4E8F87',bat:'#7A6AA8',glass:'#3A4442'};const q=st.query.toLowerCase();
  const list=t.items8.map((x,i)=>[...x,S.ko.items8[i][0]]).filter(x=>!q||x[0].toLowerCase().includes(q)||x[3].includes(q)||x[1].includes(q));
@@ -584,48 +913,38 @@ SCR.w6=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.waste
 
 /* transit */
 const LINES=`<span class="badge" style="background:var(--l4)">4</span><span class="badge" style="background:var(--sb);color:#3A2600">수인분당</span><span class="badge" style="background:var(--sh);color:#1E2A00">서해</span>`;
-SCR.b1=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.busT,`<span class="kr">원포공원1로 59 · 초지동</span>`,{pin:true})}
+SCR.b1=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.busT,`<span class="kr">${addrLabel()}</span><button class="b small" style="color:var(--ink)" data-act="loc">${t.change}</button>`,{pin:true})}
  <div class="sheet">
-  <div class="card" style="padding:4px 16px"><div class="row" style="padding:11px 0;border-bottom:1px solid rgba(30,34,33,.1)">${ic('home',16)}<span class="kr b grow" style="font-size:14px">${t.home} · 원포공원1로 59</span></div><button class="row" style="padding:11px 0;width:100%" data-go="b2">${ic('work',16,'#E45C4E')}<span class="grow muted" style="text-align:left;font-size:14px">${t.whereTo}</span></button></div>
+  <div class="card" style="padding:4px 16px"><div class="row" style="padding:11px 0;border-bottom:1px solid rgba(30,34,33,.1)">${ic('home',16)}<span class="kr b grow" style="font-size:14px">${t.home} · ${esc(st.addr.road)}</span></div><button class="row" style="padding:11px 0;width:100%" data-go="b2">${ic('work',16,'#E45C4E')}<span class="grow muted" style="text-align:left;font-size:14px">${t.whereTo}</span></button></div>
   ${h2(t.saved,'자주 가는 곳')}
-  <button class="row" style="border:1px solid var(--hair);border-radius:18px;padding:12px 14px;text-align:left" data-go="b3">${dotI('work','#22393A','#fff',36)}<span class="col grow"><span class="b" style="font-size:13px">${t.toWork}</span><span class="row tiny muted" style="gap:6px"><span class="badge" style="background:var(--bus)">Bus</span>~35 ${t.min}</span></span>${ic('arrow',16,'#6E7472')}</button>
+  <button class="row" style="border:1px solid var(--hair);border-radius:18px;padding:12px 14px;text-align:left" data-route="0">${dotI('work','#22393A','#fff',36)}<span class="col grow"><span class="b" style="font-size:13px">${t.toWork}</span><span class="tiny muted">${t.openNaver}</span></span>${ic('arrow',16,'#6E7472')}</button>
   ${h2(t.nearby,'주변')}
   ${miniMap('near')}
-  <button class="card row" style="text-align:left" data-naver="초지역">${dotI('train','#fff','#1E2221',36)}<span class="col grow" style="gap:4px"><span class="row" style="gap:6px;align-items:baseline"><span class="serif" style="font-size:15px">${t.choji}</span>${koSub('초지역')}</span><span class="row" style="gap:4px;flex-wrap:wrap">${LINES}</span></span>${ic('map',16,'#6E7472')}</button>
-  <button class="card row" style="text-align:left" data-go="b4">${dotI('bus','#fff','#1E2221',36)}<span class="col grow"><span class="serif" style="font-size:15px">${t.busStop}</span><span class="tiny muted">${t.busStopS}</span></span>${ic('arrow',16,'#6E7472')}</button>
+  <button class="card row fixh" style="text-align:left" data-naver="초지역">${dotI('train','#fff','#1E2221',36)}<span class="col grow" style="gap:4px"><span class="row" style="gap:6px;align-items:baseline"><span class="serif" style="font-size:15px">${t.choji}</span>${koSub('초지역')}</span><span class="row lines" style="gap:4px">${LINES}</span></span>${ic('map',16,'#6E7472')}</button>
+  <div id="stops" class="col" style="gap:10px"><button class="card row fixh" style="text-align:left" data-act="samplestop">${dotI('bus','#fff','#1E2221',36)}<span class="col grow"><span class="serif" style="font-size:15px">${t.busStop}</span><span class="tiny muted">${t.busStopS}</span></span>${ic('arrow',16,'#6E7472')}</button></div>
   <div class="acts">${[['card',t.quick[0],'b6'],['moon',t.quick[1],'b5'],['route',t.quick[2],'b2']].map(([i,l,g])=>`<button data-go="${g}" class="col" style="flex:1;align-items:center;gap:6px;border:1px solid var(--hair);border-radius:16px;padding:12px 6px">${ic(i,18,'#22393A')}<span class="b" style="font-size:12px;text-align:center">${l}</span></button>`).join('')}</div>
  </div>${foot}</div>`;};
 const seg=(c,g,l='')=>`<span class="seg" style="background:${c};flex:${g}">${l}</span>`;
-SCR.b2=()=>{const t=T();const opts=[[35,0,[[ 'var(--walk)',1],['var(--bus)',5,'Bus'],['var(--walk)',1]],true],[42,1,[['var(--walk)',1],['var(--l4)',3,'Line 4'],['var(--bus)',3,'Bus'],['var(--walk)',1]]],[48,1,[['var(--walk)',2],['var(--bus)',3,'Bus'],['var(--bus)',3,'Bus'],['var(--walk)',1]]]];
- return `<div class="scr ${isKo()?'ko':''}">${nav(t.busT)}
- <div class="ttl" style="gap:0">${[['var(--ink)','원포공원1로 59',t.home],['var(--accent)',isKo()?'반월국가산업단지':'Banwol Industrial Complex','반월국가산업단지']].map(([c,a,b],i)=>`<div class="row" style="padding:6px 0"><span class="dot" style="background:${c};width:10px;height:10px"></span><span class="col"><span class="${i===0||isKo()?'kr b':'serif'}" style="font-size:17px">${a}</span><span class="tiny muted kr">${i===0?b:(isKo()?'':b)}</span></span></div>`).join('')}</div>
+SCR.b2=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.busT)}${ttl(t.whereTo,`<span class="kr">${t.home} · ${addrLabel()}</span>`,{eye:t.routeT})}
  <div class="sheet" style="gap:12px">
-  <div class="row" style="gap:18px">${t.sortBy.map((s,i)=>`<span class="col" style="align-items:center;gap:4px"><span style="font-size:13px;${i?'color:var(--muted)':'font-weight:600'}">${s}</span><span style="height:2px;width:18px;background:${i?'transparent':'var(--accent)'}"></span></span>`).join('')}</div>
-  ${opts.map(([m,tr,segs,best])=>`<button class="opt ${best?'best':''}" data-go="b3"><span class="row" style="align-items:baseline;gap:8px;width:100%"><span class="serif" style="font-size:26px">${m}</span><span class="small muted">${t.min}</span><span class="grow"></span>${best?`<span class="badge" style="background:var(--accent)">${t.best}</span>`:''}</span><span class="row" style="gap:3px;width:100%">${segs.map(s=>seg(...s)).join('')}</span><span class="row tiny muted" style="gap:8px">${t.transfers(tr)} · ₩1,650+</span></button>`).join('')}
+  <form id="destf" class="field">${ic('search',18,'#6E7472')}<input id="dest" type="search" enterkeyhint="go" placeholder="${t.destPh}" aria-label="${t.destPh}"><button type="submit" aria-label="${t.openNaver}">${ic('arrowR',18,'#22393A')}</button></form>
+  <div>${PLACES().map((p,i)=>`<button class="listrow" data-route="${i}"><span class="bag">${ic(p.icon,18,'#22393A')}</span><span class="col grow"><span class="row" style="gap:6px;align-items:baseline"><span class="serif" style="font-size:15px">${p.n}</span>${koSub(p.ko)}</span></span>${ic('ext',15,'#6E7472')}</button>`).join('')}</div>
   <div class="spacer"></div>
-  <button class="btn line" data-naver="반월국가산업단지">${ic('map',18)}${t.openNaver}</button>
-  <span class="row tiny muted" style="gap:8px"><span class="dot" style="background:var(--accent);width:6px;height:6px"></span>${t.sampleNote}</span>
+  <div class="soft-accent row">${ic('map',16,'#E45C4E')}<span class="small" style="line-height:1.5">${t.routeNote}</span></div>
  </div>${foot}</div>`;};
-SCR.b3=()=>{const t=T();const cols={walk:'var(--walk)',bus:'var(--bus)',spot:'var(--bus)',tap:'var(--accent)'};
- return `<div class="scr ${isKo()?'ko':''}">${nav(t.routeT,{right:`<button class="ibtn" aria-label="Notify">${ic('bell',20)}</button>`})}
- <div class="ttl"><div class="row" style="align-items:baseline;gap:8px"><span class="serif" style="font-size:34px">~35</span><span class="muted">${t.min} · ₩1,650 · ${t.transfers(0)}</span></div><span class="small">${t.leaveBy}</span></div>
- <div class="sheet" style="gap:0">
-  ${t.rsteps.map(([i,a,b,k],n)=>`<div class="tl"><div class="rail2">${dotI(i,cols[i],'#fff',30)}${n<4?`<span class="ln ${i==='walk'?'walk':''}" style="${i==='walk'?'':'background:var(--bus)'}"></span>`:''}</div><div class="col grow" style="padding:4px 0 18px"><span class="row" style="gap:8px"><span class="b grow" style="font-size:14px">${a}</span>${n===1?`<span class="chip" style="background:var(--accent-soft)"><span class="dot" style="background:var(--accent);width:6px;height:6px"></span>~4 ${t.min}</span>`:''}</span><span class="small muted">${b}</span><span class="micro muted ${isKo()?'':'kr'}">${k}</span></div></div>`).join('')}
-  <div class="spacer"></div>
-  <div class="acts"><button class="btn line sq" data-go="b5" aria-label="${t.guideApp}">${ic('route',18)}</button><button class="btn dark" data-naver="반월국가산업단지">${ic('map',18,'#fff')}${t.openNaver}${ic('ext',14,'#fff')}</button></div>
- </div>${foot}</div>`;};
-SCR.b4=()=>{const t=T();const rows=[['Bus A',2,5,0,true],['Bus B',6,14,1],['Bus C',11,25,2],['Bus D',null]];
- return `<div class="scr ${isKo()?'ko':''}">${nav(t.busT)}${ttl(t.busStop,`<span>${t.busStopS}</span>`,{eye:t.stopT})}
+SCR.b4=()=>{const t=T();const rows=[['Bus A',2,5,0,true],['Bus B',6,14,1],['Bus C',11,25,2],['Bus D',null]];const live=hasApi()&&st.stop;
+ const sample=`<span class="row tiny muted" style="gap:6px">${ic('refresh',13,'#6E7472')}${t.updated} · ${t.sample}</span>
+  ${rows.map(([n,a,b,c,mine])=>`<div class="row" style="border-radius:18px;padding:12px 14px;background:${mine?'#fff':'var(--bg)'};${mine?'box-shadow:inset 0 0 0 1.5px var(--accent)':''}"><span class="col grow" style="gap:4px"><span><span class="badge" style="background:${a==null?'var(--walk)':'var(--bus)'}">${n}</span></span><span class="micro muted">${a==null?t.lastBus:t.crowd[c]}</span></span>${a==null?'<span class="serif">—</span>':`<span class="col" style="align-items:flex-end"><span><span class="serif ${mine?'accent':''}" style="font-size:22px">${a}</span> <span class="tiny muted">${t.min}</span></span><span class="micro muted">${t.next} ${b} ${t.min}</span></span>`}</div>`).join('')}`;
+ return `<div class="scr ${isKo()?'ko':''}">${nav(t.busT)}${ttl(live?esc(st.stop.name):t.busStop,`<span>${live?(st.stop.no?esc(st.stop.no):''):t.busStopS}</span>`,{eye:t.stopT})}
  <div class="sheet" style="gap:10px">
-  <span class="row tiny muted" style="gap:6px">${ic('refresh',13,'#6E7472')}${t.updated}</span>
-  ${rows.map(([n,a,b,c,mine])=>`<div class="row" style="border-radius:18px;padding:12px 14px;background:${mine?'#fff':'var(--bg)'};${mine?'box-shadow:inset 0 0 0 1.5px var(--accent)':''}"><span class="col grow" style="gap:4px"><span><span class="badge" style="background:${a==null?'var(--walk)':'var(--bus)'}">${n}</span></span><span class="micro muted">${a==null?t.lastBus:t.crowd[c]}</span></span>${a==null?'<span class="serif">—</span>':`<span class="col" style="align-items:flex-end"><span><span class="serif ${mine?'accent':''}" style="font-size:22px">${a}</span> <span class="tiny muted">${t.min}</span></span><span class="micro muted">${t.next} ${b} ${t.min}</span></span>`}</div>`).join('')}
+  ${live?`<span id="arrerr" class="soft-accent small" hidden>${t.busErr}</span><div id="arrs" class="col" style="gap:10px" data-sample="${esc(sample)}"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>`:sample}
   <div class="soft-accent row">${dotI('bell','var(--accent)','#fff',32)}<span class="col grow"><span class="b" style="font-size:13px">${t.notify}</span>${koSub('도착 2정류장 전 알림')}</span><button class="toggle" id="ntf" aria-pressed="${st.notify}" aria-label="${t.notify}"></button></div>
   <div class="spacer"></div>
   <span class="row tiny muted" style="gap:6px">${ic('moon',13,'#6E7472')}${t.nightNote}</span>
  </div>${foot}</div>`;};
 SCR.b5=()=>{const t=T();return `<div class="scr board ${isKo()?'ko':''}" style="background:var(--deep)">${nav(t.onboard)}
  <div class="ttl" style="color:#fff"><span class="row small" style="gap:8px;opacity:.8"><span class="badge" style="background:var(--bus)">Bus</span>→ Banwol</span><div class="row" style="align-items:baseline;gap:10px"><span class="serif" style="font-size:72px;line-height:1">3</span><span class="col"><span class="it" style="font-size:20px">${t.stopsLeft}</span>${koSub('3정류장 남았어요')}</span></div><span class="small" style="opacity:.85">${t.getOffAt}</span></div>
- <div style="padding:6px 40px 16px;color:#fff;display:flex;flex-direction:column">${['now','','',''].map((x,i)=>`<div class="row" style="gap:14px;align-items:flex-start"><span class="col" style="align-items:center;width:16px"><span class="dot" style="width:${i===3?16:12}px;height:${i===3?16:12}px;background:${i===3?'var(--accent)':i===0?'#fff':'rgba(255,255,255,.35)'};${i===0?'box-shadow:0 0 0 3px var(--bus)':''}"></span>${i<3?'<span style="width:2px;height:22px;background:rgba(255,255,255,.25)"></span>':''}</span><span class="small" style="${i===0||i===3?'font-weight:700':'opacity:.65'}">${i===3?(isKo()?'내릴 정류장':st.lang==='vi'?'Trạm xuống':'Your stop'):(isKo()?'정류장':st.lang==='vi'?'Trạm':'Stop')+' '+(i+1)}${i===0?' <span class="badge" style="background:var(--bus);font-size:9px">NOW</span>':''}</span></div>`).join('')}</div>
+ <div style="padding:6px 40px 16px;color:#fff;display:flex;flex-direction:column">${['now','','',''].map((x,i)=>`<div class="row" style="gap:14px;align-items:flex-start"><span class="col" style="align-items:center;width:16px"><span class="dot" style="width:${i===3?16:12}px;height:${i===3?16:12}px;background:${i===3?'var(--accent)':i===0?'#fff':'rgba(255,255,255,.35)'};${i===0?'box-shadow:0 0 0 3px var(--bus)':''}"></span>${i<3?'<span style="width:2px;height:22px;background:rgba(255,255,255,.25)"></span>':''}</span><span class="small" style="${i===0||i===3?'font-weight:700':'opacity:.65'}">${i===3?t.yourStop:t.stopN(i+1)}${i===0?' <span class="badge" style="background:var(--bus);font-size:9px">NOW</span>':''}</span></div>`).join('')}</div>
  <div class="spacer"></div>
  <div class="bottomsheet" style="position:relative;border-top-left-radius:40px;border-top-right-radius:40px">
   <span class="serif" style="font-size:17px">${t.whenOff}</span>
@@ -645,28 +964,107 @@ SCR.b6=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.busT)
  </div>${foot}</div>`;};
 
 /* hospitals / offices / news */
-SCR.hosp=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.hospT,`<span>${t.near}</span>`,{pin:true})}
- <div class="sheet">
-  <div class="soft-accent row">${dotI('alert','var(--accent)','#fff',32)}<span class="col"><span class="serif" style="font-size:15px">${t.emerg}</span><span class="tiny muted">${t.emergS}</span></span></div>
-  <button class="col" style="gap:8px;text-align:left" data-go="hdetail"><span class="row" style="gap:10px"><span style="width:16px;height:1.5px;background:var(--ink)"></span><span class="serif grow" style="font-size:16px">${t.univ}</span></span><span class="ticket" style="width:100%"><span class="col grow" style="gap:5px"><span class="kr tiny muted">고려대학교 안산병원</span><span class="chips"><span class="tag">ER</span><span class="tag">University</span></span><span class="row tiny" style="gap:5px">${ic('spot',12,'#6E7472')}<span class="kr">단원구 적금로 123</span></span></span><span class="dash"></span><span class="idot" style="background:var(--accent)">${ic('map',16,'#fff',2)}</span></span></button>
-  <span class="small muted">${t.more}</span>
+/* ---------- hospitals & pharmacies: GPS → server /med/* (국립중앙의료원 공공데이터) ---------- */
+const HS={
+en:{tabs:['All','Open now','Pharmacy','English OK'],locating:'Finding places near you…',nearGps:'Near your current location',nearHome:a=>`Near ${a}`,refresh:'Refresh',noApi:'Live hospital and pharmacy data appears once the app server is connected.',searchNaver:'Search hospitals in Naver Map',err:"Couldn't load nearby places. Check your connection and try again.",retry:'Try again',none:'No places found nearby.',noneOpen:'Nothing nearby is open right now.',noneLang:'No English-friendly places listed nearby yet.',langNote:'English availability comes from Medical Korea data. Call ahead to confirm.',openUntil:t=>`Open until ${t}`,closed:'Closed now',noHours:'Hours not listed',call:'Call',naver:'Naver Map',today:'Today',hoursT:'Opening hours',deptsT:'Departments',er:'Emergency room',you:'You',holiday:'Holidays',src:'Source: National Medical Center public data. Hours can change, so call before you go.',staffMeaning:'I need an English interpreter. Can you help me?',gpsOff:'Location is off, so this shows places near your saved address.',langOk:'English OK',
+ types:{gh:'General hospital',h:'Hospital',c:'Clinic',d:'Dental',k:'Korean medicine',care:'Care hospital',ph:'Public health center',pharm:'Pharmacy',other:'Medical'}},
+vi:{tabs:['Tất cả','Đang mở cửa','Nhà thuốc','Nói tiếng Anh'],locating:'Đang tìm nơi gần bạn…',nearGps:'Gần vị trí hiện tại',nearHome:a=>`Gần ${a}`,refresh:'Làm mới',noApi:'Thông tin bệnh viện, nhà thuốc trực tiếp sẽ hiện khi máy chủ được kết nối.',searchNaver:'Tìm bệnh viện trên Naver Map',err:'Không tải được danh sách. Kiểm tra kết nối rồi thử lại.',retry:'Thử lại',none:'Không tìm thấy nơi nào gần đây.',noneOpen:'Hiện không có nơi nào gần đây đang mở cửa.',noneLang:'Chưa có nơi nói tiếng Anh gần đây.',langNote:'Thông tin tiếng Anh lấy từ Medical Korea. Hãy gọi trước để chắc chắn.',openUntil:t=>`Mở đến ${t}`,closed:'Đang đóng cửa',noHours:'Chưa có giờ mở cửa',call:'Gọi',naver:'Naver Map',today:'Hôm nay',hoursT:'Giờ mở cửa',deptsT:'Chuyên khoa',er:'Phòng cấp cứu',you:'Bạn',holiday:'Ngày lễ',src:'Nguồn: dữ liệu công của Trung tâm Y tế Quốc gia. Giờ có thể thay đổi, hãy gọi trước khi đến.',staffMeaning:'Tôi cần phiên dịch tiếng Việt. Anh/chị có thể giúp tôi không?',gpsOff:'Chưa bật vị trí, đang hiển thị nơi gần địa chỉ đã lưu.',langOk:'Tiếng Anh',
+ types:{gh:'Bệnh viện đa khoa',h:'Bệnh viện',c:'Phòng khám',d:'Nha khoa',k:'Đông y',care:'Bệnh viện dưỡng lão',ph:'Trung tâm y tế công',pharm:'Nhà thuốc',other:'Cơ sở y tế'}},
+ko:{tabs:['전체','진료 중','약국','영어 가능'],locating:'주변 병원을 찾고 있어요…',nearGps:'현재 위치 주변',nearHome:a=>`${a} 주변`,refresh:'새로고침',noApi:'앱 서버가 연결되면 실시간 병원·약국 정보가 나와요.',searchNaver:'네이버지도에서 병원 찾기',err:'주변 병원을 불러오지 못했어요. 연결을 확인하고 다시 시도하세요.',retry:'다시 시도',none:'주변에서 찾은 곳이 없어요.',noneOpen:'지금 진료 중인 곳이 주변에 없어요.',noneLang:'주변에 영어 가능 병원 정보가 아직 없어요.',langNote:'영어 가능 여부는 메디컬코리아 자료 기준이에요. 방문 전 전화로 확인하세요.',openUntil:t=>`${t}까지 진료`,closed:'지금은 문 닫음',noHours:'진료시간 정보 없음',call:'전화',naver:'네이버지도',today:'오늘',hoursT:'진료시간',deptsT:'진료과목',er:'응급실',you:'내 위치',holiday:'공휴일',src:'출처: 국립중앙의료원 공공데이터. 시간은 바뀔 수 있으니 방문 전 전화로 확인하세요.',staffMeaning:'',gpsOff:'위치 권한이 없어 저장한 주소 주변으로 보여드려요.',langOk:'영어 가능',
+ types:{gh:'종합병원',h:'병원',c:'의원',d:'치과',k:'한의원',care:'요양병원',ph:'보건소',pharm:'약국',other:'의료기관'}},
+zh:{tabs:['全部','营业中','药店','可说英语'],locating:'正在查找附近的医院…',nearGps:'当前位置附近',nearHome:a=>`${a} 附近`,refresh:'刷新',noApi:'连接应用服务器后，将显示实时医院和药店信息。',searchNaver:'在Naver地图中搜索医院',err:'无法加载附近地点，请检查网络后重试。',retry:'重试',none:'附近没有找到。',noneOpen:'附近目前没有营业中的地方。',noneLang:'附近暂无可说英语的医院信息。',langNote:'英语服务信息来自Medical Korea，请提前致电确认。',openUntil:t=>`营业至 ${t}`,closed:'目前休息',noHours:'暂无营业时间',call:'电话',naver:'Naver地图',today:'今天',hoursT:'营业时间',deptsT:'诊疗科目',er:'急诊室',you:'我的位置',holiday:'节假日',src:'来源：韩国国立中央医疗院公共数据。时间可能变动，请提前致电确认。',staffMeaning:'我需要中文翻译。可以帮我吗？',gpsOff:'未开启定位，按已保存的地址显示附近地点。',langOk:'可说英语',
+ types:{gh:'综合医院',h:'医院',c:'诊所',d:'牙科',k:'韩医院',care:'疗养医院',ph:'保健所',pharm:'药店',other:'医疗机构'}},
+ru:{tabs:['Все','Открыто','Аптеки','Английский'],locating:'Ищем места рядом…',nearGps:'Рядом с вами',nearHome:a=>`Рядом: ${a}`,refresh:'Обновить',noApi:'Данные о больницах и аптеках появятся после подключения сервера.',searchNaver:'Искать больницы в Naver Map',err:'Не удалось загрузить места рядом. Проверьте соединение и попробуйте снова.',retry:'Повторить',none:'Рядом ничего не найдено.',noneOpen:'Сейчас рядом ничего не открыто.',noneLang:'Пока нет данных о клиниках с английским языком рядом.',langNote:'Данные об английском языке взяты из Medical Korea. Позвоните заранее.',openUntil:t=>`Открыто до ${t}`,closed:'Сейчас закрыто',noHours:'Часы не указаны',call:'Позвонить',naver:'Naver Map',today:'Сегодня',hoursT:'Часы работы',deptsT:'Отделения',er:'Приёмный покой',you:'Вы',holiday:'Праздники',src:'Источник: открытые данные Национального медицинского центра. Часы могут меняться, позвоните заранее.',staffMeaning:'Мне нужен переводчик с русского. Вы можете помочь?',gpsOff:'Геолокация выключена, показываем места рядом с сохранённым адресом.',langOk:'Английский',
+ types:{gh:'Многопрофильная больница',h:'Больница',c:'Клиника',d:'Стоматология',k:'Корейская медицина',care:'Больница ухода',ph:'Центр здоровья',pharm:'Аптека',other:'Медучреждение'}},
+uz:{tabs:['Hammasi','Hozir ochiq','Dorixona','Ingliz tilida'],locating:'Yaqin joylar qidirilmoqda…',nearGps:'Joriy joylashuvingiz yaqinida',nearHome:a=>`${a} yaqinida`,refresh:'Yangilash',noApi:'Server ulangach, shifoxona va dorixonalar haqida jonli ma’lumot chiqadi.',searchNaver:'Naver Map’da shifoxona qidirish',err:'Yaqin joylarni yuklab bo‘lmadi. Internetni tekshirib, qayta urinib ko‘ring.',retry:'Qayta urinish',none:'Yaqinda hech narsa topilmadi.',noneOpen:'Hozir yaqinda ochiq joy yo‘q.',noneLang:'Yaqinda ingliz tilida xizmat ko‘rsatadigan joy hali yo‘q.',langNote:'Ingliz tili haqidagi ma’lumot Medical Korea’dan olingan. Oldindan qo‘ng‘iroq qiling.',openUntil:t=>`${t} gacha ochiq`,closed:'Hozir yopiq',noHours:'Ish vaqti ko‘rsatilmagan',call:'Qo‘ng‘iroq',naver:'Naver Map',today:'Bugun',hoursT:'Ish vaqti',deptsT:'Bo‘limlar',er:'Tez yordam bo‘limi',you:'Siz',holiday:'Bayramlar',src:'Manba: Milliy tibbiyot markazi ochiq ma’lumotlari. Vaqt o‘zgarishi mumkin, oldindan qo‘ng‘iroq qiling.',staffMeaning:'Menga o‘zbek tili tarjimoni kerak. Yordam bera olasizmi?',gpsOff:'Joylashuv o‘chiq, saqlangan manzil yaqinidagi joylar ko‘rsatilmoqda.',langOk:'Ingliz tili',
+ types:{gh:'Ko‘p tarmoqli shifoxona',h:'Shifoxona',c:'Klinika',d:'Stomatologiya',k:'Koreys tabobati',care:'Parvarish shifoxonasi',ph:'Sog‘liqni saqlash markazi',pharm:'Dorixona',other:'Tibbiyot muassasasi'}},
+mn:{tabs:['Бүгд','Одоо нээлттэй','Эмийн сан','Англи хэлтэй'],locating:'Ойролцоох газруудыг хайж байна…',nearGps:'Одоогийн байршлын ойролцоо',nearHome:a=>`${a} орчим`,refresh:'Шинэчлэх',noApi:'Сервер холбогдсоны дараа эмнэлэг, эмийн сангийн шууд мэдээлэл гарна.',searchNaver:'Naver Map-аас эмнэлэг хайх',err:'Ойролцоох газруудыг ачаалж чадсангүй. Холболтоо шалгаад дахин оролдоно уу.',retry:'Дахин оролдох',none:'Ойролцоо юу ч олдсонгүй.',noneOpen:'Одоогоор ойролцоо нээлттэй газар алга.',noneLang:'Ойролцоо англи хэлтэй эмнэлгийн мэдээлэл одоогоор алга.',langNote:'Англи хэлний мэдээллийг Medical Korea-аас авсан. Урьдчилан залгаж лавлаарай.',openUntil:t=>`${t} хүртэл нээлттэй`,closed:'Одоо хаалттай',noHours:'Цагийн хуваарь байхгүй',call:'Залгах',naver:'Naver Map',today:'Өнөөдөр',hoursT:'Ажлын цаг',deptsT:'Тасгууд',er:'Яаралтай тусламж',you:'Та',holiday:'Баярын өдөр',src:'Эх сурвалж: Үндэсний эрүүл мэндийн төвийн нээлттэй өгөгдөл. Цаг өөрчлөгдөж болох тул урьдчилан залгаарай.',staffMeaning:'Надад монгол хэлний орчуулагч хэрэгтэй. Туслах уу?',gpsOff:'Байршил унтраастай тул хадгалсан хаягийн ойролцоо харуулж байна.',langOk:'Англи хэл',
+ types:{gh:'Нэгдсэн эмнэлэг',h:'Эмнэлэг',c:'Клиник',d:'Шүдний эмнэлэг',k:'Солонгос уламжлалт эмнэлэг',care:'Асаргааны эмнэлэг',ph:'Эрүүл мэндийн төв',pharm:'Эмийн сан',other:'Эмнэлгийн байгууллага'}}};
+const HT=()=>HS[st.lang]||HS.en;
+const KO_LANG={en:'영어',vi:'베트남어',zh:'중국어',ru:'러시아어',uz:'우즈베크어',mn:'몽골어'};
+st.med={tab:'all',pos:null,hosp:null,pharm:null,err:null,loading:false,at:0,sel:null,detail:{},langSet:null};
+const MED_TABS=['all','open','pharm','lang'];
+function typeKey(it){const n=String(it.type||'')+(it.kind==='pharm'?'약국':'');
+ if(/약국/.test(n))return 'pharm';if(/치과/.test(n))return 'd';if(/한의|한방/.test(n))return 'k';if(/요양/.test(n))return 'care';if(/보건/.test(n))return 'ph';if(/종합병원|상급/.test(n))return 'gh';if(/병원/.test(n))return 'h';if(/의원/.test(n))return 'c';return 'other';}
+const hm=v=>v==null?'':`${String(Math.floor(v/100)).padStart(2,'0')}:${String(v%100).padStart(2,'0')}`;
+function openState(s,e){if(s==null||e==null)return null;const d=new Date(),now=d.getHours()*100+d.getMinutes();
+ if(e===s)return null;if(e>2400)return now>=s||now<e-2400;if(e<=s)return now>=s||now<e;return now>=s&&now<e;}
+const distTxt=m=>m==null?'':m<1000?`${m} m`:`${(m/1000).toFixed(1)} km`;
+const normName=s=>String(s||'').replace(/\(.*?\)|\s|주식회사|의료법인|재단법인|학교법인|사회복지법인/g,'').toLowerCase();
+function langOk(it){const L=st.med.langSet;if(!L||!L.length||it.kind==='pharm')return false;const n=normName(it.name);return L.some(x=>x.n&&(n===x.n||(x.n.length>=4&&(n.includes(x.n)||x.n.includes(n)))));}
+const statusChip=it=>{const h=HT();const o=openState(it.start,it.end);return o==null?`<span class="mstat closed"><span class="dot"></span>${h.noHours}</span>`:o?`<span class="mstat open"><span class="dot"></span>${h.openUntil(hm(it.end>2400?it.end-2400:it.end))}</span>`:`<span class="mstat closed"><span class="dot"></span>${h.closed}</span>`;};
+function medAll(){const m=st.med;return [...(m.hosp||[]),...(m.pharm||[])].sort((a,b)=>(a.dist??1e9)-(b.dist??1e9));}
+function medList(){const m=st.med;if(m.tab==='pharm')return m.pharm||[];if(m.tab==='open')return medAll().filter(x=>openState(x.start,x.end)===true);if(m.tab==='lang')return (m.hosp||[]).filter(langOk);return medAll();}
+function medRow(it,i){const h=HT();const k=typeKey(it);const tel=String(it.tel||'').replace(/[^\d-]/g,'');
+ return `<div class="mrow"><button class="nm" data-med="${i}"><b>${esc(it.name)}</b></button>
+  <div class="ticket"><button class="col grow" style="gap:5px;text-align:left" data-med="${i}"><span class="row" style="gap:6px;flex-wrap:wrap"><span class="tag">${h.types[k]}</span>${!isKo()?`<span class="kr micro muted">${HS.ko.types[k]}</span>`:''}${langOk(it)?`<span class="tag" style="background:var(--accent-soft)">${h.langOk}</span>`:''}</span>${statusChip(it)}<span class="row tiny muted" style="gap:5px">${ic('spot',12,'#6E7472')}<span>${distTxt(it.dist)}</span></span></button>
+  <span class="dash"></span><div class="macts">${tel?`<a class="idot fx" href="tel:${tel}" aria-label="${h.call} ${esc(it.name)}" style="background:#fff;box-shadow:inset 0 0 0 1px var(--hair)">${ic('phone',18,'#1E2221',2)}</a>`:''}<button class="idot" data-mnav="${i}" aria-label="${h.naver}" style="background:var(--accent)">${ic('map',18,'#fff',2)}</button></div></div></div>`;}
+function paintMed(){const box=document.getElementById('medlist');if(!box)return;const h=HT(),m=st.med;
+ const tabs=document.getElementById('medtabs');if(tabs){const counts=[medAll().length,medAll().filter(x=>openState(x.start,x.end)===true).length,(m.pharm||[]).length,(m.hosp||[]).filter(langOk).length];
+  tabs.innerHTML=MED_TABS.map((k,i)=>`<button class="mtab" role="tab" data-mtab="${k}" aria-selected="${m.tab===k}">${h.tabs[i]}${m.hosp&&!m.loading?`<sup>${counts[i]}</sup>`:''}<i></i></button>`).join('');}
+ const sub=document.getElementById('medsub');if(sub){const tx=!hasApi()?'':m.loading&&!m.pos?esc(h.locating):m.pos?esc(m.pos.src==='gps'?h.nearGps:h.nearHome(st.addr.road)):'';sub.innerHTML=tx;if(sub.parentElement)sub.parentElement.style.visibility=tx?'':'hidden';}
+ if(m.err==='noapi'){box.innerHTML=`<p class="small muted">${h.noApi}</p><button class="btn line" data-naver="안산 병원">${ic('map',18)}${h.searchNaver}</button>`;}
+ else if(m.loading&&!m.hosp){box.innerHTML='<div class="mskel"></div><div class="mskel"></div><div class="mskel"></div>';}
+ else if(m.err&&!m.hosp){box.innerHTML=`<p class="small muted">${h.err}</p><button class="btn line" data-act="medretry">${ic('refresh',18)}${h.retry}</button>`;}
+ else{const list=medList();const note=m.pos&&m.pos.src!=='gps'?`<span class="row tiny muted" style="gap:6px">${ic('spot',12,'#6E7472')}${h.gpsOff}</span>`:'';
+  box.innerHTML=note+(m.tab==='lang'?`<span class="row tiny muted" style="gap:6px;align-items:flex-start"><span class="dot" style="background:var(--accent);width:6px;height:6px;margin-top:5px"></span>${h.langNote}</span>`:'')+
+   (list.length?list.slice(0,40).map(it=>medRow(it,medAll().indexOf(it)>=0?'a'+medAll().indexOf(it):'')).join(''):`<p class="small muted">${m.tab==='open'?h.noneOpen:m.tab==='lang'?h.noneLang:h.none}</p>`)+
+   `<span class="micro muted">${h.src}</span>`;}
+ tagFx(box);if(tabs)tagFx(tabs);const mm=app.querySelector('.nmap[data-map="medlist"]');if(mm&&m.hosp)mountMaps(mm);}
+async function getPos(){if(window.isSecureContext&&navigator.geolocation){try{const p=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:false,timeout:9000,maximumAge:300000}));return {lat:p.coords.latitude,lng:p.coords.longitude,src:'gps'};}catch(e){}}
+ const ll=await homeLL();return ll?{...ll,src:'home'}:null;}
+async function loadLangSet(){if(st.med.langSet)return;try{const r=await fetch('data/lang_hospitals.json',{cache:'no-cache'});const j=await r.json();st.med.langSet=(j.hospitals||[]).filter(x=>(x.langs||[]).includes('en')).map(x=>({n:normName(x.name)}));}catch(e){st.med.langSet=[];}}
+async function loadMed(force){const m=st.med;if(!document.getElementById('medlist'))return;
+ if(!hasApi()){m.err='noapi';paintMed();return;}
+ if(!force&&m.hosp&&Date.now()-m.at<300000){paintMed();return;}
+ if(m.loading)return;m.loading=true;m.err=null;paintMed();
+ try{const [pos]=await Promise.all([getPos(),loadLangSet()]);if(!pos)throw new Error('pos');m.pos=pos;paintMed();
+  const q=`lat=${pos.lat.toFixed(5)}&lng=${pos.lng.toFixed(5)}`;
+  const [h,p]=await Promise.allSettled([api(`/med/nearby?kind=hosp&${q}`),api(`/med/nearby?kind=pharm&${q}`)]);
+  if(h.status!=='fulfilled'&&p.status!=='fulfilled')throw new Error('api');
+  m.hosp=h.status==='fulfilled'?(h.value.items||[]):[];m.pharm=p.status==='fulfilled'?(p.value.items||[]):[];m.at=Date.now();}
+ catch(e){m.err='err';}
+ finally{m.loading=false;paintMed();}}
+function medNaver(it){const h=HT();const q=new URLSearchParams({dlat:it.lat,dlng:it.lng,dname:it.name,appname:appname()});
+ if(st.med.pos){q.set('slat',st.med.pos.lat);q.set('slng',st.med.pos.lng);q.set('sname',h.you);}
+ openNaver(`안산 ${it.name}`,it.lat!=null?'nmap://route/public?'+q.toString():null);}
+const medPick=key=>{const i=+String(key).slice(1);return medAll()[i]||null;};
+async function loadMedDetail(){const it=st.med.sel;if(!it||!hasApi()||!it.id)return;const h=HT();
+ try{let d=st.med.detail[it.id];if(!d){d=await api(`/med/detail?kind=${it.kind}&id=${enc(it.id)}`);st.med.detail[it.id]=d;}
+  const hb=document.getElementById('mhrs');if(hb&&d.hours&&d.hours.some(x=>x&&x[0]!=null)){const today=new Date().getDay();
+   const order=[1,2,3,4,5,6,0];hb.innerHTML=order.map(dw=>{const x=d.hours[dw===0?6:dw-1];return `<span class="${dw===today?'td':''}">${DAYLONG[st.lang][dw]}</span><span class="${dw===today?'td':''}">${x&&x[0]!=null?hm(x[0])+' – '+hm(x[1]):'—'}</span>`;}).join('')+(d.hours[7]&&d.hours[7][0]!=null?`<span>${h.holiday}</span><span>${hm(d.hours[7][0])} – ${hm(d.hours[7][1])}</span>`:'');hb.parentElement.hidden=false;}
+  const db=document.getElementById('mdept');if(db&&d.depts&&d.depts.length){db.innerHTML=d.depts.slice(0,16).map(x=>`<span class="tag kr" style="background:var(--bg)">${esc(x)}</span>`).join('');db.parentElement.hidden=false;}
+  const er=document.getElementById('mer');if(er&&d.er&&it.kind!=='pharm')er.hidden=false;}
+ catch(e){}}
+
+SCR.hosp=()=>{const t=T(),h=HT();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu,{right:`<button class="ibtn" data-act="medretry" aria-label="${h.refresh}">${ic('refresh',20)}</button>`})}${ttl(t.hospT,`<span id="medsub">${esc(st.med.pos?(st.med.pos.src==='gps'?h.nearGps:h.nearHome(st.addr.road)):h.locating)}</span>`,{pin:true})}
+ <div class="sheet" style="gap:16px">
+  <div class="mtabs" id="medtabs" role="tablist">${MED_TABS.map((k,i)=>`<button class="mtab" role="tab" data-mtab="${k}" aria-selected="${st.med.tab===k}">${h.tabs[i]}<i></i></button>`).join('')}</div>
+  ${hasApi()&&hasMapKey()?`${miniMap('medlist')}<div class="mlegend tiny muted"><span><i></i>${h.types.h} · ${h.types.c}</span><span><i class="ph"></i>${h.types.pharm}</span></div>`:''}
+  <a class="soft-accent row" href="tel:119">${dotI('alert','var(--accent)','#fff',32)}<span class="col"><span class="serif" style="font-size:15px">${t.emerg}</span><span class="tiny muted">${t.emergS}</span></span></a>
+  <div id="medlist" class="col" style="gap:18px"><div class="mskel"></div><div class="mskel"></div></div>
   <div class="spacer"></div>
- </div>${foot}</div>`;};
-SCR.hdetail=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">
+ </div></div>`;};
+SCR.hdetail=()=>{const t=T(),h=HT();const it=st.med.sel;if(!it)return SCR.hosp();const k=typeKey(it);const tel=String(it.tel||'').replace(/[^\d-]/g,'');const d=st.med.detail[it.id]||{};
+ return `<div class="scr ${isKo()?'ko':''}">
  <div class="nmap" data-map="hosp" style="height:250px;flex:none"><div class="live"></div><svg class="fallback" width="100%" height="100%" viewBox="0 0 390 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g stroke="#fff" stroke-linecap="round" fill="none"><path d="M-10 190 C 90 160,160 210,260 150 S 380 100,400 110" stroke-width="14"/><path d="M120 -10 L 170 260" stroke-width="10"/><path d="M-10 80 L 400 50" stroke-width="8"/><path d="M290 -10 L 250 260" stroke-width="6"/></g><g fill="#C9D8D9"><rect x="190" y="180" width="46" height="40" rx="6"/><rect x="20" y="110" width="60" height="44" rx="6"/><rect x="300" y="170" width="70" height="60" rx="6"/></g><path d="M195 135s16-15 16-27a16 16 0 0 0-32 0c0 12 16 27 16 27z" fill="#E45C4E"/><circle cx="195" cy="108" r="6" fill="#fff"/></svg>
   <button class="idot" data-act="back" aria-label="Back" style="position:absolute;z-index:3;left:24px;top:calc(48px + env(safe-area-inset-top,0px));width:44px;height:44px;background:#fff">${ic('back',20)}</button></div>
  <div class="sheet" style="border-top-right-radius:40px;border-top-left-radius:40px;margin-top:-36px;position:relative">
-  <div class="col" style="gap:4px"><span class="serif" style="font-size:22px;line-height:1.25">${t.univ}</span><span class="small muted kr">고려대학교 안산병원 · ${t.univS}</span></div>
-  <div>${[['clock',t.hours,t.checkHours],['spot',t.addr,'단원구 적금로 123'],['phone',t.tel,'1577-7516']].map(([i,k,v])=>`<div class="row" style="padding:11px 0;border-bottom:1px solid rgba(30,34,33,.12)">${ic(i,16,'#6E7472')}<span class="small muted">${k}</span><span class="grow b kr" style="text-align:right;font-size:13px;user-select:all">${v}</span></div>`).join('')}</div>
-  <div class="card col" style="gap:8px"><span class="row cap" style="gap:8px">${ic('speak',16,'#E45C4E')}${t.staff}</span><span class="h1 ko" style="font-size:16px;line-height:1.5">통역이 필요해요.<br>영어로 도와주실 수 있나요?</span><span class="tiny muted">${t.staffEn}</span></div>
+  <div class="col" style="gap:6px"><span class="h1 ko" style="font-size:22px;line-height:1.3">${esc(it.name)}</span><span class="row small muted" style="gap:6px;flex-wrap:wrap"><span>${h.types[k]}</span>${!isKo()?`<span class="kr">${HS.ko.types[k]}</span>`:''}<span>·</span><span>${distTxt(it.dist)}</span></span>
+   <span class="row" style="gap:6px;flex-wrap:wrap">${statusChip(it)}<span class="tag" id="mer" style="background:var(--accent-soft)" ${d.er&&it.kind!=='pharm'?'':'hidden'}>${h.er}</span>${langOk(it)?`<span class="tag" style="background:var(--accent-soft)">${h.langOk}</span>`:''}</span></div>
+  <div>${[['clock',h.today,it.start!=null?`${hm(it.start)} – ${hm(it.end)}`:h.noHours],['spot',t.addr,esc(it.addr||'')],['phone',t.tel,tel?`<a href="tel:${tel}" style="text-decoration:underline">${esc(it.tel)}</a>`:'—']].map(([i,kk,v])=>`<div class="row" style="padding:11px 0;border-bottom:1px solid rgba(30,34,33,.12);align-items:flex-start">${ic(i,16,'#6E7472')}<span class="small muted" style="flex:none">${kk}</span><span class="grow b kr" style="text-align:right;font-size:13px;user-select:all">${v}</span></div>`).join('')}</div>
+  <div class="col" style="gap:10px" hidden>${h2(h.hoursT)}<div class="hrs" id="mhrs"></div></div>
+  <div class="col" style="gap:10px" hidden>${h2(h.deptsT)}<div class="chips" id="mdept"></div></div>
+  ${isKo()?'':`<div class="card col" style="gap:8px"><span class="row cap" style="gap:8px">${ic('speak',16,'#E45C4E')}${t.staff}</span><span class="h1 ko" style="font-size:16px;line-height:1.5">${KO_LANG[st.lang]||'영어'} 통역이 필요해요.<br>도와주실 수 있나요?</span><span class="tiny muted">${h.staffMeaning}</span></div>`}
+  <span class="micro muted">${h.src}</span>
   <div class="spacer"></div>
-  <button class="btn dark" data-naver="고려대학교안산병원">${ic('map',18,'#fff')}${t.openNaver}${ic('ext',14,'#fff')}</button>
+  <div class="acts">${tel?`<a class="btn line" href="tel:${tel}">${ic('phone',18)}${h.call}</a>`:''}<button class="btn dark" data-mnav="sel">${ic('map',18,'#fff')}${h.naver}${ic('ext',14,'#fff')}</button></div>
  </div></div>`;};
 SCR.offices=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.offT,`<span>${t.offS}</span>`,{pin:true})}
  <div class="sheet" style="gap:18px">${miniMap('offices')}${t.offices.map(([a,k,d],i)=>`<button class="col" style="gap:8px;text-align:left" data-naver="${S.ko.offices[i][0]}"><span class="row" style="gap:10px"><span style="width:16px;height:1.5px;background:var(--ink)"></span><span class="serif grow ${isKo()?'kr':''}" style="font-size:16px">${a}</span></span><span class="ticket" style="width:100%"><span class="col grow" style="gap:4px"><span class="tiny muted kr">${k}</span><span class="small">${d}</span></span><span class="dash"></span><span class="idot" style="background:var(--accent)">${ic('map',16,'#fff',2)}</span></span></button>`).join('')}<div class="spacer"></div></div>${foot}</div>`;};
-SCR.news=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.newsT,koSub('공지·행사'))}
- <div class="sheet" style="gap:20px">${t.newsItems.map(([a,b],i)=>`<div class="quote"><div class="col" style="gap:6px"><span class="row cap" style="gap:6px;color:var(--deep)">${ic(i?'cal':'shield',13,'#22393A',2)}${i?(isKo()?'행사':st.lang==='vi'?'SỰ KIỆN':'EVENT'):t.official} · ${t.sample}</span><span class="serif" style="font-size:17px">${a}</span><span class="small muted">${b}</span></div></div>`).join('')}
- ${adFree()?adFreeRow():`<div class="card row"><span class="col grow" style="gap:3px"><span class="row cap" style="gap:6px"><span class="dot" style="background:var(--accent);width:6px;height:6px"></span>${t.sponsored}</span><span class="serif" style="font-size:15px">${t.adT}</span></span><span style="width:60px;height:60px;border-radius:14px;background:#FBE7D6;display:grid;place-items:center">${ic('gift',20,'#9A6A44')}</span></div>`}
+SCR.news=()=>{const t=T();const cached=(hasApi()||hasSb())&&st.news[st.lang];return `<div class="scr ${isKo()?'ko':''}">${nav(t.menu)}${ttl(t.newsT,koSub('공지·행사'))}
+ <div class="sheet" style="gap:20px"><div id="newslist" class="col" style="gap:20px">${cached?newsList(cached.notices||[]):t.newsItems.map(([a,b],i)=>`<div class="quote"><div class="col" style="gap:6px"><span class="row cap" style="gap:6px;color:var(--deep)">${ic(i?'cal':'shield',13,'#22393A',2)}${i?t.event:t.official} · ${t.sample}</span><span class="serif" style="font-size:17px">${a}</span><span class="small muted">${b}</span></div></div>`).join('')}</div>
+ ${adSlot()}
  <div class="spacer"></div></div>${foot}</div>`;};
 
 /* survey */
@@ -699,11 +1097,115 @@ SCR.sdone=()=>{const t=T();return `<div class="scr ${isKo()?'ko':''}">${nav(t.su
   <button class="btn dark" data-act="home">${t.backHome}</button>
  </div>${foot}</div>`;};
 
+
+/* building rules editor */
+SCR.rules=()=>{const t=T();const R=st.rulesDraft||(st.rulesDraft=JSON.parse(JSON.stringify(rules())));const L=DAYS[st.lang];
+ const row=(k,n,c)=>`<div class="col" style="gap:8px"><span class="row b small" style="gap:6px"><span class="dot" style="background:${c}"></span>${n}</span><div class="rulegrid">${[0,1,2,3,4,5,6].map(d=>`<button class="dtog" data-day="${k}:${d}" aria-pressed="${R[k].includes(d)}" aria-label="${n} ${DAYLONG[st.lang][d]}">${L[d]}</button>`).join('')}</div></div>`;
+ return `<div class="scr ${isKo()?'ko':''}">${nav(t.wasteT)}${ttl(t.rulesT,`<span>${t.rulesS}</span>`,{eye:t.myRules})}
+ <div class="sheet" style="gap:18px">
+  ${row('g',t.genL,'#3A4442')}${row('f',t.foodL,'#EE8A3C')}${row('r',t.recL,'#4E8F87')}
+  <div class="row" style="gap:10px"><label class="tfield"><span class="cap">${t.timeFrom}</span><input type="time" id="rfrom" value="${R.from}"></label><label class="tfield"><span class="cap">${t.timeTo}</span><input type="time" id="rto" value="${R.to}"></label></div>
+  <div class="spacer"></div>
+  <button class="b small" data-act="rcity" style="align-self:flex-start;color:var(--muted)">${ic('refresh',14,'#6E7472')} ${t.cityDefault}</button>
+  <button class="btn dark" data-act="rsave">${ic('check',18,'#fff')}${t.save}</button>
+ </div>${foot}</div>`;};
+
+/* destinations for Naver Map transit directions (주소가 있는 곳은 좌표로 길찾기, 없으면 장소 검색) */
+const PLACES=()=>{const t=T();return [
+ {n:t.toWork,ko:'반월국가산업단지',q:'반월국가산업단지',icon:'work'},
+ {n:t.choji,ko:'초지역',q:'초지역',addr:'경기도 안산시 단원구 중앙대로 620',icon:'train'},
+ {n:t.offices[0][0],ko:'안산시청',q:'안산시청',addr:'경기도 안산시 단원구 화랑로 387',icon:'office'},
+ {n:t.univ,ko:'고려대학교 안산병원',q:'고려대학교 안산병원',addr:'경기도 안산시 단원구 적금로 123',icon:'med'},
+ {n:t.offices[1][0],ko:'안산시 외국인주민지원본부',q:'안산시 외국인주민지원본부',icon:'globe'},
+ {n:t.offices[2][0],ko:'출입국·외국인청 안산출장소',q:'안산출입국외국인사무소',icon:'shield'}];};
+async function routeTo(name,addr){const N=await loadNaver();
+ if(N){const dest=addr?await geocode(N,addr):await geocode(N,name);const home=await homeLL();
+  if(dest){const dl=typeof dest.lat==='function'?{lat:dest.lat(),lng:dest.lng()}:{lat:dest.y,lng:dest.x};
+   const q=new URLSearchParams({dlat:dl.lat,dlng:dl.lng,dname:name,appname:appname()});
+   if(home){q.set('slat',home.lat);q.set('slng',home.lng);q.set('sname',st.addr.road);}
+   openNaver(name,'nmap://route/public?'+q.toString());return;}}
+ openNaver(name);}
+
+/* live bus: nearby stops + arrivals (server/worker.js → 경기도 버스 API) */
+st.stops=null;st.stop=null;st.arr=null;let arrTimer=null;
+async function homeLL(){if(st.addr.lat)return {lat:st.addr.lat,lng:st.addr.lng};const P=await mapProv();if(!P)return null;const ll=await P.geocode(st.addr.full);return ll?{lat:typeof ll.lat==="function"?ll.lat():ll.y,lng:typeof ll.lng==="function"?ll.lng():ll.x}:null;}
+async function loadStops(){const box=document.getElementById('stops');if(!box)return;const t=T();
+ try{const key=st.addr.full;if(!st.stops||st.stops.key!==key){const ll=await homeLL();if(!ll)throw new Error('coords');const j=await api(`/bus/stops?lat=${ll.lat}&lng=${ll.lng}`);if(st.addr.full!==key)return;st.stops={key,list:j.stops||[]};}
+  if(!document.body.contains(box))return;
+  box.innerHTML=st.stops.list.length?`<span class="livetag">${t.live}</span>${st.stops.list.slice(0,3).map((x,i)=>`<button class="card row fixh" style="text-align:left" data-stop="${i}">${dotI('bus','#fff','#1E2221',36)}<span class="col grow"><span class="serif" style="font-size:15px">${esc(x.name)}</span><span class="tiny muted">${x.no?esc(x.no)+' · ':''}${x.dist!=null?x.dist+' m':''}</span></span>${ic('arrow',16,'#6E7472')}</button>`).join('')}`:`<span class="small muted">${t.noStops}</span>`;tagFx(box);}
+ catch(e){/* keep the sample card */}}
+const crowdTxt=(t,b)=>b.seats!=null&&b.seats>=0?t.seats(b.seats):b.crowd?t.crowd[Math.min(2,b.crowd-1)]:'';
+async function loadArr(){const box=document.getElementById('arrs');if(!box||!st.stop)return;const t=T();const again=()=>{clearTimeout(arrTimer);arrTimer=setTimeout(()=>{if(cur()==='b4')loadArr()},30000)};
+ if(document.hidden&&st.arr&&st.arr.stationId===st.stop.id){again();return;}
+ try{const j=await api(`/bus/arrivals?stationId=${enc(st.stop.id)}`);if(!document.body.contains(box))return;st.arr=j;
+  const rows=j.arrivals||[];
+  box.innerHTML=`<span class="row tiny muted" style="gap:6px"><span class="livetag">${t.live}</span>${ic('refresh',13,'#6E7472')}${new Date(j.at||Date.now()).toLocaleTimeString(loc(),{hour:'2-digit',minute:'2-digit'})}</span>`+
+   (rows.length?rows.map((r,i)=>{const b=r.buses[0],b2=r.buses[1];return `<div class="row" style="border-radius:18px;padding:12px 14px;background:${i?'var(--bg)':'#fff'};${i?'':'box-shadow:inset 0 0 0 1.5px var(--accent)'}"><span class="col grow" style="gap:4px"><span class="row" style="gap:6px"><span class="badge" style="background:${r.ended||!b?'var(--walk)':'var(--bus)'}">${esc(r.route)}</span>${r.dest?`<span class="tiny muted">→ ${esc(r.dest)}</span>`:''}</span><span class="micro muted">${r.ended||!b?t.ended:[b.stops!=null?t.stopsAway(b.stops):'',crowdTxt(t,b)].filter(Boolean).join(' · ')}</span></span>${r.ended||!b?'<span class="serif">—</span>':`<span class="col" style="align-items:flex-end"><span>${b.min<=1?`<span class="b accent">${t.arrSoon}</span>`:`<span class="serif ${i?'':'accent'}" style="font-size:22px">${b.min}</span> <span class="tiny muted">${t.min}</span>`}</span>${b2?`<span class="micro muted">${t.next} ${b2.min} ${t.min}</span>`:''}</span>`}</div>`}).join(''):`<p class="small muted">${t.ended}</p>`);
+  again();}
+ catch(e){if(document.body.contains(box)){const n=document.getElementById('arrerr');const real=st.arr&&String(st.arr.stationId)===String(st.stop.id);if(!real){if(n)n.hidden=false;box.innerHTML=box.dataset.sample||'';}again();}}}
+
+/* notices: data/notices.json (Korean) → server translates for the viewer's language */
+st.news={};st.nsel=null;st.showOrig=false;
+async function loadNews(){const box=document.getElementById('newslist');if(!box)return;const lang=st.lang;
+ try{if(!st.news[lang]||st.news[lang].retry){if(hasApi()){const j=await api(`/notices?lang=${lang}`,{},25000);st.news[lang]=(j.error||j.partial||j.lang!==lang)?{...j,retry:true}:j;}
+  else{/* 번역 서버 전: Supabase 한국어 원문 */const list=await sb('notices?select=id,type,title,body,date,url,sample&order=sort.desc,created_at.desc&limit=30');st.news[lang]={lang:'ko',notices:list||[]};}}if(!document.body.contains(box)||st.lang!==lang)return;box.innerHTML=newsList(st.news[lang].notices||[]);tagFx(box);}
+ catch(e){/* keep static sample list */}}
+const newsList=list=>{const t=T();return list.map((n,i)=>`<button class="nitem" data-news="${i}"><span class="col" style="gap:6px"><span class="row cap" style="gap:6px;color:var(--deep)">${ic(n.type==='event'?'cal':'shield',13,'#22393A',2)}${n.type==='event'?t.event:t.official}${n.sample?` · ${t.sample}`:''}${n.date?` · ${esc(n.date)}`:''}</span><span class="serif" style="font-size:17px">${esc(n.title)}</span><span class="small muted" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(n.body)}</span></span></button>`).join('')};
+SCR.ndetail=()=>{const t=T();const n=(st.news[st.lang]&&st.news[st.lang].notices||[])[st.nsel]||{};const tr=!isKo()&&n.title_ko;const o=tr&&st.showOrig;
+ return `<div class="scr ${isKo()||o?'ko':''}">${nav(t.newsT)}${ttl(esc(o?n.title_ko:n.title),`<span>${n.type==='event'?t.event:t.official}${n.sample?` · ${t.sample}`:''}${n.date?` · ${esc(n.date)}`:''}</span>`)}
+ <div class="sheet">
+  ${tr?`<div class="row" style="justify-content:space-between"><span class="tiny muted">${o?'':t.autoTr}</span><button class="b small" data-act="orig">${ic('globe',14,'#22393A')} ${o?t.transView:t.origView}</button></div>`:''}
+  <div class="${o?'kr':''}" style="white-space:pre-line;line-height:1.7;font-size:15px">${esc(o?n.body_ko:n.body)}</div>
+  ${n.url&&/^https:\/\//.test(n.url)?`<a class="btn line" href="${esc(n.url)}" target="_blank" rel="noopener">${ic('ext',16)}${t.readMore}</a>`:''}
+  <div class="spacer"></div>
+ </div>${foot}</div>`;};
+
+/* ads: 직접 계약 광고(Supabase) → 없으면 애드센스 → 없으면 비움. Supabase 미설정(시제품)일 때만 예시 광고 */
+st.ad={};
+const sampleAd=()=>{const t=T();return `<div class="card row"><div class="col grow" style="gap:3px"><span class="row cap" style="gap:6px"><span class="dot" style="background:var(--accent);width:6px;height:6px"></span>${t.sponsored}</span><span class="serif" style="font-size:15px">${t.adT}</span><span class="small muted">${t.adS}</span></div><span style="width:64px;height:64px;border-radius:14px;background:#FBE7D6;display:grid;place-items:center;flex:none">${ic('gift',22,'#9A6A44')}</span></div>`};
+const directAd=a=>{const t=T();const img=a.image_url&&/^https:\/\//.test(a.image_url)?`<img src="${esc(a.image_url)}" alt="" style="width:64px;height:64px;border-radius:14px;object-fit:cover;flex:none">`:`<span style="width:64px;height:64px;border-radius:14px;background:#FBE7D6;display:grid;place-items:center;flex:none">${ic('gift',22,'#9A6A44')}</span>`;
+ const inner=`<div class="col grow" style="gap:3px"><span class="row cap" style="gap:6px"><span class="dot" style="background:var(--accent);width:6px;height:6px"></span>${t.adLbl}</span><span class="serif" style="font-size:15px">${esc(a.title)}</span>${a.body?`<span class="small muted">${esc(a.body)}</span>`:''}</div>${img}`;
+ return a.url&&/^https:\/\//.test(a.url)?`<a class="card row" href="${esc(a.url)}" target="_blank" rel="noopener sponsored">${inner}</a>`:`<div class="card row">${inner}</div>`};
+const adsenseBox=()=>`<div id="adslot" class="card" style="padding:8px"><ins class="adsbygoogle" style="display:block" data-ad-client="${ADS_CLIENT}" data-ad-slot="${ADS_SLOT}" data-ad-format="auto" data-full-width-responsive="true"></ins></div>`;
+/* 광고 순서: Supabase 직접 광고 → 애드센스 → (둘 다 없으면) 예시 광고 */
+function adSlot(){if(adFree())return adFreeRow();if(!hasSb())return hasAdsense()?adsenseBox():sampleAd();const a=st.ad[st.lang];
+ if(a===undefined)return '<div id="adslot"></div>';if(a)return directAd(a);
+ return hasAdsense()?adsenseBox():'';}
+const pickAd=list=>{const tot=list.reduce((n,a)=>n+(a.weight||1),0);let r=Math.random()*tot;for(const a of list){r-=a.weight||1;if(r<=0)return a}return list[0]||null};
+let adsenseLoaded=false;
+function mountAdsense(){if(!document.querySelector('ins.adsbygoogle:not([data-adsbygoogle-status])'))return;
+ if(!adsenseLoaded){adsenseLoaded=true;const sc=document.createElement('script');sc.async=true;sc.crossOrigin='anonymous';sc.src=`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS_CLIENT}`;document.head.appendChild(sc);}
+ try{(window.adsbygoogle=window.adsbygoogle||[]).push({})}catch(e){}}
+async function loadAd(){if(adFree())return;if(!hasSb()){if(hasAdsense())mountAdsense();return;}const lang=st.lang;
+ if(st.ad[lang]===undefined){try{const list=await sb(`ads?select=id,title,body,url,image_url,weight&langs=cs.%7B${lang}%7D`);st.ad[lang]=pickAd(list||[]);}catch(e){st.ad[lang]=null;}
+  const box=document.getElementById('adslot');if(box&&st.lang===lang){box.outerHTML=adSlot();tagFx(app);}}
+ mountAdsense();}
+
+/* survey answers → Supabase (실패하면 기기에 모아 두었다가 다음 실행 때 다시 보냄) */
+const SURVEY_ID='commute-2026';
+async function sendSurvey(rows){try{await sb('survey_responses',{method:'POST',headers:{prefer:'return=minimal'},body:JSON.stringify(rows)});return true}catch(e){return false}}
+function queueSurvey(row){let q=[];try{q=JSON.parse(localStorage.getItem('al_sq')||'[]')}catch(e){}q.push(row);try{localStorage.setItem('al_sq',JSON.stringify(q.slice(-20)))}catch(e){}}
+async function flushSurvey(){if(!hasSb())return;let q=[];try{q=JSON.parse(localStorage.getItem('al_sq')||'[]')}catch(e){}if(!q.length)return;if(await sendSurvey(q)){try{localStorage.removeItem('al_sq')}catch(e){}}}
+function saveSurvey(){if(!hasSb())return;const codes=st.answers.map((a,i)=>S.en.sq[i]&&S.en.sq[i][2][a]?S.en.sq[i][2][a][0]:null);const row={survey_id:SURVEY_ID,lang:st.lang,answers:codes};
+ sendSurvey([row]).then(ok=>{if(!ok)queueSurvey(row)});}
+
+/* install as app (PWA) */
+let installEvt=null;
+const isIOS=()=>/iPhone|iPad|iPod/i.test(navigator.userAgent);
+const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const installDismissed=()=>{try{return localStorage.getItem('al_inst')==='1'}catch(e){return false}};
+const installCard=()=>{if(standalone()||installDismissed()||!(installEvt||isIOS()))return '';const t=T();
+ return `<div class="card row" style="background:#fff;border:1px solid var(--hair)">${dotI('download','var(--deep)','#fff',36)}<span class="col grow"><span class="b" style="font-size:13px">${t.addHome}</span><span class="tiny muted">${installEvt?t.addHomeS:t.iosHome}</span></span>${installEvt?`<button class="b small accent" data-act="install">${t.install}</button>`:''}<button class="ibtn" data-act="instx" aria-label="Close" style="margin:0 -8px 0 0">${ic('x',16,'#6E7472')}</button></div>`;};
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;if(cur()==='home')render();});
+addEventListener('offline',()=>toast(T().offline));
+setTimeout(flushSurvey,3000);
+if('serviceWorker' in navigator&&!BG.orange.startsWith('data:')&&(location.protocol==='https:'||location.hostname==='localhost')){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+
 /* ---------- bottom sheets (Naver) ---------- */
 function sheet(kind){const t=T();const o=document.createElement('div');o.className='sheetover';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
  if(kind==='choose'){o.innerHTML=`<div class="bs"><span class="grab"></span><span class="eyebrow">${t.chooseT}</span><span class="h1" style="font-size:28px">Naver Map</span>
-  <div class="card row small" style="padding:10px 12px"><span class="dot" style="background:var(--accent)"></span><span class="kr b">${naverQ}</span></div>
-  <a class="choice rec" href="${nApp(naverQ)}" data-app="1">${dotI('mobile','var(--deep)','#fff',40)}<span class="col grow"><span class="row" style="gap:6px"><span class="b">${t.naverApp}</span><span class="badge" style="background:var(--accent);font-size:9px">${t.rec2}</span></span><span class="tiny muted">${t.naverAppS}</span></span>${ic('arrow',16,'#6E7472')}</a>
+  <div class="card row small" style="padding:10px 12px"><span class="dot" style="background:var(--accent)"></span><span class="kr b">${esc(naverQ)}</span></div>
+  <a class="choice rec" href="${esc(naverAppUrl||nApp(naverQ))}" data-app="1">${dotI('mobile','var(--deep)','#fff',40)}<span class="col grow"><span class="row" style="gap:6px"><span class="b">${t.naverApp}</span><span class="badge" style="background:var(--accent);font-size:9px">${t.rec2}</span></span><span class="tiny muted">${t.naverAppS}</span></span>${ic('arrow',16,'#6E7472')}</a>
   <a class="choice" href="${nWeb(naverQ)}" target="_blank" rel="noopener" data-web="1">${dotI('web','#fff','#22393A',40)}<span class="col grow"><span class="b">${t.naverWeb}</span><span class="tiny muted">${t.naverWebS}</span></span>${ic('ext',16,'#6E7472')}</a>
   <button class="row small" id="alw" style="text-align:left"><span class="ck" role="checkbox" aria-checked="false"></span>${t.always}</button>
   <div class="soft-accent row" style="background:rgba(228,92,78,.08)">${ic('globe',18,'#E45C4E')}<span class="col"><span class="b small">${t.langTip}</span><span class="tiny muted">${t.langTipS}</span></span></div></div>`;}
@@ -717,13 +1219,107 @@ function sheet(kind){const t=T();const o=document.createElement('div');o.classNa
  app.appendChild(o);}
 function remember(o,v){if(o.dataset.always){st.always=v;try{localStorage.setItem('al_naver',v)}catch(e){}}}
 
+/* ---------- camera (HTTPS only; falls back to the photo picker) ---------- */
+let camStream=null;
+function stopCam(){if(camStream){camStream.getTracks().forEach(x=>x.stop());camStream=null}}
+function camOff(){const n=document.getElementById('camnote');if(n)n.textContent=T().camOff;}
+async function startCam(){const v=document.getElementById('cv');if(!v)return;
+ if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)||!window.isSecureContext){camOff();return}
+ try{const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:1280}},audio:false});
+  if(cur()!=='w2'||!v.isConnected){s.getTracks().forEach(x=>x.stop());return}
+  camStream=s;v.srcObject=s;try{await v.play()}catch(e){}
+  v.closest('.vf').classList.add('live');v.closest('.scr').classList.add('live');}
+ catch(e){camOff()}}
+/* downscale before upload: long side 1024px, JPEG */
+function shrink(src,w,h,max=1024){const k=Math.min(1,max/Math.max(w,h));const c=document.createElement('canvas');c.width=Math.round(w*k);c.height=Math.round(h*k);c.getContext('2d').drawImage(src,0,0,c.width,c.height);return c.toDataURL('image/jpeg',.82);}
+function capture(){const v=document.getElementById('cv');if(!v||!v.videoWidth)return;st.photo=shrink(v,v.videoWidth,v.videoHeight);stopCam();go('w3');}
+function readPhoto(f){const u=URL.createObjectURL(f);const im=new Image();
+ im.onload=()=>{st.photo=shrink(im,im.naturalWidth,im.naturalHeight);URL.revokeObjectURL(u);go('w3')};
+ im.onerror=()=>{URL.revokeObjectURL(u);const r=new FileReader();r.onload=()=>{st.photo=r.result;go('w3')};r.readAsDataURL(f)};im.src=u;}
+
+/* ---------- photo analysis (server/analyze-worker.js) ---------- */
+const DESTS=Object.keys(DEST);
+const clip=v=>String(v||'').slice(0,60);
+async function analyze(dataUrl){const m=/^data:([^;]+);base64,(.*)$/.exec(dataUrl||'');if(!m)return null;
+ const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),25000);
+ try{const r=await fetch(API_URL+'/analyze',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({image:m[2],mediaType:m[1],lang:st.lang}),signal:ctl.signal});
+  if(!r.ok)return null;const j=await r.json();if(!j||!DESTS.includes(j.dest))return null;
+  return {dest:j.dest,name:clip(j.name),name_ko:clip(j.name_ko),confidence:Math.max(0,Math.min(1,+j.confidence||0)),
+   candidates:(Array.isArray(j.candidates)?j.candidates:[]).filter(c=>c&&DESTS.includes(c.dest)).slice(0,3).map(c=>({dest:c.dest,name:clip(c.name),name_ko:clip(c.name_ko)}))};}
+ catch(e){return null}finally{clearTimeout(to)}}
+let scanSeq=0;
+async function runScan(){const id=scanSeq;const steps=[...app.querySelectorAll('.stat')];const alive=()=>id===scanSeq&&cur()==='w3';
+ const mark=(i,s)=>{const e=steps[i];if(!e)return;e.className='stat '+s;e.innerHTML=s==='done'?ic('check',12,'#fff',3):'';const l=e.nextElementSibling&&e.nextElementSibling.firstElementChild;if(l)l.style.cssText='font-size:14px'+(s?'':';color:var(--muted);font-weight:500');};
+ [1,2].forEach(i=>mark(i,''));
+ let res;
+ if(st.photo&&hasAnalyzer()){const p=analyze(st.photo);await wait(700);if(!alive())return;mark(0,'done');mark(1,'doing');res=await p;}
+ else{await wait(1300);if(!alive())return;mark(0,'done');mark(1,'doing');res={demo:true,dest:'pet',name:T().pet,name_ko:'투명 페트병',confidence:.92,candidates:[]};}
+ if(!alive())return;
+ if(!res){showAnaErr();return}
+ mark(1,'done');mark(2,'doing');await wait(700);if(!alive())return;
+ st.result=res;st.remind=false;st.stack.pop();go('w4');}
+function showAnaErr(){const t=T();const b=app.querySelector('.bottomsheet');const sl=app.querySelector('.scanline');if(sl)sl.remove();
+ b.innerHTML=`<span class="h1 ${isKo()?'ko':''}" style="font-size:24px">${t.anaFail}</span>${koSub('사진을 분석하지 못했어요.')}<div class="acts"><button class="btn line" data-act="pick">${t.pickAgain}</button><button class="btn dark" data-act="retry">${ic('camera',18,'#fff')}${t.tryAgain}</button></div>`;tagFx(b);}
+
+/* ---------- home address: GPS → Naver reverse geocoding, or typed address ---------- */
+const inAnsanBox=(lat,lng)=>lat>37.20&&lat<37.38&&lng>126.36&&lng<126.95; // 대략적인 안산시 범위(대부도 포함). 키가 있으면 행정구역명으로 판정
+function revGeo(N,lat,lng){return new Promise(res=>{try{N.maps.Service.reverseGeocode({coords:new N.maps.LatLng(lat,lng),orders:'admcode,roadaddr,addr'},(s,r)=>{
+  if(s!==N.maps.Service.Status.OK||!r||!r.v2)return res(null);const R=r.v2.results||[];
+  const adm=R.find(x=>x.name==='admcode'),road=R.find(x=>x.name==='roadaddr'),jib=R.find(x=>x.name==='addr');const base=road||jib||adm;if(!base)return res(null);
+  const g=base.region,L=base.land,num=L?`${L.number1||''}${L.number2?'-'+L.number2:''}`:'';
+  const short=road&&L?`${L.name} ${num}`.trim():jib&&L?`${g.area3.name} ${num}`.trim():g.area3.name;
+  const A=r.v2.address||{};
+  res({inAnsan:/안산/.test(g.area2&&g.area2.name||''),road:short,dong:adm?adm.region.area3.name:g.area3.name,full:A.roadAddress||A.jibunAddress||`${g.area1.name} ${g.area2.name} ${short}`,lat,lng});});}catch(e){res(null)}});}
+function geoText(N,q){return new Promise(res=>{try{N.maps.Service.geocode({query:q},(s,r)=>res(s===N.maps.Service.Status.OK&&r&&r.v2&&r.v2.addresses&&r.v2.addresses[0]||null))}catch(e){res(null)}});}
+function locSheet(){const t=T();const o=document.createElement('div');o.className='sheetover';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-label',t.locT);
+ o.innerHTML=`<div class="bs"><span class="grab"></span><span class="eyebrow">${t.change}</span><span class="h1 ${isKo()?'ko':''}" style="font-size:26px">${t.locT}</span>${koSub('어디에 사세요?')}<span class="small muted">${t.locS}</span>
+  <button class="choice rec" id="lgps" type="button">${dotI('spot','var(--deep)','#fff',40)}<span class="col grow"><span class="b">${t.useGps}</span>${koSub('현재 위치 사용')}</span>${ic('arrow',16,'#6E7472')}</button>
+  <span class="micro muted" style="margin-top:-4px">${t.locConsent}</span>
+  <form id="lform" class="col" style="gap:10px"><label class="field">${ic('search',18,'#6E7472')}<input id="laddr" type="text" enterkeyhint="done" autocomplete="street-address" placeholder="${t.addrPh}" aria-label="${t.addrPh}"></label>
+   <div id="lmsg" class="small" role="status" aria-live="polite" hidden></div>
+   <div class="acts"><button type="button" class="btn line" id="lkeep">${t.keep}</button><button type="submit" class="btn dark">${t.save}</button></div></form>
+  <div class="card row small" style="padding:10px 12px"><span class="dot" style="background:var(--accent)"></span><span class="col"><span class="cap">${t.locCur}</span><span class="kr b">${addrLabel()}</span></span></div></div>`;
+ const msg=(m,err)=>{const e=o.querySelector('#lmsg');e.hidden=!m;e.textContent=m||'';e.classList.toggle('err',!!err)};
+ const focusAddr=()=>{const i=o.querySelector('#laddr');try{i.focus()}catch(e){}};
+ const done=a=>{saveAddr(a);o.remove();render();toast(T().locSaved);};
+ o.querySelector('#lgps').addEventListener('click',async()=>{const t=T();
+  if(!navigator.geolocation||!window.isSecureContext){msg(t.gpsDenied,1);focusAddr();return}
+  msg(t.gpsWorking);let pos;
+  try{pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:true,timeout:12000,maximumAge:60000}))}
+  catch(e){msg(e&&e.code===1?t.gpsDenied:t.gpsFail,1);focusAddr();return}
+  if(!o.isConnected)return;const lat=pos.coords.latitude,lng=pos.coords.longitude;
+  const N=await loadNaver();
+  if(!N){if(!inAnsanBox(lat,lng)){msg(t.onlyAnsan,1);return}msg(t.gpsNoKey,1);focusAddr();return}
+  const a=await revGeo(N,lat,lng);if(!o.isConnected)return;
+  if(!a){msg(t.gpsFail,1);focusAddr();return}
+  if(!a.inAnsan){msg(t.onlyAnsan,1);return}
+  done(a);});
+ o.querySelector('#lform').addEventListener('submit',async e=>{e.preventDefault();const t=T();const v=o.querySelector('#laddr').value.trim().slice(0,80);if(!v){focusAddr();return}
+  const q=/안산/.test(v)?v:`경기도 안산시 ${v}`;const N=await loadNaver();
+  if(!N){done({road:v.replace(/^(경기도\s*)?안산시\s*((단원|상록)구\s*)?/,'')||v,dong:'',full:q});return}
+  msg(t.gpsWorking);const hit=await geoText(N,q);if(!o.isConnected)return;
+  const full=hit&&(hit.roadAddress||hit.jibunAddress)||'';
+  if(!hit||!/안산/.test(full)){msg(t.onlyAnsan,1);return}
+  const a=await revGeo(N,+hit.y,+hit.x);
+  done(a&&a.inAnsan?a:{road:v,dong:'',full,lat:+hit.y,lng:+hit.x});});
+ o.querySelector('#lkeep').addEventListener('click',()=>o.remove());
+ o.addEventListener('click',e=>{if(e.target===o)o.remove()});
+ app.appendChild(o);tagFx(o);}
+
 /* ---------- render + behaviors ---------- */
 let bgTimer=null,scanTimer=null;
-function render(){clearInterval(bgTimer);clearTimeout(scanTimer);const n=cur();app.innerHTML=SCR[n]();
+function render(){clearInterval(bgTimer);clearTimeout(scanTimer);clearTimeout(arrTimer);scanSeq++;const n=cur();if(n!=='w2')stopCam();if(n!=='rules')st.rulesDraft=null;
+ app.className='l-'+(st.lang||'en');document.documentElement.lang=st.lang||'ko';app.innerHTML=SCR[n]();
  if(n==='intro')bindIntro();
  if(n==='w3')runScan();
+ if(n==='home'||n==='news')loadAd();
+ if(n==='b2'){const f=document.getElementById('destf');f&&f.addEventListener('submit',e=>{e.preventDefault();const v=document.getElementById('dest').value.trim().slice(0,80);if(v)routeTo(v,/(로|길|동|구)\s*\d/.test(v)?(/안산/.test(v)?v:'경기도 안산시 '+v):null);});}
+ if(n==='news'&&(hasApi()||hasSb()))loadNews();
+ if(hasApi()){if(n==='b1')loadStops();if(n==='b4')loadArr();}
+ if(n==='hosp')loadMed();if(n==='hdetail')loadMedDetail();
  mountMaps();
- if(n==='w2'){['ph','ph2'].forEach(id=>{const i=document.getElementById(id);i&&i.addEventListener('change',()=>{const f=i.files&&i.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{st.photo=r.result;go('w3')};r.readAsDataURL(f);});});}
+ if(n==='w2'){['ph','ph2'].forEach(id=>{const i=document.getElementById(id);i&&i.addEventListener('change',()=>{const f=i.files&&i.files[0];if(f)readPhoto(f);});});
+  document.getElementById('shut').addEventListener('click',e=>{if(camStream){e.preventDefault();capture();}});startCam();}
  if(n==='w5'){const q=document.getElementById('q');q.addEventListener('input',()=>{st.query=q.value;const pos=q.selectionStart;app.innerHTML=SCR.w5();const q2=document.getElementById('q');q2.focus();try{q2.setSelectionRange(pos,pos)}catch(e){}render.bindW5&&0;rebindW5();});}
 }
 function rebindW5(){const q=document.getElementById('q');q.addEventListener('input',()=>{st.query=q.value;const pos=q.selectionStart;app.innerHTML=SCR.w5();const q2=document.getElementById('q');q2.focus();try{q2.setSelectionRange(pos,pos)}catch(e){}rebindW5();});}
@@ -742,11 +1338,10 @@ function bindIntro(start=true){const A=document.getElementById('bgA'),B=document
  rail.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){rail.scrollLeft+=e.deltaY;e.preventDefault();}},{passive:false});
 }
 let dragMoved=false;
-function runScan(){const steps=[...app.querySelectorAll('.stat')];
- scanTimer=setTimeout(()=>{steps[1].className='stat done';steps[1].innerHTML=ic('check',12,'#fff',3);steps[2].className='stat doing';
-  scanTimer=setTimeout(()=>{st.stack.pop();go('w4')},1100)},1300);}
-
-app.addEventListener('click',e=>{const el=e.target.closest('[data-sel],[data-go],[data-act],[data-naver],[data-ans],#goBtn,#remind,#ntf');if(!el)return;
+app.addEventListener('click',e=>{const el=e.target.closest('[data-sel],[data-go],[data-act],[data-naver],[data-ans],[data-cand],[data-day],[data-stop],[data-news],[data-route],[data-mtab],[data-med],[data-mnav],#goBtn,#remind,#ntf');if(!el)return;
+ if(el.dataset.mtab){st.med.tab=el.dataset.mtab;paintMed();return;}
+ if(el.dataset.med){const it=medPick(el.dataset.med);if(it){st.med.sel=it;go('hdetail');}return;}
+ if(el.dataset.mnav){const it=el.dataset.mnav==='sel'?st.med.sel:medPick(el.dataset.mnav);if(it)medNaver(it);return;}
  if(el.dataset.sel){if(dragMoved)return;const keep=document.getElementById('rail').scrollLeft;const A0=document.getElementById('bgA');const orangeOn=A0&&A0.style.opacity!=='0';st.sel=el.dataset.sel;clearInterval(bgTimer);app.innerHTML=SCR.intro().replace('class="scr intro"','class="scr intro" style="animation:none"');
   const A=document.getElementById('bgA'),B=document.getElementById('bgB');A.style.transition=B.style.transition='none';A.style.opacity=orangeOn?1:0;B.style.opacity=orangeOn?0:1;void A.offsetWidth;A.style.transition=B.style.transition='';
   bindIntro(orangeOn);document.getElementById('rail').scrollLeft=keep;return;}
@@ -755,12 +1350,27 @@ app.addEventListener('click',e=>{const el=e.target.closest('[data-sel],[data-go]
  if(el.id==='ntf'){st.notify=!st.notify;el.setAttribute('aria-pressed',st.notify);return;}
  if(el.dataset.naver){openNaver(el.dataset.naver);return;}
  if(el.dataset.ans!=null){st.answers[st.qi]=+el.dataset.ans;render();return;}
+ if(el.dataset.day){const [k,d]=el.dataset.day.split(':');const R=st.rulesDraft;const i=R[k].indexOf(+d);i<0?R[k].push(+d):R[k].splice(i,1);R[k].sort();el.setAttribute('aria-pressed',i<0);return;}
+ if(el.dataset.route!=null){const p=PLACES()[+el.dataset.route];if(p)routeTo(p.q,p.addr);return;}
+ if(el.dataset.stop!=null){const x=st.stops&&st.stops.list[+el.dataset.stop];if(x){st.stop=x;go('b4');}return;}
+ if(el.dataset.news!=null){st.nsel=+el.dataset.news;st.showOrig=false;go('ndetail');return;}
+ if(el.dataset.cand!=null){const c=st.result&&st.result.candidates[+el.dataset.cand];if(c){st.result={...c,demo:st.result.demo,confidence:1,candidates:[]};render();}return;}
  if(el.dataset.go){if(el.dataset.go==='w2')st.photo=null;go(el.dataset.go);return;}
  const a=el.dataset.act;
- if(a==='back')back();else if(a==='home')home();else if(a==='intro'){st.stack=['intro'];render();}
+ if(a==='back')back();else if(a==='home')home();else if(a==='loc')locSheet();
+ else if(a==='sample'){stopCam();st.photo=null;go('w3');}
+ else if(a==='rsave'){const R=st.rulesDraft;const tm=(id,d)=>{const v=document.getElementById(id).value;return /^\d{2}:\d{2}$/.test(v)?v:d};R.from=tm('rfrom','20:00');R.to=tm('rto','06:00');if(!validRules(R))return;saveRules(JSON.stringify(R)===JSON.stringify(CITY)?null:R);back();toast(T().rulesSaved);}
+ else if(a==='rcity'){st.rulesDraft=JSON.parse(JSON.stringify(CITY));render();}
+ else if(a==='samplestop'){st.stop=null;go('b4');}
+ else if(a==='orig'){st.showOrig=!st.showOrig;render();}
+ else if(a==='install'){if(installEvt){installEvt.prompt();installEvt.userChoice.finally(()=>{installEvt=null;render();});}}
+ else if(a==='instx'){try{localStorage.setItem('al_inst','1')}catch(e){}render();}
+ else if(a==='retry'){st.stack.pop();st.photo=null;render();}
+ else if(a==='medretry'){loadMed(true);}
+ else if(a==='pick'){st.stack.splice(-2,2);go('w5');}else if(a==='intro'){st.stack=['intro'];render();}
  else if(a==='startsurv'){st.qi=0;st.answers=[];go('sq');}
  else if(a==='qprev'){if(st.qi>0){st.qi--;render()}else back();}
- else if(a==='qnext'){if(st.qi<T().sq.length-1){st.qi++;render()}else{grantAdFree();st.stack=['home','sdone'];render();}}
+ else if(a==='qnext'){if(st.qi<T().sq.length-1){st.qi++;render()}else{saveSurvey();grantAdFree();st.stack=['home','sdone'];render();}}
 });
 
 /* ---------- press feedback (touchdown) ---------- */
@@ -775,14 +1385,19 @@ document.addEventListener('scroll',release,{passive:true,capture:true});
 document.addEventListener('pointermove',e=>{if(pressed&&e.pointerType!=='mouse'&&!pressed.contains(document.elementFromPoint(e.clientX,e.clientY)))release();},{passive:true});
 document.addEventListener('touchstart',()=>{},{passive:true}); /* enables :active on iOS */
 
-/* ---------- desktop fit + modal ---------- */
+/* ---------- desktop fit + 안내 문구 ---------- */
 function fit(){const ph=document.getElementById('phone');if(innerWidth<=500){ph.style.transform='';return}const s=Math.min(1,(innerHeight-48)/864);ph.style.transform=`scale(${s})`;ph.style.margin=`${-(844*(1-s))/2}px ${-(390*(1-s))/2}px`;}
 addEventListener('resize',fit);fit();
-const modal=document.getElementById('modal');
-let seen=false;try{seen=sessionStorage.getItem('al_modal')==='1'}catch(e){}
-if(innerWidth>500&&!seen){modal.hidden=false;document.getElementById('mclose').focus();}
-document.getElementById('mclose').addEventListener('click',()=>{modal.hidden=true;try{sessionStorage.setItem('al_modal','1')}catch(e){}});
-modal.addEventListener('click',e=>{if(e.target===modal)document.getElementById('mclose').click()});
+/* 데스크톱 안내 문구: 접속한 브라우저 언어로 */
+const ASIDE={ko:'안산살이는 휴대폰 화면에 맞춰 만들어졌어요. 지금은 모바일 크기로 보여드릴게요.',
+ en:'Ansan Life is made for phone screens. For now, we’ll show it at mobile size.',
+ vi:'Ansan Life được thiết kế cho màn hình điện thoại. Bây giờ chúng tôi sẽ hiển thị ở kích thước di động.',
+ zh:'安山生活是为手机屏幕设计的。现在先以手机尺寸为您显示。',
+ ru:'«Жизнь в Ансане» создана для экрана телефона. Пока покажем её в мобильном размере.',
+ uz:'Ansan Life telefon ekrani uchun yaratilgan. Hozircha uni mobil o‘lchamda ko‘rsatamiz.',
+ mn:'Ansan Life нь утасны дэлгэцэнд зориулагдсан. Одоохондоо гар утасны хэмжээгээр харуулъя.'};
+(()=>{const el=document.getElementById('asideLead');if(!el)return;const prefs=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||'en']).map(x=>String(x).toLowerCase().split('-')[0]);
+ const l=prefs.find(x=>ASIDE[x])||'en';el.textContent=ASIDE[l];el.lang=l;})();
 render();
 })();
 </script>

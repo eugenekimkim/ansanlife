@@ -1,0 +1,28 @@
+name = "ansanlife-api"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+# 앱이 올라간 주소. 여러 개면 쉼표로 구분
+ALLOWED_ORIGIN = "https://gogeangs.github.io,https://eugenekimkim.github.io"
+# 공지 원문(한국어). Supabase 를 쓰면 아래 주석의 주소로 바꾸고 NOTICES_KEY(anon 키)를 넣으세요
+#   https://<프로젝트>.supabase.co/rest/v1/notices?select=id,type,title,body,date,url,sample&published=is.true&order=sort.desc,created_at.desc
+NOTICES_URL = "https://gogeangs.github.io/ansanlife-dev/data/notices.json"
+# NOTICES_KEY = "<Supabase anon 키>"   (공개 키라 vars 에 둬도 됨)
+# 기본 모델은 claude-haiku-5-5 (저렴). 사진 판별 정확도가 부족하면 사진만 Sonnet 으로:
+# VISION_MODEL = "claude-sonnet-5-5"
+
+# 키는 여기에 쓰지 말고 secret 으로:
+#   npx wrangler secret put ANTHROPIC_API_KEY   (사진 분석 · 공지 번역)
+#   npx wrangler secret put DATA_GO_KR_KEY      (버스 · 공공데이터포털 Decoding 키)
+
+# 비용이 드는 경로(/analyze, /notices)의 IP별 횟수 제한: 1분에 20번
+[[ratelimits]]
+name = "LIMITER"
+namespace_id = "1001"
+simple = { limit = 20, period = 60 }
+
+# (선택) 공지 번역 저장소. 만들기: npx wrangler kv namespace create TR_KV → 나온 id 를 아래에 넣고 주석 해제
+# [[kv_namespaces]]
+# binding = "TR_KV"
+# id = "<kv namespace id>"
